@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Reverse lunge movement guide</title>
+  <desc id="desc">Two simple line figures show standing and reverse lunge positions.</desc>
+  <rect width="800" height="450" fill="#f6f4ef"/>
+  <path d="M70 360H730" stroke="#c8c0b1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M400 75V365" stroke="#ded9cd" stroke-width="3" stroke-dasharray="8 12"/>
+  <g fill="none" stroke="#1f1e1b" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="190" cy="112" r="27" fill="#f6f4ef"/>
+    <path d="M190 140V245M190 165L145 215M190 165L235 215M190 245L155 350M190 245L225 350"/>
+    <circle cx="590" cy="125" r="27" fill="#f6f4ef"/>
+    <path d="M590 153V245M590 175L540 215M590 175L640 215M590 245L535 305L485 350M590 245L650 290L700 350"/>
+  </g>
+  <path d="M450 245H350" fill="none" stroke="#b7891c" stroke-width="9" stroke-linecap="round"/>
+  <path d="M350 245l22-18v36z" fill="#b7891c"/>
+  <g fill="#5d5a53" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="2">
+    <text x="145" y="405">START</text><text x="545" y="405">MOVE</text>
+  </g>
+</svg>

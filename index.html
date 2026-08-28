@@ -1,0 +1,2283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1a17">
+  <meta name="description" content="为徒步摄影装备设计的8周体能、作息与打卡计划。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>徒步摄影体能计划</title>
+  <style>
+    :root {
+      --ink: #1f1e1b;
+      --ink-soft: #5d5a53;
+      --muted: #817d74;
+      --paper: #ffffff;
+      --canvas: #f6f4ef;
+      --canvas-deep: #ebe7dc;
+      --line: #ded9cd;
+      --line-strong: #c8c0b1;
+      --green: #856313;
+      --green-dark: #5b430c;
+      --green-soft: #f5edcf;
+      --yellow: #b7891c;
+      --yellow-soft: #fbf2d7;
+      --coral: #856313;
+      --coral-soft: #f5edcf;
+      --blue: #716f69;
+      --blue-soft: #f0eee8;
+      --shadow: 0 10px 28px rgba(28, 36, 45, .07);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(52, 119, 150, .28);
+      outline-offset: 2px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 980px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 190px;
+      padding: 22px 18px 16px;
+      overflow: hidden;
+      color: #fff;
+      background:
+        linear-gradient(100deg, rgba(26, 31, 40, .84) 0%, rgba(26, 31, 40, .55) 48%, rgba(26, 31, 40, .16) 100%),
+        url("assets/mountain-training-cover.jpg") center 54% / cover no-repeat,
+        #292824;
+    }
+
+    .hero::after {
+      position: absolute;
+      right: 16px;
+      bottom: 10px;
+      color: rgba(255,255,255,.72);
+      content: "Unsplash";
+      font-size: 10px;
+      letter-spacing: .02em;
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 8px;
+      color: #eed99b;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .eyebrow::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f5c862;
+      content: "";
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      margin: 0;
+      font-size: 27px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .hero-subtitle {
+      position: relative;
+      z-index: 1;
+      max-width: 550px;
+      margin: 7px 0 0;
+      color: rgba(255,255,255,.86);
+      font-size: 12px;
+    }
+
+    .hero-metrics {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      margin-top: 13px;
+    }
+
+    .hero-metric {
+      min-width: 0;
+      padding: 5px 7px 4px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 6px;
+      background: rgba(20, 25, 33, .42);
+      backdrop-filter: blur(5px);
+    }
+
+    .hero-metric strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      line-height: 1.15;
+    }
+
+    .hero-metric span {
+      display: block;
+      margin-top: 2px;
+      overflow-wrap: anywhere;
+      color: rgba(255,255,255,.72);
+      font-size: 9px;
+    }
+
+    .context-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 50px;
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(14px);
+      min-width: 0;
+    }
+
+    .date-context {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .date-context strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .date-context span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .context-actions {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .icon-button, .text-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      min-height: 32px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .icon-button {
+      padding: 3px;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .text-button {
+      color: var(--green-dark);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .icon-button:hover, .text-button:hover { border-color: var(--green); background: var(--green-soft); }
+
+    main {
+      padding: 12px 14px calc(78px + env(safe-area-inset-bottom));
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 9px;
+      align-items: center;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--green);
+      border-radius: var(--radius);
+      background: #fbfdfb;
+      min-width: 0;
+    }
+
+    .status-strip.warn { border-left-color: var(--yellow); background: #fffdf8; }
+    .status-strip.alert { border-left-color: var(--coral); background: #fffaf8; }
+
+    .status-orb {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .warn .status-orb { color: #8c5b00; background: var(--yellow-soft); }
+    .alert .status-orb { color: #5b430c; background: var(--coral-soft); }
+
+    .status-strip h2 {
+      overflow-wrap: anywhere;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .status-strip p {
+      overflow-wrap: anywhere;
+      margin: 3px 0 0;
+      color: var(--ink-soft);
+      font-size: 11px;
+    }
+
+    .status-action {
+      grid-column: 2;
+      justify-self: start;
+      display: none;
+      border: 0;
+      border-bottom: 1px solid currentColor;
+      padding: 0;
+      color: var(--green-dark);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .warn .status-action, .alert .status-action { display: inline-block; }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 8px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .section-heading p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .section-heading .small-label {
+      flex: 0 0 auto;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mode-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin: 0 0 16px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--canvas);
+    }
+
+    .mode-switch button {
+      min-height: 33px;
+      border: 0;
+      border-radius: 5px;
+      color: var(--ink-soft);
+      background: transparent;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mode-switch button.active {
+      color: #f3d37a;
+      background: var(--ink);
+      box-shadow: 0 1px 4px rgba(28,36,45,.12);
+    }
+
+    .mode-note {
+      margin: -5px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .timeline {
+      border-top: 1px solid var(--line);
+    }
+
+    .timeline-group {
+      padding-top: 15px;
+    }
+
+    .timeline-group + .timeline-group { margin-top: 3px; }
+
+    .timeline-group-title {
+      margin: 0 0 6px 73px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .timeline-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 62px 18px 1fr auto;
+      gap: 10px;
+      align-items: start;
+      min-height: 52px;
+      padding: 8px 0;
+    }
+
+    .timeline-row::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 70px;
+      width: 1px;
+      background: var(--line);
+      content: "";
+    }
+
+    .timeline-row:last-child::before { bottom: 20px; }
+
+    .timeline-time {
+      position: relative;
+      z-index: 1;
+      padding-top: 1px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .timeline-dot {
+      position: relative;
+      z-index: 2;
+      width: 10px;
+      height: 10px;
+      margin-top: 5px;
+      border: 2px solid var(--green);
+      border-radius: 50%;
+      background: var(--paper);
+    }
+
+    .timeline-row.done .timeline-dot { background: var(--green); }
+
+    .timeline-content { min-width: 0; }
+
+    .timeline-content strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .timeline-content span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .timeline-row.done .timeline-content strong { color: var(--muted); text-decoration: line-through; }
+
+    .timeline-summary {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline-summary-label {
+      flex: 0 0 auto;
+      padding-top: 1px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .timeline-summary-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px 10px;
+    }
+
+    .timeline-summary-items span {
+      color: var(--ink-soft);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .timeline-summary-items b {
+      margin-right: 3px;
+      color: var(--green-dark);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timeline-details { border: 0; }
+    .timeline-details summary { min-height: 39px; padding: 7px 0; color: var(--green); font-size: 12px; }
+    .timeline-details summary span { color: var(--muted); font-size: 11px; font-weight: 400; }
+    .timeline-full { border-top: 1px solid var(--line); }
+    .timeline-full .timeline-group { padding-top: 10px; }
+    .timeline-full .timeline-group-title { margin-bottom: 3px; }
+    .timeline-full .timeline-row { min-height: 44px; padding: 6px 0; }
+    .timeline-full .timeline-content span { font-size: 11px; }
+
+    .check-button {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: transparent;
+      background: var(--paper);
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .check-button:hover { border-color: var(--green); }
+    .timeline-row.done .check-button { border-color: var(--ink); color: #f3d37a; background: var(--ink); }
+
+    .workout-sheet, .checkin-sheet, .data-sheet, .gear-sheet {
+      margin-top: 19px;
+      border-top: 2px solid var(--ink);
+      padding-top: 11px;
+    }
+
+    .workout-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .workout-head h2, .checkin-sheet h2, .data-sheet h2, .gear-sheet h2 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .workout-head p {
+      margin: 5px 0 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+
+    .workout-tag {
+      flex: 0 0 auto;
+      padding: 4px 7px;
+      border-radius: 4px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 7px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfdfb;
+    }
+
+    .timer-value {
+      min-width: 64px;
+      color: var(--green-dark);
+      font-size: 21px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .timer-label {
+      flex: 1;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .mini-button {
+      min-height: 30px;
+      padding: 4px 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--ink-soft);
+      background: var(--paper);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mini-button.primary { border-color: var(--ink); color: #f3d37a; background: var(--ink); }
+
+    .workout-steps {
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .workout-step {
+      display: grid;
+      grid-template-columns: 31px 67px 1fr 30px;
+      gap: 9px;
+      align-items: start;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step-time {
+      padding-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .step-copy { min-width: 0; }
+
+    .step-copy strong { display: block; font-size: 13px; line-height: 1.35; }
+    .step-copy span { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
+    .workout-step.done .step-copy strong { color: var(--muted); text-decoration: line-through; }
+
+    .exercise-links { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .exercise-link {
+      min-height: 24px;
+      padding: 2px 7px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--green-dark);
+      background: var(--paper);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .exercise-link:hover { border-color: var(--green); background: var(--green-soft); }
+
+    .workout-note {
+      margin: 12px 0 0;
+      padding: 10px 11px;
+      border-left: 3px solid var(--yellow);
+      color: #684d0c;
+      background: var(--yellow-soft);
+      font-size: 12px;
+    }
+
+    .complete-button {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 14px;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      color: #f3d37a;
+      background: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .complete-button.done { color: var(--green-dark); background: var(--green-soft); }
+
+    .checkin-intro {
+      margin: 4px 0 11px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field input[type="number"], .field input[type="date"], .field select, .field textarea {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .field textarea { min-height: 72px; resize: vertical; }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: 38px 1fr 38px;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stepper button {
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--green-dark);
+      background: var(--canvas);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .stepper input { text-align: center; }
+
+    .energy-options {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
+
+    .energy-options button {
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--ink-soft);
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .energy-options button.active { border-color: var(--ink); color: #f3d37a; background: var(--ink); }
+
+    .save-status {
+      min-height: 19px;
+      margin-top: 11px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .week-overview {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdfb;
+    }
+
+    .week-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .week-title-row strong { font-size: 18px; }
+    .week-title-row span { color: var(--green); font-size: 12px; font-weight: 800; }
+
+    .progress-track {
+      height: 8px;
+      margin: 12px 0 10px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: var(--canvas-deep);
+    }
+
+    .progress-fill { height: 100%; border-radius: inherit; background: var(--green); transition: width .25s ease; }
+
+    .week-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat-cell { min-width: 0; }
+    .stat-cell strong { display: block; font-size: 17px; line-height: 1.2; }
+    .stat-cell span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
+
+    .week-range {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .week-days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 5px;
+      margin-top: 17px;
+    }
+
+    .day-button {
+      min-width: 0;
+      min-height: 66px;
+      padding: 7px 3px 5px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink-soft);
+      background: var(--paper);
+      text-align: center;
+    }
+
+    .day-button strong, .day-button span, .day-button em { display: block; }
+    .day-button strong { font-size: 11px; }
+    .day-button span { margin-top: 2px; font-size: 16px; font-weight: 800; line-height: 1.2; }
+    .day-button em { min-height: 16px; margin-top: 3px; color: var(--muted); font-size: 10px; font-style: normal; }
+    .day-button.selected { border-color: var(--green); box-shadow: inset 0 -3px 0 var(--green); color: var(--green-dark); }
+    .day-button.today strong { color: var(--coral); }
+    .day-button.complete em { color: var(--green); font-weight: 800; }
+
+    .week-list {
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .week-list-row {
+      display: grid;
+      grid-template-columns: 45px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 67px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .week-list-day {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .week-list-copy { min-width: 0; }
+    .week-list-copy strong { display: block; font-size: 13px; line-height: 1.3; }
+    .week-list-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .week-list-status { font-size: 18px; }
+    .week-list-status.complete { color: var(--green); }
+    .week-list-status.pending { color: var(--line-strong); }
+
+    .subheading {
+      margin: 27px 0 10px;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .two-column {
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-band {
+      padding: 13px 14px;
+      border-left: 3px solid var(--blue);
+      background: var(--blue-soft);
+      color: #5d5a53;
+      font-size: 12px;
+    }
+
+    .info-band strong { display: block; margin-bottom: 2px; color: #4d3d16; font-size: 13px; }
+
+    .gear-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+    .gear-table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+    .gear-table th, .gear-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+    .gear-table th:nth-child(1), .gear-table td:nth-child(1) { width: 27%; }
+    .gear-table th:nth-child(2), .gear-table td:nth-child(2) { width: 49%; }
+    .gear-table th:nth-child(3), .gear-table td:nth-child(3) { width: 24%; overflow-wrap: anywhere; }
+    .gear-table th { color: var(--ink-soft); background: var(--canvas); font-size: 11px; font-weight: 800; }
+    .gear-table td:last-child, .gear-table th:last-child { text-align: right; white-space: nowrap; }
+    .gear-table tr:last-child td { border-bottom: 0; }
+    .gear-table .total td { color: var(--green-dark); background: var(--green-soft); font-weight: 800; }
+
+    .gear-note { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
+
+    .benchmark-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .benchmark-item {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #fbfdfb;
+    }
+
+    .benchmark-item strong { display: block; color: var(--green-dark); font-size: 13px; }
+    .benchmark-item span { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 12px; }
+
+    .program-start {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfdfb;
+    }
+
+    .program-start label { display: block; color: var(--ink-soft); font-size: 12px; font-weight: 700; }
+    .program-start input { display: block; width: 100%; min-height: 38px; margin-top: 5px; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 5px; }
+    .program-start span { max-width: 130px; color: var(--muted); font-size: 11px; text-align: right; }
+
+    .progression-list { margin-top: 13px; border-top: 1px solid var(--line); }
+    .progression-row {
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 75px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .progression-row.current { margin-inline: -8px; padding-inline: 8px; border-radius: 5px; background: var(--green-soft); }
+    .progression-week { color: var(--green); font-size: 12px; font-weight: 800; }
+    .progression-copy strong { display: block; font-size: 13px; }
+    .progression-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .progression-load { color: var(--green-dark); font-size: 13px; font-weight: 800; text-align: right; white-space: nowrap; }
+
+    details { border-top: 1px solid var(--line); }
+    details:last-child { border-bottom: 1px solid var(--line); }
+    summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 50px; padding: 10px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 800; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { color: var(--muted); content: "+"; font-size: 20px; font-weight: 400; }
+    details[open] summary::after { content: "−"; }
+    .detail-body { padding: 0 0 14px; color: var(--ink-soft); font-size: 12px; }
+    .detail-body p { margin: 5px 0 10px; }
+    .detail-body ul { margin: 0; padding-left: 18px; }
+    .detail-body li { margin: 5px 0; }
+
+    .schedule-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+    .schedule-table { width: 100%; min-width: 540px; border-collapse: collapse; font-size: 12px; }
+    .schedule-table th, .schedule-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .schedule-table th { color: var(--ink-soft); background: var(--canvas); font-size: 11px; }
+    .schedule-table tr:last-child td { border-bottom: 0; }
+    .schedule-table td:first-child { width: 110px; color: var(--green-dark); font-variant-numeric: tabular-nums; font-weight: 800; white-space: nowrap; }
+
+    .recovery-card {
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .recovery-card:last-child { border-bottom: 1px solid var(--line); }
+    .recovery-card h3 { margin: 0; font-size: 14px; }
+    .recovery-card p { margin: 5px 0 0; color: var(--ink-soft); font-size: 12px; }
+    .clock-line { display: grid; grid-template-columns: 86px 1fr; gap: 10px; margin-top: 8px; color: var(--ink-soft); font-size: 12px; }
+    .clock-line strong { color: var(--green); font-variant-numeric: tabular-nums; }
+
+    .data-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .danger-button { border-color: #c4b27d; color: #5b430c; }
+    .danger-button:hover { border-color: var(--coral); background: var(--coral-soft); }
+
+    .exercise-modal[hidden] { display: none; }
+    .exercise-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+    .exercise-backdrop { position: absolute; inset: 0; background: rgba(18, 17, 15, .78); }
+    .exercise-dialog {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 560px);
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      border: 1px solid var(--line-strong);
+      border-top: 4px solid var(--green);
+      border-radius: 6px;
+      background: var(--paper);
+      box-shadow: 0 18px 50px rgba(0,0,0,.28);
+    }
+    .exercise-dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px 10px;
+    }
+    .exercise-kicker { margin: 0 0 2px; color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+    .exercise-dialog h2 { margin: 0; font-size: 18px; line-height: 1.25; }
+    .exercise-close {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--ink);
+      background: var(--paper);
+      font-size: 22px;
+      line-height: 1;
+    }
+    .exercise-close:hover { color: #f3d37a; background: var(--ink); }
+    .exercise-image { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: var(--canvas); }
+    .exercise-modal-copy { padding: 12px 14px 15px; }
+    .exercise-modal-copy p { margin: 0; color: var(--ink-soft); font-size: 13px; }
+    .exercise-modal-copy ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-soft); font-size: 12px; }
+    .exercise-modal-copy li { margin: 4px 0; }
+    body.modal-open { overflow: hidden; }
+
+    .footer-note {
+      margin: 26px 0 0;
+      padding: 13px 0 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      max-width: 980px;
+      width: auto;
+      min-height: 58px;
+      margin: 0 auto;
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 -8px 25px rgba(28,36,45,.07);
+      backdrop-filter: blur(14px);
+    }
+
+    .bottom-nav button {
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      min-height: 44px;
+      min-width: 0;
+      border: 0;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .bottom-nav button span:first-child { display: block; min-height: 17px; color: currentColor; font-size: 16px; line-height: 17px; }
+    .bottom-nav button.active { color: #f3d37a; background: var(--ink); }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: calc(78px + env(safe-area-inset-bottom));
+      left: 16px;
+      z-index: 30;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 11px 14px;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--ink);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (min-width: 680px) {
+      body { padding: 24px 0; }
+      .app-shell { min-height: calc(100vh - 48px); border-radius: 10px; overflow: hidden; }
+      .hero { min-height: 220px; padding: 30px 46px 22px; }
+      .hero h1 { font-size: 34px; }
+      main { padding-inline: 46px; }
+      .context-bar { padding-inline: 38px; }
+      .two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .benchmark-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .field.full { grid-column: 1 / -1; }
+      .bottom-nav { right: auto; left: 50%; width: 980px; transform: translateX(-50%); border-radius: 8px 8px 0 0; }
+    }
+
+    @media (max-width: 420px) {
+      .hero { padding-inline: 16px; }
+      .hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+      .hero-metric:last-child { grid-column: 1 / -1; }
+      .hero-metric { padding: 6px 5px 5px; }
+      .hero-metric strong { font-size: 14px; }
+      .hero-metric span { font-size: 10px; }
+      main { padding-inline: 12px; }
+      .context-bar { padding-inline: 12px; }
+      .timeline-row { grid-template-columns: 56px 18px 1fr auto; gap: 8px; }
+      .timeline-row::before { left: 64px; }
+      .timeline-group-title { margin-left: 67px; }
+      .workout-step { grid-template-columns: 27px 58px 1fr 30px; gap: 7px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">8 周 · 负重适应</p>
+      <h1>摄影徒步训练</h1>
+      <p class="hero-subtitle">负重、作息和打卡，今天只做下一步。</p>
+      <div class="hero-metrics" aria-label="计划摘要">
+        <div class="hero-metric"><strong>12.9–14.6</strong><span>kg 路上负重</span></div>
+        <div class="hero-metric"><strong>8 周</strong><span>进阶周期</span></div>
+        <div class="hero-metric"><strong>22:50</strong><span>熄灯时间</span></div>
+      </div>
+    </header>
+
+    <div class="context-bar">
+      <div class="date-context">
+        <strong id="selectedDateLabel">今天</strong>
+        <span id="selectedDateSub">正在读取日期</span>
+      </div>
+      <div class="context-actions">
+        <button class="icon-button" type="button" data-action="previous-week" aria-label="上一周">‹</button>
+        <button class="text-button" type="button" data-action="go-today">今天</button>
+        <button class="icon-button" type="button" data-action="next-week" aria-label="下一周">›</button>
+      </div>
+    </div>
+
+    <main>
+      <section id="todayPanel" class="tab-panel active" data-panel="today">
+        <div id="readinessStrip" class="status-strip">
+          <div id="readinessOrb" class="status-orb">✓</div>
+          <div>
+            <h2 id="readinessTitle">今天的状态</h2>
+            <p id="readinessText">填入睡眠和精力后，这里会给出训练建议。</p>
+          </div>
+          <button class="status-action" type="button" data-action="use-recovery">切换为恢复版</button>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <h2 id="todayHeading">今日时间表</h2>
+            <p id="todayHeadingSub">按时间节点走，不靠意志力硬撑</p>
+          </div>
+          <span id="todayWeekLabel" class="small-label">第 1 周</span>
+        </div>
+
+        <div class="mode-switch" role="tablist" aria-label="今日作息模式">
+          <button type="button" data-mode="standard" class="active">标准日</button>
+          <button type="button" data-mode="overtime">加班日</button>
+          <button type="button" data-mode="recovery">低睡眠</button>
+        </div>
+        <p id="modeNote" class="mode-note">适用于18:30下班、19:00左右到家的一天。</p>
+
+        <div id="timeline" class="timeline" aria-label="详细时间表"></div>
+
+        <section class="workout-sheet" aria-labelledby="workoutTitle">
+          <div class="workout-head">
+            <div>
+              <h2 id="workoutTitle">今日训练</h2>
+              <p id="workoutSubtitle">训练内容加载中</p>
+            </div>
+            <span id="workoutTag" class="workout-tag">30 分钟</span>
+          </div>
+          <div class="timer-row">
+            <strong id="timerValue" class="timer-value">30:00</strong>
+            <span class="timer-label">主训练计时，不含洗漱与通勤</span>
+            <button id="timerStart" class="mini-button primary" type="button" data-action="timer-start">开始</button>
+            <button class="mini-button" type="button" data-action="timer-reset">重置</button>
+          </div>
+          <div id="workoutSteps" class="workout-steps"></div>
+          <p id="workoutNote" class="workout-note"></p>
+          <button id="completeWorkout" class="complete-button" type="button" data-action="complete-workout">完成今日训练</button>
+        </section>
+
+        <section class="checkin-sheet" aria-labelledby="checkinTitle">
+          <h2 id="checkinTitle">今日打卡</h2>
+          <p class="checkin-intro">数据只保存在当前浏览器；每次修改会自动保存。</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="sleepInput">昨晚睡眠（小时）</label>
+              <div class="stepper">
+                <button type="button" data-action="adjust-sleep" data-delta="-0.25" aria-label="减少睡眠时长">−</button>
+                <input id="sleepInput" type="number" min="0" max="14" step="0.25" inputmode="decimal" value="7.75">
+                <button type="button" data-action="adjust-sleep" data-delta="0.25" aria-label="增加睡眠时长">＋</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="packInput">今天训练负重（公斤）</label>
+              <input id="packInput" type="number" min="0" max="30" step="0.5" inputmode="decimal" placeholder="例如 5">
+            </div>
+            <div class="field full">
+              <label>起床精力（1=很差，5=很好）</label>
+              <div id="energyOptions" class="energy-options" role="radiogroup" aria-label="起床精力"></div>
+            </div>
+            <div class="field">
+              <label for="painInput">身体反馈</label>
+              <select id="painInput">
+                <option value="none">无明显不适</option>
+                <option value="muscle">普通肌肉酸胀</option>
+                <option value="joint">膝、踝或腰部不适</option>
+                <option value="sharp">刺痛、麻木或异常气短</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="notesInput">一句话记录</label>
+              <input id="notesInput" type="text" maxlength="100" placeholder="例如：下楼时膝盖发紧">
+            </div>
+          </div>
+          <div id="saveStatus" class="save-status" aria-live="polite">自动保存已开启</div>
+        </section>
+      </section>
+
+      <section id="weekPanel" class="tab-panel" data-panel="week">
+        <div class="section-heading" style="margin-top:0">
+          <div>
+            <h2>本周节奏</h2>
+            <p>完成训练日，比一次练到力竭更重要</p>
+          </div>
+          <span id="weekPhaseLabel" class="small-label">基础期</span>
+        </div>
+        <div class="week-overview">
+          <div class="week-title-row"><strong id="weekOverviewTitle">第 1 周</strong><span id="weekPercent">0%</span></div>
+          <div class="progress-track"><div id="weekProgressFill" class="progress-fill" style="width:0%"></div></div>
+          <div class="week-stats">
+            <div class="stat-cell"><strong id="weekDoneCount">0/6</strong><span>训练完成</span></div>
+            <div class="stat-cell"><strong id="weekSleepAvg">—</strong><span>平均睡眠</span></div>
+            <div class="stat-cell"><strong id="weekPackAvg">—</strong><span>平均负重</span></div>
+          </div>
+          <p id="weekRange" class="week-range"></p>
+        </div>
+        <div id="weekDays" class="week-days" aria-label="本周日期"></div>
+        <div id="weekList" class="week-list"></div>
+        <div class="info-band" style="margin-top:18px">
+          <strong>本周判断标准</strong>
+          训练后第二天能正常上下楼、关节没有持续疼痛，才进入下一周。没有达标就原周复练，进度不会白费。
+        </div>
+      </section>
+
+      <section id="planPanel" class="tab-panel" data-panel="plan">
+        <div class="section-heading" style="margin-top:0">
+          <div>
+            <h2>8 周进阶</h2>
+            <p>负重用水瓶替代器材，先练身体，再带相机</p>
+          </div>
+          <span id="planCurrentWeek" class="small-label">当前第 1 周</span>
+        </div>
+
+        <section class="gear-sheet" style="margin-top:0" aria-labelledby="gearTitle">
+          <h2 id="gearTitle">先算清楚要背多少</h2>
+          <p class="checkin-intro">以下按你列出的器材做区间估算；型号、脚架云台和配件会造成差异。</p>
+          <div class="gear-table-wrap">
+            <table class="gear-table">
+              <thead><tr><th>装备</th><th>估算依据</th><th>重量</th></tr></thead>
+              <tbody>
+                <tr><td>相机机身</td><td>R6 系机身，含一块电池约</td><td>0.70 kg</td></tr>
+                <tr><td>RF 28–70 F2.8</td><td>约 495 g 的轻量变焦版本</td><td>0.50 kg</td></tr>
+                <tr><td>RF 70–200 F2.8</td><td>约 1,070 g</td><td>1.07 kg</td></tr>
+                <tr><td>RF 200–800</td><td>约 2,050 g</td><td>2.05 kg</td></tr>
+                <tr><td>EL-5 闪光灯</td><td>约 491 g，不含额外电池</td><td>0.49 kg</td></tr>
+                <tr><td>备用电池、卡、清洁用品</td><td>按少量备用估算</td><td>0.25 kg</td></tr>
+                <tr><td>三脚架</td><td>你提供的重量</td><td>1.50 kg</td></tr>
+                <tr><td>摄影包</td><td>你提供的重量</td><td>3.00 kg</td></tr>
+                <tr><td>其他配件</td><td>电源、滤镜、雨罩等区间</td><td>0.80–1.50 kg</td></tr>
+                <tr class="total"><td>器材包合计</td><td>未计饮水和食物</td><td>10.36–11.06 kg</td></tr>
+                <tr class="total"><td>实际上山建议按</td><td>加水、食物、雨具、急救用品</td><td>12.9–14.6 kg</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="gear-note">注：如果你说的其实是 RF 28–70 F2 L USM（约 1.43 kg），器材包还要再增加约 0.94 kg。200–800 与 70–200 有焦段重叠，日常路线可按拍摄目的减掉一支。</p>
+          <div class="benchmark-grid" aria-label="上山前体力门槛">
+            <div class="benchmark-item"><strong>入门门槛</strong><span>能以轻松对话速度连续快走60–90分钟；训练包4–6 kg，第二天膝踝没有持续疼痛。</span></div>
+            <div class="benchmark-item"><strong>建议出发标准</strong><span>能完成3小时、10–12 kg负重、约500 m爬升；下坡后仍能正常走路，24小时内恢复。</span></div>
+            <div class="benchmark-item"><strong>负重比例提醒</strong><span>先从体重的约10%开始，适应后再逐步接近15–20%；完整器材超过体重20%时，优先减镜头或缩短路线。</span></div>
+          </div>
+        </section>
+
+        <div class="program-start">
+          <div>
+            <label for="startDateInput">计划开始日</label>
+            <input id="startDateInput" type="date">
+          </div>
+          <span>改日期后，周数和周末目标会自动重算。</span>
+        </div>
+
+        <div id="progressionList" class="progression-list"></div>
+
+        <h3 class="subheading">每周训练模板</h3>
+        <div id="templateDetails">
+          <details open>
+            <summary>周一 · 下肢与核心（30分钟）</summary>
+            <div class="detail-body">
+              <p>06:40–06:47 热身；06:47–07:17 主训练；07:17–07:25 放松。</p>
+              <ul>
+                <li>背包深蹲 10次、反向箭步蹲 每侧8次、小腿提踵15次，循环2轮。</li>
+                <li>髋铰链/背包硬拉12次、台阶上步 每侧8次、臀桥12次，循环2轮。</li>
+                <li>死虫 每侧8次 + 平板支撑30秒，做2轮；动作变形就立即减量。</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>周二 · 有氧与坡度（30分钟）</summary>
+            <div class="detail-body">
+              <p>热身5分钟后快走18分钟，保持“能说完整句子但不想唱歌”的强度；最后做4–6轮30秒坡走/楼梯 + 60秒平地恢复，再慢走收操。</p>
+              <ul><li>优先快走，不跑楼梯；下坡缩小步幅，膝盖对准脚尖。</li><li>若前一晚加班且睡眠不足，改为25分钟平地轻松走。</li></ul>
+            </div>
+          </details>
+          <details>
+            <summary>周三 · 上肢、肩胛与核心（30分钟）</summary>
+            <div class="detail-body">
+              <p>俯卧撑（可跪姿）8–12次、背包划船12次、墙天使8次、侧桥每侧20–30秒，循环3轮，组间休息30–45秒。</p>
+              <ul><li>相机主要压在肩带和腰带，肩胛稳定比追求大重量更重要。</li><li>背包划船时保持背部平直，不要耸肩或借腰甩。</li></ul>
+            </div>
+          </details>
+          <details>
+            <summary>周四 · 恢复与灵活性（25分钟）</summary>
+            <div class="detail-body">
+              <p>猫牛式8次、踝关节前移每侧10次、髋屈肌拉伸每侧45秒、臀肌拉伸每侧45秒、胸椎旋转每侧8次，做2轮。</p>
+              <ul><li>全程只到拉伸感，不追求疼痛；晚上可加10分钟散步。</li></ul>
+            </div>
+          </details>
+          <details>
+            <summary>周五 · 负重楼梯/坡走（30分钟）</summary>
+            <div class="detail-body">
+              <p>背包按本周目标的50–70%装水。热身6分钟，然后做5–8轮：上楼或上坡2分钟（RPE 6/10）+ 平地恢复1分钟，最后慢走和小腿放松。</p>
+              <ul><li>全程不跑；出现膝痛就立刻改平地，并把下周负重冻结。</li><li>每一轮都应留一点余力，模拟山路的持续输出。</li></ul>
+            </div>
+          </details>
+          <details>
+            <summary>周六 · 长距离徒步/负重步行</summary>
+            <div class="detail-body">
+              <p>按上方8周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。</p>
+              <ul><li>超过90分钟：每小时饮水约400–600 ml，按出汗量调整；每小时补30–45 g碳水。</li><li>第一次模拟不要带贵重相机，使用水瓶和沙袋把负重配平。</li><li>训练结束后记录脚底、膝、腰和肩带压力，第二天再决定是否升级。</li></ul>
+            </div>
+          </details>
+          <details>
+            <summary>周日 · 休息与复盘</summary>
+            <div class="detail-body">
+              <p>不安排力量和爬坡。轻松走20–30分钟，做10分钟踝、髋、胸椎活动；整理鞋袜和背包，检查下周路线。</p>
+            </div>
+          </details>
+        </div>
+
+        <h3 class="subheading">日常作息对照</h3>
+        <div class="schedule-table-wrap">
+          <table class="schedule-table">
+            <thead><tr><th>情境</th><th>关键时间节点</th><th>执行重点</th></tr></thead>
+            <tbody>
+              <tr><td>标准下班日</td><td>06:35起床 · 06:40训练 · 07:25洗漱收拾 · 08:30出发 · 18:30下班 · 22:50熄灯</td><td>晚饭后只散步或拉伸，不做第二次高强度训练。</td></tr>
+              <tr><td>加班到21:00</td><td>18:30办公室轻食 · 21:00下班 · 21:30到家 · 22:05轻拉伸 · 22:50熄灯</td><td>不补做训练；第二天若睡眠不足，直接用恢复版。</td></tr>
+              <tr><td>睡眠不足</td><td>06:55起床 · 07:00–07:12活动 · 07:25开始洗漱 · 22:40熄灯</td><td>取消负重、楼梯和间歇，把今天当恢复日。</td></tr>
+              <tr><td>周六长走</td><td>07:30起床 · 08:00早餐 · 09:00出发 · 每45–60分钟补水休息</td><td>先完成时间，再逐步加负重；不要同时加距离和爬升。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="recoveryPanel" class="tab-panel" data-panel="recovery">
+        <div class="section-heading" style="margin-top:0">
+          <div>
+            <h2>提神与恢复</h2>
+            <p>清醒不是靠透支换来的</p>
+          </div>
+          <span class="small-label">每天可执行</span>
+        </div>
+
+        <div class="info-band">
+          <strong>你的睡眠底线</strong>
+          标准作息按22:50–06:35安排，约7小时45分钟。连续两天低于7小时，就把下一次爬坡或负重训练改为恢复版，优先补回睡眠。
+        </div>
+
+        <div class="recovery-card">
+          <h3>起床后 0–30 分钟</h3>
+          <p>睁眼后先喝300–500 ml水，立刻拉开窗帘或到户外接触自然光5–10分钟；不要在床上刷手机拖延起床。</p>
+          <div class="clock-line"><strong>06:35–06:40</strong><span>水 + 光照 + 简单整理</span></div>
+          <div class="clock-line"><strong>07:45–08:05</strong><span>早餐优先蛋白质和碳水，例如鸡蛋/牛奶 + 面包/燕麦/香蕉</span></div>
+        </div>
+        <div class="recovery-card">
+          <h3>咖啡因怎么放</h3>
+          <p>如果需要咖啡，放在起床后30–90分钟；下午14:00后尽量不再摄入。加班日不要用晚间浓咖啡换清醒，睡眠会更难补回来。</p>
+          <div class="clock-line"><strong>07:45–09:30</strong><span>第一杯，按平时耐受量</span></div>
+          <div class="clock-line"><strong>14:00之后</strong><span>改用水、无咖啡因饮料或5分钟走动</span></div>
+        </div>
+        <div class="recovery-card">
+          <h3>工作日的清醒节点</h3>
+          <p>午饭后走10分钟，比趴着刷手机更能减少下午困倦；每坐50–60分钟，站起来活动2分钟。15:30如果饿，补一份水果加酸奶或坚果。</p>
+        </div>
+        <div class="recovery-card">
+          <h3>加班回家后的最低版本</h3>
+          <p>21:30到家后只做三件事：洗澡、5–10分钟温和拉伸、准备第二天。若没在公司吃饭，选择少油少量的蛋白质加主食，避免酒精和很辣的夜宵。</p>
+        </div>
+        <div class="recovery-card">
+          <h3>什么时候必须停下来</h3>
+          <p>胸痛、晕厥感、异常气短、心悸不缓解、关节刺痛或麻木时立即停止训练；有心血管、血压、膝踝腰部旧伤或长期久坐基础疾病，开始负重计划前先咨询医生或康复师。</p>
+        </div>
+
+        <section class="data-sheet" aria-labelledby="dataTitle">
+          <h2 id="dataTitle">打卡数据</h2>
+          <p class="checkin-intro">数据保存在当前浏览器；可定期导出备份，也可以在另一台设备导入。</p>
+          <div class="data-actions">
+            <button class="text-button" type="button" data-action="export-data">下载打卡记录</button>
+            <button class="text-button" type="button" data-action="import-data">导入打卡记录</button>
+            <button class="text-button danger-button" type="button" data-action="clear-data">清空本机记录</button>
+          </div>
+          <input id="importInput" type="file" accept="application/json,.json" hidden>
+        </section>
+      </section>
+
+      <p class="footer-note">这是通用训练安排，不替代医疗建议。负重目标以“动作稳定、第二天关节无持续疼痛”为准；路线、天气和身体反馈优先于计划数字。</p>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要页面">
+      <button type="button" data-tab="today" class="active"><span aria-hidden="true">✓</span><span>今天</span></button>
+      <button type="button" data-tab="week"><span aria-hidden="true">▦</span><span>本周</span></button>
+      <button type="button" data-tab="plan"><span aria-hidden="true">↗</span><span>8周计划</span></button>
+      <button type="button" data-tab="recovery"><span aria-hidden="true">☼</span><span>恢复</span></button>
+    </nav>
+  </div>
+  <div id="exerciseModal" class="exercise-modal" hidden>
+    <div class="exercise-backdrop" data-action="close-exercise" aria-hidden="true"></div>
+    <section class="exercise-dialog" role="dialog" aria-modal="true" aria-labelledby="exerciseModalTitle">
+      <div class="exercise-dialog-header">
+        <div><p class="exercise-kicker">动作示范</p><h2 id="exerciseModalTitle">动作</h2></div>
+        <button class="exercise-close" type="button" data-action="close-exercise" aria-label="关闭动作示范">×</button>
+      </div>
+      <img id="exerciseModalImage" class="exercise-image" src="" alt="">
+      <div class="exercise-modal-copy">
+        <p id="exerciseModalSummary"></p>
+        <ul id="exerciseModalCues"></ul>
+      </div>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "photography-trail-training-v1";
+      const today = new Date();
+      const pad = (value) => String(value).padStart(2, "0");
+      const toISO = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+      const fromISO = (value) => new Date(`${value}T12:00:00`);
+      const addDays = (date, amount) => {
+        const next = new Date(date);
+        next.setDate(next.getDate() + amount);
+        return next;
+      };
+      const getMonday = (date) => {
+        const day = date.getDay();
+        return addDays(date, day === 0 ? -6 : 1 - day);
+      };
+      const dayIndex = (date) => date.getDay() === 0 ? 7 : date.getDay();
+      const dateLabel = new Intl.DateTimeFormat("zh-CN", {month: "numeric", day: "numeric", weekday: "short"});
+      const shortDateLabel = new Intl.DateTimeFormat("zh-CN", {month: "numeric", day: "numeric"});
+      const dateDiff = (first, second) => Math.round((fromISO(first) - fromISO(second)) / 86400000);
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+      const progression = [
+        {week: 1, load: "4 kg", minutes: 75, ascent: "平地/约100 m", focus: "熟悉背包贴合、鞋袜与走姿", phase: "适应"},
+        {week: 2, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "保持能说完整句子的强度", phase: "适应"},
+        {week: 3, load: "6 kg", minutes: 105, ascent: "约200 m", focus: "加入短坡，练习稳定下坡", phase: "建立"},
+        {week: 4, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "减量周，检查膝踝和肩带反馈", phase: "减量"},
+        {week: 5, load: "7.5 kg", minutes: 120, ascent: "约300 m", focus: "延长持续时间，不追求速度", phase: "建立"},
+        {week: 6, load: "9 kg", minutes: 150, ascent: "约400 m", focus: "练习补水、补能量和短休息", phase: "提升"},
+        {week: 7, load: "10.5 kg", minutes: 180, ascent: "约500 m", focus: "接近真实摄影行走节奏", phase: "提升"},
+        {week: 8, load: "12 kg", minutes: 210, ascent: "约600–800 m", focus: "完成一次完整模拟，不带贵重器材", phase: "模拟"}
+      ];
+
+      const weekdayNames = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+      const workoutNames = {
+        1: "下肢与核心",
+        2: "有氧与坡度",
+        3: "上肢与核心",
+        4: "恢复与灵活性",
+        5: "负重楼梯/坡走",
+        6: "长距离徒步",
+        7: "休息与复盘"
+      };
+
+      const exerciseGuides = {
+        squat: {
+          short: "深蹲",
+          title: "背包深蹲",
+          image: "assets/exercise-squat.svg",
+          summary: "臀部向后坐，保持脚掌稳定，起身时把地面踩开。",
+          cues: ["脚尖自然向外，膝盖跟着脚尖方向走。", "下到能保持腰背中立的位置，不必追求深度。", "背包贴背，先用轻重量熟悉动作。"]
+        },
+        lunge: {
+          short: "箭步",
+          title: "反向箭步蹲",
+          image: "assets/exercise-lunge.svg",
+          summary: "向后迈步，前脚稳定承重，再从前脚发力回到站立。",
+          cues: ["前脚脚掌三点着地，膝盖不要向内塌。", "后膝向地面下降，不要用前脚冲出去。", "左右各做相同次数，先小步幅。"]
+        },
+        stepup: {
+          short: "上步",
+          title: "台阶上步",
+          image: "assets/exercise-step-up.svg",
+          summary: "整只脚踩上低台阶，用台阶上的腿完成站起。",
+          cues: ["台阶高度以膝盖不明显高于髋部为宜。", "不要用后脚蹬地借力，控制下台阶。", "上坡或楼梯训练都保持小步幅、稳定节奏。"]
+        },
+        pushup: {
+          short: "俯卧撑",
+          title: "俯卧撑",
+          image: "assets/exercise-push-up.svg",
+          summary: "身体保持一条线，屈肘下降，再推回起始位置。",
+          cues: ["双手略宽于肩，手肘约向身体两侧后方。", "核心收紧，胸口下降而不是头部前伸。", "做不到标准姿势时改跪姿或抬高手。"]
+        },
+        plank: {
+          short: "平板",
+          title: "平板支撑",
+          image: "assets/exercise-plank.svg",
+          summary: "用前臂和脚尖支撑，保持头、髋、脚跟基本成一直线。",
+          cues: ["肋骨向下收，臀部不要塌腰或抬得过高。", "先以20–30秒为一组，呼吸不要憋住。", "腰部开始代偿就结束这一组。"]
+        },
+        deadbug: {
+          short: "死虫",
+          title: "死虫",
+          image: "assets/exercise-dead-bug.svg",
+          summary: "仰卧保持腰背稳定，对侧手脚缓慢伸远后收回。",
+          cues: ["腰部轻贴地面，动作幅度以不塌腰为准。", "手脚伸展时慢慢呼气，回收时吸气。", "先只移动一侧，再逐步做对侧组合。"]
+        }
+      };
+
+      function guideKeysForStep(step) {
+        const text = `${step.title} ${step.detail}`;
+        const matches = [];
+        if (text.includes("深蹲")) matches.push("squat");
+        if (text.includes("箭步蹲")) matches.push("lunge");
+        if (text.includes("台阶上步") || text.includes("坡走") || text.includes("楼梯")) matches.push("stepup");
+        if (text.includes("俯卧撑")) matches.push("pushup");
+        if (text.includes("平板支撑") || text.includes("侧桥")) matches.push("plank");
+        if (text.includes("死虫")) matches.push("deadbug");
+        return matches;
+      }
+
+      const defaultStart = toISO(getMonday(today));
+      let store = loadStore();
+      const state = {
+        selectedDate: toISO(today),
+        activeTab: "today",
+        timer: {signature: "", seconds: 1800, running: false, interval: null}
+      };
+
+      function loadStore() {
+        const fallback = {records: {}, settings: {startDate: defaultStart}};
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+          if (!saved || typeof saved !== "object") return fallback;
+          return {
+            records: saved.records && typeof saved.records === "object" ? saved.records : {},
+            settings: {...fallback.settings, ...(saved.settings || {})}
+          };
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function saveStore() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+          return true;
+        } catch (error) {
+          showToast("浏览器拒绝了本地保存，请检查隐私设置");
+          return false;
+        }
+      }
+
+      function getRecord(date = state.selectedDate) {
+        if (!store.records[date]) {
+          store.records[date] = {
+            mode: "standard",
+            sleep: 7.75,
+            energy: 3,
+            pack: "",
+            pain: "none",
+            notes: "",
+            workoutDone: false,
+            habits: {},
+            steps: {}
+          };
+        }
+        const record = store.records[date];
+        record.habits = record.habits || {};
+        record.steps = record.steps || {};
+        if (!record.mode) record.mode = "standard";
+        if (typeof record.sleep !== "number") record.sleep = 7.75;
+        if (typeof record.energy !== "number") record.energy = 3;
+        if (!record.pain) record.pain = "none";
+        return record;
+      }
+
+      function currentProgramWeek(date = state.selectedDate) {
+        const raw = Math.floor(dateDiff(date, store.settings.startDate) / 7) + 1;
+        return clamp(raw, 1, 8);
+      }
+
+      function isAfterProgram(date = state.selectedDate) {
+        return dateDiff(date, store.settings.startDate) >= 56;
+      }
+
+      function currentTarget(date = state.selectedDate) {
+        return progression[currentProgramWeek(date) - 1];
+      }
+
+      function getReadiness(record) {
+        if (record.pain === "sharp" || record.pain === "joint" || record.sleep < 5.5 || record.energy <= 1) {
+          return {
+            level: "alert",
+            symbol: "!",
+            title: "今天先保身体",
+            text: record.pain === "sharp" || record.pain === "joint" ? "有疼痛或异常反馈，取消负重和楼梯，只做轻松走与活动；症状持续请就医。" : "睡眠或精力明显不足，今天用恢复版，把训练时间还给身体。"
+          };
+        }
+        if (record.sleep < 7 || record.energy === 2 || record.pain === "muscle") {
+          return {
+            level: "warn",
+            symbol: "~",
+            title: "状态一般，降一级训练",
+            text: "保留活动习惯，但去掉负重、间歇或最后一轮；全程以能说话为准。"
+          };
+        }
+        return {
+          level: "ready",
+          symbol: "✓",
+          title: "状态良好，可以按计划",
+          text: "睡眠、精力和身体反馈允许今天完成计划；仍以动作稳定和第二天状态为准。"
+        };
+      }
+
+      function makeSteps(items) {
+        return items.map((item, index) => ({...item, id: `step-${index + 1}`}));
+      }
+
+      function getWorkout(date = state.selectedDate, mode = getRecord(date).mode) {
+        const index = dayIndex(fromISO(date));
+        const target = currentTarget(date);
+        if (mode === "recovery") {
+          return {
+            title: "恢复版 · 轻松活动",
+            subtitle: "把今天的目标改成恢复，不背包、不爬坡",
+            tag: "12 分钟",
+            minutes: 12,
+            note: "今天不追求训练量。若活动后疼痛、头晕或气短增加，立即停止并休息。",
+            steps: makeSteps([
+              {time: "0–2′", title: "原地慢走与呼吸", detail: "鼻吸4秒、口呼6秒，肩膀放松。"},
+              {time: "2–5′", title: "踝泵与踝关节绕环", detail: "每侧踝泵15次、绕环8次，动作慢。"},
+              {time: "5–8′", title: "猫牛式与胸椎旋转", detail: "猫牛6次，胸椎旋转每侧6次。"},
+              {time: "8–12′", title: "髋部拉伸与放松走", detail: "髋屈肌每侧30秒，再轻松走几分钟。"}
+            ])
+          };
+        }
+        if (index === 6) {
+          return {
+            title: "长距离徒步/负重步行",
+            subtitle: `第${target.week}周目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}`,
+            tag: `${target.minutes} 分钟`,
+            minutes: target.minutes,
+            note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加负重；不要在同一周同时大幅增加距离和爬升。",
+            steps: makeSteps([
+              {time: "0–10′", title: "慢走热身", detail: "空包或轻包，检查鞋带、肩带和腰带是否压迫。"},
+              {time: `10–${Math.round(target.minutes * .42)}′`, title: "稳定主段", detail: `负重${target.load}，RPE 4–5/10，能说完整句子；每15分钟快速检查脚底和肩带。`},
+              {time: `${Math.round(target.minutes * .42)}–${Math.round(target.minutes * .82)}′`, title: "补水与短休息", detail: "每45–60分钟休息5–8分钟，休息时不要完全坐死，活动脚踝。"},
+              {time: `${Math.round(target.minutes * .82)}–${target.minutes}′`, title: "收尾与记录", detail: "最后一段降速，回家后记录膝、踝、腰、肩和脚底反馈。"}
+            ])
+          };
+        }
+        if (index === 7) {
+          return {
+            title: "休息与复盘",
+            subtitle: "轻松走20–30分钟，整理装备，不安排力量和爬坡",
+            tag: "20 分钟",
+            minutes: 20,
+            note: "休息日不是躺平考核：轻微活动有助于恢复，但不要为了补进度加练。",
+            steps: makeSteps([
+              {time: "0–10′", title: "轻松散步", detail: "平地、能轻松聊天的速度。"},
+              {time: "10–15′", title: "踝与髋活动", detail: "踝关节前移、髋屈肌拉伸，每侧各30–45秒。"},
+              {time: "15–20′", title: "装备复盘", detail: "检查鞋袜、背包贴合、三脚架固定和下周路线。"}
+            ])
+          };
+        }
+        if (index === 1) {
+          return {
+            title: "下肢与核心",
+            subtitle: `30分钟力量基础 · 本周负重目标${target.load}`,
+            tag: "30 分钟",
+            minutes: 30,
+            note: "深蹲和上步只用能保持膝盖对准脚尖的重量；如果膝痛，改坐站或低台阶，不要硬完成次数。",
+            steps: makeSteps([
+              {time: "0–3′", title: "原地快走与关节唤醒", detail: "抬膝、髋绕环、踝泵，逐步提高体温。"},
+              {time: "3–13′", title: "下肢循环 A × 2轮", detail: "背包深蹲10次；反向箭步蹲每侧8次；小腿提踵15次。"},
+              {time: "13–23′", title: "下肢循环 B × 2轮", detail: "髋铰链/背包硬拉12次；台阶上步每侧8次；臀桥12次。"},
+              {time: "23–28′", title: "核心稳定 × 2轮", detail: "死虫每侧8次 + 平板支撑30秒，腰部不离地。"},
+              {time: "28–30′", title: "呼吸收尾", detail: "慢走，做4次长呼气，记录膝踝反馈。"}
+            ])
+          };
+        }
+        if (index === 2) {
+          return {
+            title: "有氧与坡度",
+            subtitle: "保持能说话的节奏，建立山路发动机",
+            tag: "30 分钟",
+            minutes: 30,
+            note: "优先快走，不跑楼梯。若前一晚加班或睡眠不足，直接改恢复版。",
+            steps: makeSteps([
+              {time: "0–5′", title: "平地热身", detail: "从慢走逐步加速，活动踝、膝、髋。"},
+              {time: "5–23′", title: "持续快走", detail: "RPE 4–5/10，能说完整句子但不适合唱歌。"},
+              {time: "23–28′", title: "坡走/楼梯间歇", detail: "4–6轮：上坡或楼梯30秒 + 平地恢复60秒；不冲刺。"},
+              {time: "28–30′", title: "慢走收操", detail: "逐步降心率，做小腿轻柔拉伸。"}
+            ])
+          };
+        }
+        if (index === 3) {
+          return {
+            title: "上肢与核心",
+            subtitle: "肩胛稳定，让相机重量落在骨盆和背包上",
+            tag: "30 分钟",
+            minutes: 30,
+            note: "动作质量优先于次数。肩前侧刺痛、麻木或耸肩明显时，停止俯卧撑和划船。",
+            steps: makeSteps([
+              {time: "0–5′", title: "肩胛热身", detail: "肩绕环、墙滑、胸椎旋转，逐步扩大范围。"},
+              {time: "5–16′", title: "推拉循环 × 3轮", detail: "俯卧撑8–12次（可跪姿） + 背包划船12次，休息30–45秒。"},
+              {time: "16–24′", title: "肩胛控制 × 2轮", detail: "墙天使8次 + 俯身Y举8次，动作慢而轻。"},
+              {time: "24–28′", title: "侧桥核心", detail: "每侧20–30秒，骨盆保持水平，做2轮。"},
+              {time: "28–30′", title: "放松呼吸", detail: "放下背包，做长呼气和胸口打开。"}
+            ])
+          };
+        }
+        if (index === 4) {
+          return {
+            title: "恢复与灵活性",
+            subtitle: "给周末负重留下余量",
+            tag: "25 分钟",
+            minutes: 25,
+            note: "全程只到拉伸感，不追求疼痛。若身体特别疲劳，可以只做一轮并提前睡觉。",
+            steps: makeSteps([
+              {time: "0–5′", title: "呼吸与关节活动", detail: "鼻吸口呼，做踝泵、肩绕环和髋绕环。"},
+              {time: "5–12′", title: "踝与小腿", detail: "踝关节前移每侧10次，小腿拉伸每侧45秒。"},
+              {time: "12–19′", title: "髋部与胸椎", detail: "髋屈肌、臀肌拉伸每侧45秒；胸椎旋转每侧8次。"},
+              {time: "19–25′", title: "轻松走与复盘", detail: "原地走或平地走，写下周末路线和天气。"}
+            ])
+          };
+        }
+        return {
+          title: "负重楼梯/坡走",
+          subtitle: `短时坡度训练 · 背包建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`,
+          tag: "30 分钟",
+          minutes: 30,
+          note: "不跑楼梯，不追配速。若膝、踝或腰出现刺痛，马上改平地慢走并记录。",
+          steps: makeSteps([
+            {time: "0–6′", title: "热身走", detail: "平地慢走到快走，做踝泵和髋绕环。"},
+            {time: "6–24′", title: "坡度循环 × 5–8轮", detail: "上坡/楼梯2分钟（RPE 6/10）+ 平地恢复1分钟，步幅小而稳。"},
+            {time: "24–27′", title: "平地降速", detail: "让呼吸回到可完整说话的程度。"},
+            {time: "27–30′", title: "小腿与髋放松", detail: "小腿、臀肌各做30秒轻柔拉伸。"}
+          ])
+        };
+      }
+
+      function makeSchedule(date, mode) {
+        const index = dayIndex(fromISO(date));
+        const target = currentTarget(date);
+        if (index === 6 && mode !== "recovery") {
+          return [
+            {phase: "上午", time: "07:30", title: "起床、喝水、自然光", detail: "喝300–500 ml水，接触自然光5–10分钟", key: "morning"},
+            {phase: "上午", time: "08:00", title: "早餐与装包", detail: `早餐含蛋白质和碳水；今天目标${target.load}`, key: "breakfast"},
+            {phase: "上午", time: "09:00", title: "开始长距离步行", detail: `${target.minutes}分钟 · ${target.ascent} · RPE 4–5/10`, key: "workout"},
+            {phase: "途中", time: "每45–60′", title: "补水与短休息", detail: "休息5–8分钟，检查脚底、膝和肩带", key: "fuel"},
+            {phase: "结束", time: "结束后10′", title: "慢走收尾", detail: "不要突然停下，回家后换干袜", key: "cooldown"},
+            {phase: "晚上", time: "22:30", title: "屏幕降噪", detail: "调暗灯光，准备下周训练", key: "winddown"},
+            {phase: "晚上", time: "22:50", title: "熄灯睡觉", detail: "目标睡眠至少7小时45分钟", key: "sleep"}
+          ];
+        }
+        if (index === 7 && mode !== "recovery") {
+          return [
+            {phase: "上午", time: "08:00", title: "自然醒与喝水", detail: "不要用长时间赖床换恢复", key: "morning"},
+            {phase: "上午", time: "10:00", title: "轻松散步", detail: "平地20–30分钟，能轻松聊天", key: "workout"},
+            {phase: "下午", time: "15:00", title: "装备与路线复盘", detail: "整理鞋袜、背包、补水和下周路线", key: "review"},
+            {phase: "晚上", time: "21:45", title: "温和拉伸", detail: "踝、髋、胸椎各几分钟，不做力量训练", key: "stretch"},
+            {phase: "晚上", time: "22:30", title: "屏幕降噪", detail: "把明天衣物和早餐准备好", key: "winddown"},
+            {phase: "晚上", time: "22:50", title: "熄灯睡觉", detail: "目标睡眠至少7小时45分钟", key: "sleep"}
+          ];
+        }
+        if (mode === "recovery") {
+          return [
+            {phase: "早晨", time: "06:55", title: "起床、喝水、见光", detail: "多睡20分钟；喝300–500 ml水，接触自然光", key: "morning"},
+            {phase: "早晨", time: "07:00–07:12", title: "恢复活动", detail: "踝泵、猫牛、胸椎旋转、髋部活动，不背包", key: "workout"},
+            {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾", detail: "早餐优先蛋白质和碳水，留出5分钟缓冲", key: "prepare"},
+            {phase: "白天", time: "09:30", title: "必要时第一杯咖啡", detail: "按平时耐受量，下午14:00后不再摄入", key: "caffeine"},
+            {phase: "白天", time: "12:35", title: "饭后走10分钟", detail: "帮助清醒和恢复，避免久坐", key: "lunchwalk"},
+            {phase: "晚上", time: "18:30/21:00", title: "下班，按现实情况回家", detail: "不补做错过的训练，选择普通晚饭", key: "offwork"},
+            {phase: "晚上", time: "21:45", title: "温和拉伸与准备明天", detail: "5–10分钟即可，避免屏幕刺激", key: "winddown"},
+            {phase: "晚上", time: "22:40", title: "尽早熄灯", detail: "给身体补回睡眠，不追求完美打卡", key: "sleep"}
+          ];
+        }
+        if (mode === "overtime") {
+          return [
+            {phase: "早晨", time: "06:35", title: "起床、喝水、自然光", detail: "喝300–500 ml水，拉开窗帘或出门5分钟", key: "morning"},
+            {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "关节活动、原地走，逐步提高体温", key: "warmup"},
+            {phase: "早晨", time: "06:47–07:17", title: "完成主训练", detail: "若昨晚睡眠不足，切换恢复版；不要用晚间加练补回", key: "workout"},
+            {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
+            {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
+            {phase: "白天", time: "09:30", title: "必要时咖啡", detail: "下午14:00后停止咖啡因", key: "caffeine"},
+            {phase: "白天", time: "12:35", title: "饭后走10分钟", detail: "哪怕只在楼下绕一圈，也比久坐更好", key: "lunchwalk"},
+            {phase: "傍晚", time: "17:30", title: "加班前补小餐", detail: "酸奶/香蕉/全麦面包，避免21点暴食", key: "snack"},
+            {phase: "傍晚", time: "18:30–21:00", title: "继续工作", detail: "每50–60分钟站起活动2分钟", key: "work"},
+            {phase: "晚上", time: "21:00", title: "下班", detail: "不在回家路上补高强度训练", key: "offwork"},
+            {phase: "晚上", time: "21:30–21:55", title: "到家、轻食或洗澡", detail: "若公司已吃饭，回家直接洗澡；否则先吃少量蛋白质和主食", key: "home"},
+            {phase: "晚上", time: "21:55–22:05", title: "温和拉伸", detail: "颈肩、胸椎、髋和小腿，各1–2分钟", key: "stretch"},
+            {phase: "晚上", time: "22:05–22:15", title: "准备明天", detail: "放好衣物、早餐和通勤物品，减少早晨决策", key: "prepare-night"},
+            {phase: "晚上", time: "22:15–22:40", title: "屏幕降噪", detail: "调暗灯光；不处理工作消息", key: "winddown"},
+            {phase: "晚上", time: "22:50", title: "熄灯睡觉", detail: "如果实际超过23:15才睡，次日直接恢复版", key: "sleep"}
+          ];
+        }
+        return [
+          {phase: "早晨", time: "06:35", title: "起床、喝水、自然光", detail: "喝300–500 ml水，拉开窗帘或出门5分钟", key: "morning"},
+          {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "原地走、踝泵、髋绕环、肩绕环", key: "warmup"},
+          {phase: "早晨", time: "06:47–07:17", title: "完成主训练", detail: "按今日训练卡执行；动作质量优先", key: "workout"},
+          {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
+          {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
+          {phase: "早晨", time: "08:30", title: "出发上班", detail: "通勤约30分钟，目标09:00左右到达", key: "leave"},
+          {phase: "白天", time: "09:30", title: "必要时第一杯咖啡", detail: "按平时耐受量；下午14:00后不再摄入", key: "caffeine"},
+          {phase: "白天", time: "10:30", title: "站起活动2分钟", detail: "活动踝、肩和髋，补几口水", key: "break"},
+          {phase: "白天", time: "12:00–12:30", title: "午餐", detail: "有蛋白质、有主食，别只吃甜食提神", key: "lunch"},
+          {phase: "白天", time: "12:35–12:45", title: "饭后走10分钟", detail: "室外或楼道均可，帮助下午保持清醒", key: "lunchwalk"},
+          {phase: "白天", time: "15:30", title: "水与小加餐", detail: "饿时选择水果+酸奶或少量坚果", key: "snack"},
+          {phase: "傍晚", time: "18:30", title: "下班", detail: "通勤回家约19:00，不在晚间补高强度训练", key: "offwork"},
+          {phase: "晚上", time: "19:00–19:35", title: "晚餐", detail: "正常吃，训练日补足主食和蛋白质", key: "dinner"},
+          {phase: "晚上", time: "19:35–19:45", title: "饭后轻松走", detail: "10分钟即可，不追步数", key: "afterwalk"},
+          {phase: "晚上", time: "21:45", title: "洗澡与明日准备", detail: "放好衣物、早餐和通勤物品", key: "prepare-night"},
+          {phase: "晚上", time: "22:15", title: "屏幕降噪", detail: "调暗灯光，停止工作消息和高刺激内容", key: "winddown"},
+          {phase: "晚上", time: "22:50", title: "熄灯睡觉", detail: "目标睡眠至少7小时45分钟", key: "sleep"}
+        ];
+      }
+
+      function renderDateContext() {
+        const date = fromISO(state.selectedDate);
+        const isToday = state.selectedDate === toISO(today);
+        document.getElementById("selectedDateLabel").textContent = isToday ? "今天 · " + dateLabel.format(date) : dateLabel.format(date);
+        document.getElementById("selectedDateSub").textContent = `${isAfterProgram(state.selectedDate) ? "巩固期" : "第" + currentProgramWeek(state.selectedDate) + "周"} · ${state.selectedDate}`;
+      }
+
+      function renderReadiness() {
+        const record = getRecord();
+        const readiness = getReadiness(record);
+        const strip = document.getElementById("readinessStrip");
+        strip.className = `status-strip ${readiness.level === "ready" ? "" : readiness.level}`;
+        document.getElementById("readinessOrb").textContent = readiness.symbol;
+        document.getElementById("readinessTitle").textContent = readiness.title;
+        document.getElementById("readinessText").textContent = readiness.text;
+      }
+
+      function renderMode() {
+        const record = getRecord();
+        document.querySelectorAll("[data-mode]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.mode === record.mode);
+        });
+        const notes = {
+          standard: "适用于18:30下班、19:00左右到家的一天。",
+          overtime: "适用于当天加班到21:00；晚上不补做训练，优先按时睡觉。",
+          recovery: "适用于昨晚少于7小时、精力低或身体有不适的一天。"
+        };
+        document.getElementById("modeNote").textContent = notes[record.mode];
+      }
+
+      function renderTimeline() {
+        const record = getRecord();
+        const schedule = makeSchedule(state.selectedDate, record.mode);
+        const previousDetails = document.querySelector(".timeline-details");
+        const previousDetailsOpen = Boolean(previousDetails && previousDetails.open);
+        const grouped = [];
+        schedule.forEach((item) => {
+          let group = grouped[grouped.length - 1];
+          if (!group || group.phase !== item.phase) {
+            group = {phase: item.phase, items: []};
+            grouped.push(group);
+          }
+          group.items.push(item);
+        });
+        const keyLabels = {morning: "起床", workout: "训练", leave: "出发", offwork: "下班", sleep: "睡觉"};
+        const keyItems = schedule.filter((item) => keyLabels[item.key]).slice(0, 5);
+        const fullTimeline = grouped.map((group) => `
+          <div class="timeline-group">
+            <p class="timeline-group-title">${group.phase}</p>
+            ${group.items.map((item) => {
+              const done = Boolean(record.habits[item.key]);
+              return `<div class="timeline-row ${done ? "done" : ""}">
+                <div class="timeline-time">${item.time}</div>
+                <div class="timeline-dot" aria-hidden="true"></div>
+                <div class="timeline-content"><strong>${item.title}</strong><span>${item.detail}</span></div>
+                ${item.key ? `<button class="check-button" type="button" data-action="toggle-habit" data-key="${item.key}" aria-label="${done ? "取消" : "完成"}${item.title}">${done ? "✓" : ""}</button>` : ""}
+              </div>`;
+            }).join("")}
+          </div>`).join("");
+        document.getElementById("timeline").innerHTML = `
+          <div class="timeline-summary">
+            <span class="timeline-summary-label">关键节点</span>
+            <div class="timeline-summary-items">${keyItems.map((item) => `<span><b>${item.time}</b>${keyLabels[item.key]}</span>`).join("")}</div>
+          </div>
+          <details class="timeline-details">
+            <summary>查看完整日程 <span>${schedule.length} 个节点</span></summary>
+            <div class="timeline-full">${fullTimeline}</div>
+          </details>`;
+        const nextDetails = document.querySelector(".timeline-details");
+        if (nextDetails) nextDetails.open = previousDetailsOpen;
+      }
+
+      function timerSignature(workout) {
+        return `${state.selectedDate}|${getRecord().mode}|${workout.title}`;
+      }
+
+      function ensureTimer(workout) {
+        const signature = timerSignature(workout);
+        if (state.timer.signature !== signature) {
+          stopTimer();
+          state.timer.signature = signature;
+          state.timer.seconds = workout.minutes * 60;
+        }
+      }
+
+      function formatTimer(seconds) {
+        const safe = Math.max(0, seconds);
+        return `${pad(Math.floor(safe / 60))}:${pad(safe % 60)}`;
+      }
+
+      function renderWorkout() {
+        const record = getRecord();
+        const workout = getWorkout(state.selectedDate, record.mode);
+        ensureTimer(workout);
+        document.getElementById("workoutTitle").textContent = workout.title;
+        document.getElementById("workoutSubtitle").textContent = workout.subtitle;
+        document.getElementById("workoutTag").textContent = workout.tag;
+        document.getElementById("timerValue").textContent = formatTimer(state.timer.seconds);
+        document.getElementById("timerStart").textContent = state.timer.running ? "暂停" : (state.timer.seconds === 0 ? "重来" : "开始");
+        document.getElementById("workoutSteps").innerHTML = workout.steps.map((step, index) => {
+          const done = Boolean(record.steps[step.id]);
+          const guideLinks = guideKeysForStep(step).map((key) => `<button class="exercise-link" type="button" data-action="open-exercise" data-exercise="${key}">看${exerciseGuides[key].short}图</button>`).join("");
+          return `<div class="workout-step ${done ? "done" : ""}">
+            <div class="step-number">${index + 1}</div>
+            <div class="step-time">${step.time}</div>
+            <div class="step-copy"><strong>${step.title}</strong><span>${step.detail}</span>${guideLinks ? `<div class="exercise-links">${guideLinks}</div>` : ""}</div>
+            <button class="check-button" type="button" data-action="toggle-step" data-key="${step.id}" aria-label="${done ? "取消" : "完成"}${step.title}">${done ? "✓" : ""}</button>
+          </div>`;
+        }).join("");
+        document.getElementById("workoutNote").textContent = workout.note;
+        const complete = document.getElementById("completeWorkout");
+        complete.classList.toggle("done", Boolean(record.workoutDone));
+        complete.textContent = record.workoutDone ? "已完成今日训练 · 再次点击取消" : "完成今日训练";
+      }
+
+      function renderCheckin() {
+        const record = getRecord();
+        document.getElementById("sleepInput").value = Number.isFinite(record.sleep) ? record.sleep : "";
+        document.getElementById("packInput").value = record.pack ?? "";
+        document.getElementById("painInput").value = record.pain || "none";
+        document.getElementById("notesInput").value = record.notes || "";
+        document.getElementById("energyOptions").innerHTML = [1, 2, 3, 4, 5].map((value) => `<button type="button" role="radio" aria-checked="${record.energy === value}" class="${record.energy === value ? "active" : ""}" data-action="set-energy" data-value="${value}">${value}</button>`).join("");
+      }
+
+      function renderToday() {
+        const target = currentTarget();
+        const index = dayIndex(fromISO(state.selectedDate));
+        document.getElementById("todayHeading").textContent = index === 6 ? "今日长距离安排" : index === 7 ? "今日休息安排" : "今日时间表";
+        document.getElementById("todayHeadingSub").textContent = index === 6 ? "先完成时间，再逐步增加负重" : "按时间节点走，不靠意志力硬撑";
+        document.getElementById("todayWeekLabel").textContent = isAfterProgram() ? "巩固期" : `第 ${target.week} 周`;
+        renderReadiness();
+        renderMode();
+        renderTimeline();
+        renderWorkout();
+        renderCheckin();
+        renderDateContext();
+      }
+
+      function weekDates() {
+        const monday = getMonday(fromISO(state.selectedDate));
+        return Array.from({length: 7}, (_, index) => addDays(monday, index));
+      }
+
+      function weekStats() {
+        const dates = weekDates().map(toISO);
+        const records = dates.map((date) => store.records[date]).filter(Boolean);
+        const trainingRecords = dates.slice(0, 6).map((date) => store.records[date]).filter(Boolean);
+        const done = trainingRecords.filter((record) => record.workoutDone).length;
+        const sleepRecords = records.filter((record) => typeof record.sleep === "number" && record.sleep > 0);
+        const packRecords = records.filter((record) => record.pack !== "" && Number.isFinite(Number(record.pack)));
+        const average = (items, getter) => items.length ? items.reduce((sum, item) => sum + getter(item), 0) / items.length : null;
+        return {
+          done,
+          sleep: average(sleepRecords, (record) => record.sleep),
+          pack: average(packRecords, (record) => Number(record.pack))
+        };
+      }
+
+      function renderWeek() {
+        const target = currentTarget();
+        const dates = weekDates();
+        const stats = weekStats();
+        const percent = Math.round((stats.done / 6) * 100);
+        const monday = dates[0];
+        const sunday = dates[6];
+        document.getElementById("weekOverviewTitle").textContent = isAfterProgram(state.selectedDate) ? "巩固期" : `第 ${target.week} 周`;
+        document.getElementById("weekPhaseLabel").textContent = target.phase;
+        document.getElementById("weekPercent").textContent = `${Math.min(100, percent)}%`;
+        document.getElementById("weekProgressFill").style.width = `${Math.min(100, percent)}%`;
+        document.getElementById("weekDoneCount").textContent = `${Math.min(stats.done, 6)}/6`;
+        document.getElementById("weekSleepAvg").textContent = stats.sleep === null ? "—" : `${stats.sleep.toFixed(1)}h`;
+        document.getElementById("weekPackAvg").textContent = stats.pack === null ? "—" : `${stats.pack.toFixed(1)}kg`;
+        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · 周六目标 ${target.load} / ${target.minutes}分钟`;
+        document.getElementById("weekDays").innerHTML = dates.map((date) => {
+          const iso = toISO(date);
+          const record = store.records[iso];
+          const complete = Boolean(record && record.workoutDone);
+          const isSelected = iso === state.selectedDate;
+          const isToday = iso === toISO(today);
+          return `<button class="day-button ${isSelected ? "selected" : ""} ${isToday ? "today" : ""} ${complete ? "complete" : ""}" type="button" data-action="select-date" data-date="${iso}">
+            <strong>${weekdayNames[date.getDay() === 0 ? 6 : date.getDay() - 1]}</strong><span>${date.getDate()}</span><em>${complete ? "已完成" : "查看"}</em>
+          </button>`;
+        }).join("");
+        document.getElementById("weekList").innerHTML = dates.map((date) => {
+          const iso = toISO(date);
+          const record = store.records[iso];
+          const index = dayIndex(date);
+          const done = Boolean(record && record.workoutDone);
+          return `<button class="week-list-row" type="button" data-action="select-date" data-date="${iso}" style="width:100%;border-left:0;border-right:0;border-top:0;text-align:left;background:transparent">
+            <span class="week-list-day">${weekdayNames[index - 1]}</span>
+            <span class="week-list-copy"><strong>${workoutNames[index]}</strong><span>${index === 6 ? `${target.load} · ${target.minutes}分钟` : index === 7 ? "主动恢复" : "早晨主训练"}</span></span>
+            <span class="week-list-status ${done ? "complete" : "pending"}" aria-label="${done ? "已完成" : "未完成"}">${done ? "✓" : "○"}</span>
+          </button>`;
+        }).join("");
+      }
+
+      function renderPlan() {
+        document.getElementById("startDateInput").value = store.settings.startDate;
+        const current = currentProgramWeek();
+        document.getElementById("planCurrentWeek").textContent = isAfterProgram() ? "当前巩固期" : `当前第 ${current} 周`;
+        document.getElementById("progressionList").innerHTML = progression.map((item) => `<div class="progression-row ${item.week === current ? "current" : ""}">
+          <div class="progression-week">第${item.week}周</div>
+          <div class="progression-copy"><strong>${item.focus}</strong><span>周六 ${item.minutes}分钟 · ${item.ascent} · ${item.phase}阶段</span></div>
+          <div class="progression-load">${item.load}</div>
+        </div>`).join("");
+      }
+
+      function renderAll() {
+        renderDateContext();
+        renderToday();
+        renderWeek();
+        renderPlan();
+        setActiveTab(state.activeTab);
+      }
+
+      function setActiveTab(tab) {
+        state.activeTab = tab;
+        document.querySelectorAll("[data-panel]").forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === tab));
+        document.querySelectorAll("[data-tab]").forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
+      }
+
+      function updateRecord(mutator, rerender = false) {
+        const record = getRecord();
+        mutator(record);
+        record.updatedAt = new Date().toISOString();
+        saveStore();
+        document.getElementById("saveStatus").textContent = `已自动保存 · ${new Intl.DateTimeFormat("zh-CN", {hour: "2-digit", minute: "2-digit"}).format(new Date())}`;
+        if (rerender) renderAll();
+        else renderReadiness();
+      }
+
+      let toastTimer = null;
+      let lastExerciseTrigger = null;
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+      }
+
+      function openExercise(key, trigger) {
+        const guide = exerciseGuides[key];
+        if (!guide) return;
+        const modal = document.getElementById("exerciseModal");
+        document.getElementById("exerciseModalTitle").textContent = guide.title;
+        document.getElementById("exerciseModalImage").src = guide.image;
+        document.getElementById("exerciseModalImage").alt = `${guide.title}示范图`;
+        document.getElementById("exerciseModalSummary").textContent = guide.summary;
+        document.getElementById("exerciseModalCues").innerHTML = guide.cues.map((cue) => `<li>${cue}</li>`).join("");
+        lastExerciseTrigger = trigger;
+        modal.hidden = false;
+        document.body.classList.add("modal-open");
+        document.querySelector(".exercise-close").focus();
+      }
+
+      function closeExercise() {
+        const modal = document.getElementById("exerciseModal");
+        if (modal.hidden) return;
+        modal.hidden = true;
+        document.body.classList.remove("modal-open");
+        document.getElementById("exerciseModalImage").removeAttribute("src");
+        if (lastExerciseTrigger && lastExerciseTrigger.isConnected) lastExerciseTrigger.focus();
+        lastExerciseTrigger = null;
+      }
+
+      function stopTimer() {
+        if (state.timer.interval) clearInterval(state.timer.interval);
+        state.timer.interval = null;
+        state.timer.running = false;
+      }
+
+      function startTimer() {
+        if (state.timer.seconds <= 0) state.timer.seconds = getWorkout().minutes * 60;
+        if (state.timer.running) {
+          stopTimer();
+          document.getElementById("timerStart").textContent = "开始";
+          return;
+        }
+        state.timer.running = true;
+        document.getElementById("timerStart").textContent = "暂停";
+        state.timer.interval = setInterval(() => {
+          state.timer.seconds -= 1;
+          document.getElementById("timerValue").textContent = formatTimer(state.timer.seconds);
+          if (state.timer.seconds <= 0) {
+            stopTimer();
+            document.getElementById("timerStart").textContent = "重来";
+            showToast("计时完成，记得慢走收操");
+          }
+        }, 1000);
+      }
+
+      function resetTimer() {
+        stopTimer();
+        const workout = getWorkout();
+        state.timer.signature = timerSignature(workout);
+        state.timer.seconds = workout.minutes * 60;
+        document.getElementById("timerValue").textContent = formatTimer(state.timer.seconds);
+        document.getElementById("timerStart").textContent = "开始";
+      }
+
+      function exportData() {
+        const payload = {
+          exportedAt: new Date().toISOString(),
+          settings: store.settings,
+          records: store.records
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], {type: "application/json;charset=utf-8"});
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `徒步摄影训练打卡-${toISO(new Date())}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        showToast("打卡记录已下载");
+      }
+
+      function importData(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const payload = JSON.parse(String(reader.result || ""));
+            if (!payload || typeof payload !== "object" || !payload.records || typeof payload.records !== "object") throw new Error("invalid");
+            if (!window.confirm("导入会覆盖当前浏览器中的打卡记录，确定继续吗？")) return;
+            store = {
+              records: payload.records,
+              settings: {...store.settings, ...(payload.settings || {})}
+            };
+            saveStore();
+            renderAll();
+            showToast("打卡记录已导入");
+          } catch (error) {
+            showToast("文件格式不正确，未导入");
+          }
+        };
+        reader.onerror = () => showToast("读取文件失败，未导入");
+        reader.readAsText(file, "utf-8");
+      }
+
+      document.addEventListener("click", (event) => {
+        const tabButton = event.target.closest("[data-tab]");
+        if (tabButton) {
+          setActiveTab(tabButton.dataset.tab);
+          window.scrollTo({top: 0, behavior: "smooth"});
+          return;
+        }
+        const modeButton = event.target.closest("[data-mode]");
+        if (modeButton) {
+          updateRecord((record) => { record.mode = modeButton.dataset.mode; }, true);
+          return;
+        }
+        const actionElement = event.target.closest("[data-action]");
+        if (!actionElement) return;
+        const action = actionElement.dataset.action;
+        if (action === "previous-week") {
+          state.selectedDate = toISO(addDays(fromISO(state.selectedDate), -7));
+          renderAll();
+          return;
+        }
+        if (action === "next-week") {
+          state.selectedDate = toISO(addDays(fromISO(state.selectedDate), 7));
+          renderAll();
+          return;
+        }
+        if (action === "go-today") {
+          state.selectedDate = toISO(today);
+          renderAll();
+          return;
+        }
+        if (action === "select-date") {
+          state.selectedDate = actionElement.dataset.date;
+          state.activeTab = "today";
+          renderAll();
+          return;
+        }
+        if (action === "toggle-habit") {
+          const key = actionElement.dataset.key;
+          updateRecord((record) => { record.habits[key] = !record.habits[key]; }, true);
+          return;
+        }
+        if (action === "toggle-step") {
+          const key = actionElement.dataset.key;
+          updateRecord((record) => { record.steps[key] = !record.steps[key]; }, true);
+          return;
+        }
+        if (action === "complete-workout") {
+          updateRecord((record) => { record.workoutDone = !record.workoutDone; }, true);
+          showToast(getRecord().workoutDone ? "今天的训练已打卡" : "已取消训练完成标记");
+          return;
+        }
+        if (action === "set-energy") {
+          updateRecord((record) => { record.energy = Number(actionElement.dataset.value); }, true);
+          return;
+        }
+        if (action === "adjust-sleep") {
+          const input = document.getElementById("sleepInput");
+          const next = clamp((Number(input.value) || 0) + Number(actionElement.dataset.delta), 0, 14);
+          input.value = Math.round(next * 4) / 4;
+          updateRecord((record) => { record.sleep = Number(input.value); });
+          return;
+        }
+        if (action === "use-recovery") {
+          updateRecord((record) => { record.mode = "recovery"; }, true);
+          showToast("已切换为低睡眠恢复版");
+          return;
+        }
+        if (action === "open-exercise") { openExercise(actionElement.dataset.exercise, actionElement); return; }
+        if (action === "close-exercise") { closeExercise(); return; }
+        if (action === "timer-start") { startTimer(); return; }
+        if (action === "timer-reset") { resetTimer(); return; }
+        if (action === "export-data") { exportData(); return; }
+        if (action === "import-data") { document.getElementById("importInput").click(); return; }
+        if (action === "clear-data") {
+          if (!window.confirm("确定清空本机所有打卡记录吗？此操作无法撤销。")) return;
+          store = {records: {}, settings: {startDate: defaultStart}};
+          saveStore();
+          renderAll();
+          showToast("本机打卡记录已清空");
+        }
+      });
+
+      document.addEventListener("input", (event) => {
+        if (event.target.id === "sleepInput") {
+          const value = clamp(Number(event.target.value) || 0, 0, 14);
+          updateRecord((record) => { record.sleep = value; });
+        }
+        if (event.target.id === "packInput") {
+          updateRecord((record) => { record.pack = event.target.value; });
+        }
+        if (event.target.id === "notesInput") {
+          updateRecord((record) => { record.notes = event.target.value; });
+        }
+      });
+
+      document.addEventListener("change", (event) => {
+        if (event.target.id === "painInput") updateRecord((record) => { record.pain = event.target.value; });
+        if (event.target.id === "startDateInput") {
+          if (!event.target.value) return;
+          store.settings.startDate = event.target.value;
+          saveStore();
+          renderAll();
+          showToast("计划开始日已更新");
+        }
+        if (event.target.id === "importInput" && event.target.files && event.target.files[0]) {
+          importData(event.target.files[0]);
+          event.target.value = "";
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeExercise();
+      });
+
+      renderAll();
+    })();
+  </script>
+</body>
+</html>

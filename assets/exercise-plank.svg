@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Plank movement guide</title>
+  <desc id="desc">A simple line figure shows a straight forearm plank.</desc>
+  <rect width="800" height="450" fill="#f6f4ef"/>
+  <path d="M70 360H730" stroke="#c8c0b1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M150 240L630 240" stroke="#b7891c" stroke-width="6" stroke-dasharray="12 12" stroke-linecap="round"/>
+  <g fill="none" stroke="#1f1e1b" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="170" cy="195" r="27" fill="#f6f4ef"/>
+    <path d="M198 210L330 255L590 275M330 255L300 345M590 275L650 350M330 255L265 335"/>
+  </g>
+  <path d="M300 120h200" stroke="#b7891c" stroke-width="9" stroke-linecap="round"/>
+  <path d="M500 120l-24-18v36z" fill="#b7891c"/>
+  <g fill="#5d5a53" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="2">
+    <text x="125" y="405">HEAD · HIPS · HEELS IN LINE</text>
+  </g>
+</svg>

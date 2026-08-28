@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Push-up movement guide</title>
+  <desc id="desc">Two simple line figures show a high plank and lowered push-up position.</desc>
+  <rect width="800" height="450" fill="#f6f4ef"/>
+  <path d="M70 360H730" stroke="#c8c0b1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M400 75V365" stroke="#ded9cd" stroke-width="3" stroke-dasharray="8 12"/>
+  <g fill="none" stroke="#1f1e1b" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="135" cy="178" r="25" fill="#f6f4ef"/>
+    <path d="M160 190L270 245L345 345M270 245L220 350M270 245L165 305"/>
+    <circle cx="535" cy="218" r="25" fill="#f6f4ef"/>
+    <path d="M560 230L650 295L680 345M650 295L585 350M650 295L550 330"/>
+  </g>
+  <path d="M365 245h70l-18-15 8-10 38 30-38 30-8-10 18-15h-70z" fill="#b7891c"/>
+  <g fill="#5d5a53" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="2">
+    <text x="105" y="405">HIGH PLANK</text><text x="535" y="405">LOWER</text>
+  </g>
+</svg>
