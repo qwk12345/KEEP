@@ -1655,7 +1655,7 @@
           <details>
             <summary>周二 · 有氧与坡度（30分钟）</summary>
             <div class="detail-body">
-              <p>热身5分钟后快走18分钟，保持“能说完整句子但不想唱歌”的强度；最后做4–6轮30秒坡走/楼梯 + 60秒平地恢复，再慢走收操。</p>
+              <p>热身5分钟后快走18分钟，保持中等偏轻强度：呼吸变快，但还能正常短句交流，不喘到断句；最后做4–6轮30秒坡走/楼梯 + 60秒平地恢复，再慢走收操。</p>
               <ul><li>优先快走，不跑楼梯；下坡缩小步幅，膝盖对准脚尖。</li><li>若前一晚加班且睡眠不足，改为25分钟平地轻松走。</li></ul>
             </div>
           </details>
@@ -1814,7 +1814,7 @@
 
       const progression = [
         {week: 1, load: "4 kg", minutes: 75, ascent: "平地/约100 m", focus: "熟悉背包贴合、鞋袜与走姿", phase: "适应"},
-        {week: 2, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "保持能说完整句子的强度", phase: "适应"},
+        {week: 2, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "控制在中等偏轻强度，不喘到断句", phase: "适应"},
         {week: 3, load: "6 kg", minutes: 105, ascent: "约200 m", focus: "加入短坡，练习稳定下坡", phase: "建立"},
         {week: 4, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "减量周，检查膝踝和肩带反馈", phase: "减量"},
         {week: 5, load: "7.5 kg", minutes: 120, ascent: "约300 m", focus: "延长持续时间，不追求速度", phase: "建立"},
@@ -1825,7 +1825,7 @@
 
       const compactProgression = [
         {week: 1, load: "5 kg", minutes: 75, ascent: "平地/约100 m", focus: "快速建立背包贴合与走姿习惯", phase: "适应"},
-        {week: 2, load: "7 kg", minutes: 105, ascent: "约200 m", focus: "延长持续时间，保持能说完整句子", phase: "建立"},
+        {week: 2, load: "7 kg", minutes: 105, ascent: "延长持续时间，呼吸变快但不喘到断句", phase: "建立"},
         {week: 3, load: "8.5 kg", minutes: 135, ascent: "约300 m", focus: "加入短坡，练习补水和稳定下坡", phase: "提升"},
         {week: 4, load: "6.5 kg", minutes: 105, ascent: "约200 m", focus: "减量周，确认第二天关节和睡眠恢复", phase: "减量"},
         {week: 5, load: "10.5 kg", minutes: 180, ascent: "约500–600 m", focus: "完成一次接近真实的摄影徒步模拟", phase: "模拟"}
@@ -2537,7 +2537,7 @@
             level: "warn",
             symbol: "~",
             title: "状态一般，降一级训练",
-            text: "保留活动习惯，但去掉负重、间歇或最后一轮；全程以能说话为准。"
+            text: "保留活动习惯，但去掉负重、间歇或最后一轮；全程控制到呼吸变快但不喘到断句。"
           };
         }
         return {
@@ -2583,7 +2583,7 @@
             note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加负重；不要在同一周同时大幅增加距离和爬升。",
             steps: makeSteps([
               {time: "0–10′", title: "慢走热身", detail: "空包或轻包，检查鞋带、肩带和腰带是否压迫。"},
-              {time: `10–${Math.round(target.minutes * .42)}′`, title: "稳定主段", detail: `负重${target.load}，RPE 4–5/10，能说完整句子；每15分钟快速检查脚底和肩带。`},
+              {time: `10–${Math.round(target.minutes * .42)}′`, title: "稳定主段", detail: `负重${target.load}，中等偏轻强度，不喘到断句；每15分钟快速检查脚底和肩带。`},
               {time: `${Math.round(target.minutes * .42)}–${Math.round(target.minutes * .82)}′`, title: "补水与短休息", detail: "每45–60分钟休息5–8分钟，休息时不要完全坐死，活动脚踝。"},
               {time: `${Math.round(target.minutes * .82)}–${target.minutes}′`, title: "收尾与记录", detail: "最后一段降速，回家后记录膝、踝、腰、肩和脚底反馈。"}
             ])
@@ -2622,13 +2622,13 @@
         if (index === 2) {
           return {
             title: "有氧与坡度",
-            subtitle: `${stage} · 保持能说话的节奏，建立山路发动机`,
+            subtitle: `${stage} · 控制呼吸和节奏，建立山路耐力`,
             tag: "30 分钟",
             minutes: 30,
             note: "优先快走，不跑楼梯。若前一晚加班或睡眠不足，直接改恢复版。",
             steps: makeSteps([
               {time: "0–5′", title: "平地热身", detail: "从慢走逐步加速，活动踝、膝、髋。"},
-              {time: "5–23′", title: "持续快走", detail: "RPE 4–5/10，能说完整句子但不适合唱歌。"},
+              {time: "5–23′", title: "持续快走", detail: "中等偏轻强度：呼吸变快，但还能正常短句交流，不喘到断句。"},
               {time: "23–28′", title: "坡走/楼梯间歇", detail: "4–6轮：上坡或楼梯30秒 + 平地恢复60秒；不冲刺。"},
               {time: "28–30′", title: "慢走收操", detail: "逐步降心率，做小腿轻柔拉伸。"}
             ])
