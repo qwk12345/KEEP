@@ -1135,6 +1135,78 @@
     .progression-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
     .progression-load { color: var(--green-dark); font-size: 13px; font-weight: 800; text-align: right; white-space: nowrap; }
 
+    .future-toolbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      margin: 9px 0 10px;
+    }
+
+    .future-toolbar strong {
+      min-width: 0;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .future-toolbar button:disabled {
+      cursor: default;
+      opacity: .38;
+    }
+
+    .future-plan-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .future-plan-row {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      min-height: 66px;
+      padding: 9px 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+    }
+
+    .future-plan-date {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .future-plan-copy { min-width: 0; }
+    .future-plan-copy strong { display: block; font-size: 13px; line-height: 1.35; }
+    .future-plan-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .future-plan-status {
+      padding: 3px 5px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .future-plan-row.rest .future-plan-status {
+      color: var(--muted);
+      background: var(--canvas);
+    }
+
+    .future-plan-note {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
     details { border-top: 1px solid var(--line); }
     details:last-child { border-bottom: 1px solid var(--line); }
     summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 50px; padding: 10px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 800; }
@@ -1558,6 +1630,15 @@
 
         <div id="progressionList" class="progression-list"></div>
 
+        <h3 class="subheading">后续计划</h3>
+        <div class="future-toolbar" aria-label="翻看后续计划">
+          <button id="futurePrevious" class="text-button" type="button" data-action="preview-previous">上一段</button>
+          <strong id="futureRange">后续 7 天</strong>
+          <button id="futureNext" class="text-button" type="button" data-action="preview-next">下一段</button>
+        </div>
+        <div id="futurePlanList" class="future-plan-list"></div>
+        <p id="futurePlanNote" class="future-plan-note"></p>
+
         <h3 class="subheading">每周训练模板</h3>
         <div id="templateDetails">
           <details open>
@@ -1866,6 +1947,7 @@
       let store = loadStore();
       const state = {
         selectedDate: todayISO,
+        previewStartDate: todayISO,
         activeTab: "today",
         timer: {signature: "", seconds: 1800, running: false, interval: null}
       };
@@ -2387,9 +2469,8 @@
         return activeProgram().progression[currentProgramWeek(date) - 1];
       }
 
-      function getPlanContext(date = state.selectedDate) {
+      function scheduledContextForDate(date = state.selectedDate) {
         const program = activeProgram();
-        const dynamic = dynamicPlanForDate(date);
         const week = baseProgramWeek(date);
         const target = program.progression[week - 1];
         const after = isAfterBaseProgram(date);
@@ -2398,8 +2479,17 @@
           week,
           target,
           after,
-          dynamic,
           stage: after ? "巩固期" : `第${week}周`
+        };
+      }
+
+      function getPlanContext(date = state.selectedDate) {
+        const baseContext = scheduledContextForDate(date);
+        const dynamic = dynamicPlanForDate(date);
+        return {
+          ...baseContext,
+          dynamic,
+          stage: baseContext.stage
         };
       }
 
@@ -2466,7 +2556,9 @@
         const workoutDate = workoutDateFor(date, mode);
         const index = dayIndex(fromISO(workoutDate));
         const context = getPlanContext(date);
-        const target = context.target;
+        const workoutContext = mode === "recovery" ? context : scheduledContextForDate(workoutDate);
+        const target = workoutContext.target;
+        const stage = workoutContext.stage;
         if (mode === "recovery") {
           return {
             title: "恢复版 · 轻松活动",
@@ -2485,7 +2577,7 @@
         if (index === 6) {
           return {
             title: "长距离徒步/负重步行",
-            subtitle: `${context.stage}目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
+            subtitle: `${stage}目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
             tag: `${target.minutes} 分钟`,
             minutes: target.minutes,
             note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加负重；不要在同一周同时大幅增加距离和爬升。",
@@ -2500,7 +2592,7 @@
         if (index === 7) {
           return {
             title: "休息与复盘",
-            subtitle: `${context.stage} · 轻松走20–30分钟，整理装备，不安排力量和爬坡${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
+            subtitle: `${stage} · 轻松走20–30分钟，整理装备，不安排力量和爬坡${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
             tag: "20 分钟",
             minutes: 20,
             note: "休息日不是躺平考核：轻微活动有助于恢复，但不要为了补进度加练。",
@@ -2514,7 +2606,7 @@
         if (index === 1) {
           return {
             title: "下肢与核心",
-            subtitle: `30分钟力量基础 · ${context.stage}周六目标${target.load}`,
+            subtitle: `30分钟力量基础 · ${stage}周六目标${target.load}`,
             tag: "30 分钟",
             minutes: 30,
             note: "深蹲和上步只用能保持膝盖对准脚尖的重量；如果膝痛，改坐站或低台阶，不要硬完成次数。",
@@ -2530,7 +2622,7 @@
         if (index === 2) {
           return {
             title: "有氧与坡度",
-            subtitle: `${context.stage} · 保持能说话的节奏，建立山路发动机`,
+            subtitle: `${stage} · 保持能说话的节奏，建立山路发动机`,
             tag: "30 分钟",
             minutes: 30,
             note: "优先快走，不跑楼梯。若前一晚加班或睡眠不足，直接改恢复版。",
@@ -2545,7 +2637,7 @@
         if (index === 3) {
           return {
             title: "上肢与核心",
-            subtitle: `${context.stage} · 肩胛稳定，让相机重量落在骨盆和背包上`,
+            subtitle: `${stage} · 肩胛稳定，让相机重量落在骨盆和背包上`,
             tag: "30 分钟",
             minutes: 30,
             note: "动作质量优先于次数。肩前侧刺痛、麻木或耸肩明显时，停止俯卧撑和划船。",
@@ -2561,7 +2653,7 @@
         if (index === 4) {
           return {
             title: "恢复与灵活性",
-            subtitle: `${context.stage} · 给周末${target.load}负重留下余量`,
+            subtitle: `${stage} · 给周末${target.load}负重留下余量`,
             tag: "25 分钟",
             minutes: 25,
             note: "全程只到拉伸感，不追求疼痛。若身体特别疲劳，可以只做一轮并提前睡觉。",
@@ -2575,7 +2667,7 @@
         }
         return {
           title: "负重楼梯/坡走",
-          subtitle: `${context.stage}短时坡度训练 · 背包建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`,
+          subtitle: `${stage}短时坡度训练 · 背包建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`,
           tag: "30 分钟",
           minutes: 30,
           note: "不跑楼梯，不追配速。若膝、踝或腰出现刺痛，马上改平地慢走并记录。",
@@ -2879,6 +2971,60 @@
         };
       }
 
+      function baseWorkoutSummary(date) {
+        const index = dayIndex(fromISO(date));
+        const context = scheduledContextForDate(date);
+        const {target} = context;
+        if (index === 1) return {title: "下肢与核心", detail: `30分钟 · ${context.stage} · 深蹲、上步、核心稳定`};
+        if (index === 2) return {title: "有氧与坡度", detail: `30分钟 · ${context.stage} · 快走和短坡度间歇`};
+        if (index === 3) return {title: "上肢与核心", detail: `30分钟 · ${context.stage} · 肩胛稳定和背包划船`};
+        if (index === 4) return {title: "恢复与灵活性", detail: `25分钟 · ${context.stage} · 踝、髋、胸椎活动`};
+        if (index === 5) return {title: "负重楼梯/坡走", detail: `30分钟 · 背包约${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg · 不跑楼梯`};
+        if (index === 6) return {title: "长距离徒步/负重步行", detail: `${target.minutes}分钟 · ${target.load} · ${target.ascent}`};
+        return {title: "休息与复盘", detail: "主动恢复 · 整理装备和路线"};
+      }
+
+      function clampPreviewStartDate() {
+        const start = fromISO(store.settings.startDate || defaultStart);
+        const end = programEndDate();
+        const minDate = dateDiff(todayISO, toISO(start)) < 0 ? start : fromISO(todayISO);
+        let preview = fromISO(state.previewStartDate || todayISO);
+        if (dateDiff(toISO(preview), toISO(minDate)) < 0) preview = minDate;
+        if (dateDiff(toISO(preview), toISO(end)) > 0) preview = addDays(end, -6);
+        if (dateDiff(toISO(preview), toISO(minDate)) < 0) preview = minDate;
+        state.previewStartDate = toISO(preview);
+      }
+
+      function futurePlanRows(startDate, length = 7) {
+        const end = programEndDate();
+        const dynamic = scheduleStateForDate(startDate);
+        const pending = dynamic.pendingBefore.slice();
+        const rows = [];
+        let cursor = fromISO(startDate);
+        let guard = 0;
+        while (rows.length < length && dateDiff(toISO(cursor), toISO(end)) <= 0 && guard < 30) {
+          const iso = toISO(cursor);
+          const originalTraining = isPlanTrainingDay(iso);
+          const canUseSlot = isWithinProgram(iso) && (originalTraining || pending.length > 0);
+          const assignedDate = canUseSlot ? (pending.shift() || (originalTraining ? iso : "")) : "";
+          if (assignedDate && assignedDate !== iso && originalTraining) pushUnique(pending, iso);
+          const summary = assignedDate ? baseWorkoutSummary(assignedDate) : baseWorkoutSummary(iso);
+          const status = assignedDate ? assignedDate === iso ? "计划" : originalTraining ? "补训" : "缓冲" : "休息";
+          const assignedLabel = assignedDate && assignedDate !== iso ? `补 ${shortDateLabel.format(fromISO(assignedDate))} · ` : "";
+          rows.push({
+            date: iso,
+            assignedDate,
+            title: summary.title,
+            detail: assignedDate ? `${assignedLabel}${summary.detail}` : summary.detail,
+            status,
+            rest: !assignedDate
+          });
+          cursor = addDays(cursor, 1);
+          guard += 1;
+        }
+        return {rows, pendingAfter: pending};
+      }
+
       function renderWeek() {
         const context = getPlanContext();
         const {target, program} = context;
@@ -2955,6 +3101,32 @@
           <div class="progression-copy"><strong>${item.focus}</strong><span>周六 ${item.minutes}分钟 · ${item.ascent} · ${item.phase}阶段</span></div>
           <div class="progression-load">${item.load}</div>
         </div>`).join("");
+        renderFuturePlan();
+      }
+
+      function renderFuturePlan() {
+        clampPreviewStartDate();
+        const start = fromISO(state.previewStartDate);
+        const end = programEndDate();
+        const preview = futurePlanRows(state.previewStartDate);
+        const last = preview.rows.length ? fromISO(preview.rows[preview.rows.length - 1].date) : start;
+        document.getElementById("futureRange").textContent = `${shortDateLabel.format(start)} – ${shortDateLabel.format(last)}`;
+        document.getElementById("futurePrevious").disabled = dateDiff(state.previewStartDate, todayISO) <= 0;
+        document.getElementById("futureNext").disabled = dateDiff(toISO(addDays(start, 7)), toISO(end)) > 0;
+        document.getElementById("futurePlanList").innerHTML = preview.rows.map((item) => {
+          const date = fromISO(item.date);
+          const isToday = item.date === todayISO;
+          return `<button class="future-plan-row ${item.rest ? "rest" : ""}" type="button" data-action="select-date" data-date="${item.date}">
+            <span class="future-plan-date">${isToday ? "今天" : weekdayNames[dayIndex(date) - 1]}<br>${shortDateLabel.format(date)}</span>
+            <span class="future-plan-copy"><strong>${item.title}</strong><span>${item.detail}</span></span>
+            <span class="future-plan-status">${item.status}</span>
+          </button>`;
+        }).join("");
+        const fixedEnd = shortDateLabel.format(end);
+        const remainingText = preview.pendingAfter.length
+          ? `本段之后仍有${preview.pendingAfter.length}项待补；固定结束日${fixedEnd}，不再向后延长。`
+          : `固定结束日${fixedEnd}；后续预览会随打卡和天气调整更新。`;
+        document.getElementById("futurePlanNote").textContent = remainingText;
       }
 
       function renderAll() {
@@ -3114,6 +3286,7 @@
           const programType = programButton.dataset.program;
           if (!trainingPrograms[programType] || programType === store.settings.programType) return;
           store.settings.programType = programType;
+          state.previewStartDate = todayISO;
           saveStore();
           renderAll();
           showToast(`已切换为${trainingPrograms[programType].label}`);
@@ -3134,6 +3307,17 @@
         }
         if (action === "go-today") {
           state.selectedDate = toISO(today);
+          state.previewStartDate = todayISO;
+          renderAll();
+          return;
+        }
+        if (action === "preview-previous") {
+          state.previewStartDate = toISO(addDays(fromISO(state.previewStartDate), -7));
+          renderAll();
+          return;
+        }
+        if (action === "preview-next") {
+          state.previewStartDate = toISO(addDays(fromISO(state.previewStartDate), 7));
           renderAll();
           return;
         }
@@ -3241,6 +3425,7 @@
         if (event.target.id === "startDateInput") {
           if (!event.target.value) return;
           store.settings.startDate = event.target.value;
+          state.previewStartDate = todayISO;
           saveStore();
           renderAll();
           showToast("计划开始日已更新");
