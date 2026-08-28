@@ -516,6 +516,36 @@
 
     .plan-summary-plan { margin-bottom: 13px; }
 
+    .adjustment-card {
+      display: grid;
+      gap: 5px;
+      margin: -2px 0 13px;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--ink);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .adjustment-card strong {
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .adjustment-card span {
+      color: var(--ink-soft);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .adjustment-card em {
+      color: var(--green-dark);
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 800;
+    }
+
     .program-switch {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       margin: 0 0 7px;
@@ -810,10 +840,15 @@
       font-size: 12px;
     }
 
+    .workout-actions {
+      display: grid;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
     .complete-button {
       width: 100%;
       min-height: 46px;
-      margin-top: 14px;
       border: 1px solid var(--ink);
       border-radius: 6px;
       color: #f3d37a;
@@ -823,6 +858,23 @@
     }
 
     .complete-button.done { color: var(--green-dark); background: var(--green-soft); }
+
+    .defer-button {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      color: var(--ink-soft);
+      background: var(--paper);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .defer-button.active {
+      border-color: var(--green);
+      color: var(--green-dark);
+      background: var(--green-soft);
+    }
 
     .checkin-intro {
       margin: 4px 0 11px;
@@ -967,6 +1019,8 @@
     .day-button.selected { border-color: var(--green); box-shadow: inset 0 -3px 0 var(--green); color: var(--green-dark); }
     .day-button.today strong { color: var(--coral); }
     .day-button.complete em { color: var(--green); font-weight: 800; }
+    .day-button.deferred { border-style: dashed; }
+    .day-button.deferred em { color: var(--green-dark); font-weight: 800; }
 
     .week-list {
       margin-top: 18px;
@@ -994,6 +1048,7 @@
     .week-list-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
     .week-list-status { font-size: 18px; }
     .week-list-status.complete { color: var(--green); }
+    .week-list-status.deferred { color: var(--green-dark); }
     .week-list-status.pending { color: var(--line-strong); }
 
     .subheading {
@@ -1350,6 +1405,11 @@
           <strong id="todayPlanTarget">4 kg · 75 分钟</strong>
           <span id="todayPlanFocus">熟悉背包贴合、鞋袜与走姿</span>
         </div>
+        <div id="adjustmentCard" class="adjustment-card" aria-live="polite">
+          <strong id="adjustmentTitle">动态调整</strong>
+          <span id="adjustmentText">没有待补训练，今天按计划执行。</span>
+          <em id="adjustmentMeta">自动顺延已开启</em>
+        </div>
 
         <div id="timeline" class="timeline" aria-label="详细时间表"></div>
 
@@ -1369,7 +1429,10 @@
           </div>
           <div id="workoutSteps" class="workout-steps"></div>
           <p id="workoutNote" class="workout-note"></p>
-          <button id="completeWorkout" class="complete-button" type="button" data-action="complete-workout">完成今日训练</button>
+          <div class="workout-actions">
+            <button id="completeWorkout" class="complete-button" type="button" data-action="complete-workout">完成今日训练</button>
+            <button id="deferWorkout" class="defer-button" type="button" data-action="toggle-defer">今日顺延</button>
+          </div>
         </section>
 
         <section class="checkin-sheet" aria-labelledby="checkinTitle">
@@ -1799,9 +1862,10 @@
       const thunderWeatherCodes = new Set([95, 96, 99]);
 
       const defaultStart = toISO(getMonday(today));
+      const todayISO = toISO(today);
       let store = loadStore();
       const state = {
-        selectedDate: toISO(today),
+        selectedDate: todayISO,
         activeTab: "today",
         timer: {signature: "", seconds: 1800, running: false, interval: null}
       };
@@ -1841,6 +1905,52 @@
 
       function activeProgram() {
         return trainingPrograms[store.settings.programType] || trainingPrograms.eight;
+      }
+
+      function isPlanTrainingDay(date) {
+        return dayIndex(fromISO(date)) <= 6;
+      }
+
+      function deferredDatesBefore(date = state.selectedDate) {
+        const dates = [];
+        let cursor = fromISO(store.settings.startDate || defaultStart);
+        let guard = 0;
+        while (dateDiff(toISO(cursor), date) < 0 && guard < 500) {
+          const iso = toISO(cursor);
+          if (dateDiff(iso, todayISO) > 0) break;
+          if (isPlanTrainingDay(iso)) {
+            const record = store.records[iso];
+            if (!record || (!record.updatedAt && !record.deferred)) {
+              cursor = addDays(cursor, 1);
+              guard += 1;
+              continue;
+            }
+            const done = Boolean(record && record.workoutDone);
+            const explicitToday = iso === todayISO && Boolean(record.deferred);
+            const alreadyPast = dateDiff(iso, todayISO) < 0;
+            if (!done && (record.deferred || alreadyPast || explicitToday)) dates.push(iso);
+          }
+          cursor = addDays(cursor, 1);
+          guard += 1;
+        }
+        return dates;
+      }
+
+      function dynamicPlanForDate(date = state.selectedDate) {
+        const pending = deferredDatesBefore(date);
+        const carryDate = pending[0] || "";
+        return {
+          pending,
+          carryDate,
+          effectiveDate: carryDate || date,
+          shifted: Boolean(carryDate),
+          deferredCount: pending.length
+        };
+      }
+
+      function workoutDateFor(date = state.selectedDate, mode = getRecord(date).mode) {
+        if (mode === "recovery") return date;
+        return dynamicPlanForDate(date).effectiveDate;
       }
 
       function asNumber(value) {
@@ -2083,7 +2193,7 @@
             level: "alert",
             symbol: "!",
             title: "今天不适合户外负重",
-            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不背摄影包、不爬坡；雷电时留在室内。`,
+            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不背摄影包、不爬坡；可点“切换恢复版”，系统会把今天顺延。`,
             recovery: true
           };
         }
@@ -2091,9 +2201,9 @@
           if (!reasons.length) addReason("路况或体感一般");
           let text = `${reasons.join("、")}。${plannedActivity}：`;
           if (dateIndex === 6) text += "长距离安排建议延期；若必须出门，缩短路线、取消负重并避开湿滑路段。";
-          else if (dateIndex === 5) text += "坡走/楼梯改为平地快走，取消负重并避开湿滑路面。";
+          else if (dateIndex === 5) text += "坡走/楼梯可顺延一天，今天改平地快走并避开湿滑路面。";
           else if (todayRecord.mode === "recovery") text += "保持恢复活动即可，不为补进度加练。";
-          else text += "今天保留训练习惯，降一级强度，优先室内力量或平地快走。";
+          else text += "今天保留训练习惯，降一级强度；若没有完成，明天会优先显示这次训练。";
           return {level: "warn", symbol: "~", title: "户外条件一般，降一级", text, recovery: false};
         }
         const range = [];
@@ -2177,6 +2287,7 @@
             pain: "none",
             notes: "",
             workoutDone: false,
+            deferred: false,
             habits: {},
             steps: {}
           };
@@ -2188,15 +2299,25 @@
         if (typeof record.sleep !== "number") record.sleep = 7.75;
         if (typeof record.energy !== "number") record.energy = 3;
         if (!record.pain) record.pain = "none";
+        if (typeof record.deferred !== "boolean") record.deferred = false;
         return record;
       }
 
-      function currentProgramWeek(date = state.selectedDate) {
+      function baseProgramWeek(date = state.selectedDate) {
         const raw = Math.floor(dateDiff(date, store.settings.startDate) / 7) + 1;
         return clamp(raw, 1, activeProgram().duration);
       }
 
+      function currentProgramWeek(date = state.selectedDate) {
+        return baseProgramWeek(dynamicPlanForDate(date).effectiveDate);
+      }
+
       function isAfterProgram(date = state.selectedDate) {
+        const effectiveDate = dynamicPlanForDate(date).effectiveDate;
+        return dateDiff(effectiveDate, store.settings.startDate) >= activeProgram().duration * 7;
+      }
+
+      function isAfterBaseProgram(date = state.selectedDate) {
         return dateDiff(date, store.settings.startDate) >= activeProgram().duration * 7;
       }
 
@@ -2206,15 +2327,17 @@
 
       function getPlanContext(date = state.selectedDate) {
         const program = activeProgram();
-        const week = currentProgramWeek(date);
-        const target = currentTarget(date);
-        const after = isAfterProgram(date);
+        const dynamic = dynamicPlanForDate(date);
+        const week = baseProgramWeek(dynamic.effectiveDate);
+        const target = program.progression[week - 1];
+        const after = isAfterBaseProgram(dynamic.effectiveDate);
         return {
           program,
           week,
           target,
           after,
-          stage: after ? "巩固期" : `第${week}周`
+          dynamic,
+          stage: after ? "巩固期" : dynamic.shifted ? `顺延第${week}周` : `第${week}周`
         };
       }
 
@@ -2225,7 +2348,9 @@
         const heroEyebrow = `${program.label} · ${stage} · ${target.phase}`;
         const heroSubtitle = context.after
           ? `沿用第${context.week}周目标：${target.focus}。按身体反馈维持，不急着加重。`
-          : `${target.focus}。本周先完成${target.minutes}分钟长走，再考虑增加负重。`;
+          : context.dynamic.shifted
+            ? `有${context.dynamic.deferredCount}次训练顺延，今天先补${shortDateLabel.format(fromISO(context.dynamic.carryDate))}的内容。`
+            : `${target.focus}。本周先完成${target.minutes}分钟长走，再考虑增加负重。`;
         const targetSummary = `${stage} · ${target.load} · ${target.minutes}分钟 · ${target.ascent}`;
         document.getElementById("heroEyebrow").textContent = heroEyebrow;
         document.getElementById("heroSubtitle").textContent = heroSubtitle;
@@ -2276,7 +2401,8 @@
       }
 
       function getWorkout(date = state.selectedDate, mode = getRecord(date).mode) {
-        const index = dayIndex(fromISO(date));
+        const workoutDate = workoutDateFor(date, mode);
+        const index = dayIndex(fromISO(workoutDate));
         const context = getPlanContext(date);
         const target = context.target;
         if (mode === "recovery") {
@@ -2297,7 +2423,7 @@
         if (index === 6) {
           return {
             title: "长距离徒步/负重步行",
-            subtitle: `${context.stage}目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}`,
+            subtitle: `${context.stage}目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
             tag: `${target.minutes} 分钟`,
             minutes: target.minutes,
             note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加负重；不要在同一周同时大幅增加距离和爬升。",
@@ -2312,7 +2438,7 @@
         if (index === 7) {
           return {
             title: "休息与复盘",
-            subtitle: `${context.stage} · 轻松走20–30分钟，整理装备，不安排力量和爬坡`,
+            subtitle: `${context.stage} · 轻松走20–30分钟，整理装备，不安排力量和爬坡${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
             tag: "20 分钟",
             minutes: 20,
             note: "休息日不是躺平考核：轻微活动有助于恢复，但不要为了补进度加练。",
@@ -2401,7 +2527,8 @@
       }
 
       function makeSchedule(date, mode) {
-        const index = dayIndex(fromISO(date));
+        const workoutDate = workoutDateFor(date, mode);
+        const index = dayIndex(fromISO(workoutDate));
         const context = getPlanContext(date);
         const target = context.target;
         const plannedWorkout = getWorkout(date, mode);
@@ -2480,10 +2607,11 @@
 
       function renderDateContext() {
         const date = fromISO(state.selectedDate);
-        const isToday = state.selectedDate === toISO(today);
+        const isToday = state.selectedDate === todayISO;
         const context = getPlanContext();
         document.getElementById("selectedDateLabel").textContent = isToday ? "今天 · " + dateLabel.format(date) : dateLabel.format(date);
-        document.getElementById("selectedDateSub").textContent = `${context.program.shortLabel} · ${context.stage} · ${state.selectedDate}`;
+        const dynamicText = context.dynamic.shifted ? ` · 待补${context.dynamic.deferredCount}次` : "";
+        document.getElementById("selectedDateSub").textContent = `${context.program.shortLabel} · ${context.stage}${dynamicText} · ${state.selectedDate}`;
       }
 
       function renderReadiness() {
@@ -2507,6 +2635,36 @@
           recovery: "多睡20分钟；07:25–08:25预留1小时洗漱、早餐、收拾，训练只做恢复活动。"
         };
         document.getElementById("modeNote").textContent = notes[record.mode];
+      }
+
+      function renderAdjustment() {
+        const record = getRecord();
+        const context = getPlanContext();
+        const dynamic = context.dynamic;
+        const selectedIsToday = state.selectedDate === todayISO;
+        const selectedIsFuture = dateDiff(state.selectedDate, todayISO) > 0;
+        const selectedIsTrainingDay = isPlanTrainingDay(state.selectedDate);
+        const title = dynamic.shifted ? "训练已顺延" : record.deferred ? "今日已顺延" : "动态调整";
+        let text = "没有待补训练，今天按计划执行。";
+        let meta = "自动顺延已开启";
+        if (dynamic.shifted) {
+          const carryDate = fromISO(dynamic.carryDate);
+          const carryWorkout = getWorkout(dynamic.carryDate, "standard");
+          text = `当前有${dynamic.deferredCount}次训练待补，今天优先补${shortDateLabel.format(carryDate)}的${carryWorkout.title}。`;
+          meta = `顺延后仍按${context.stage} · ${context.target.load} · ${context.target.minutes}分钟执行`;
+        } else if (record.deferred) {
+          text = "今天已标记为顺延，不算失败；下一次训练日会优先补回。";
+          meta = "天气、加班、睡眠不足都可以这样处理";
+        } else if (selectedIsFuture) {
+          text = "未来日期会自动承接之前未完成的训练；完成后再推进下一项。";
+          meta = "计划跟随真实完成情况更新";
+        } else if (!selectedIsTrainingDay) {
+          text = "今天是休息复盘日，不会被算作漏练。";
+          meta = "恢复日不强行补训练";
+        }
+        document.getElementById("adjustmentTitle").textContent = title;
+        document.getElementById("adjustmentText").textContent = text;
+        document.getElementById("adjustmentMeta").textContent = meta;
       }
 
       function renderTimeline() {
@@ -2571,6 +2729,9 @@
 
       function renderWorkout() {
         const record = getRecord();
+        const context = getPlanContext();
+        const workoutDate = workoutDateFor(state.selectedDate, record.mode);
+        const workoutRecord = getRecord(workoutDate);
         const workout = getWorkout(state.selectedDate, record.mode);
         ensureTimer(workout);
         document.getElementById("workoutTitle").textContent = workout.title;
@@ -2579,7 +2740,7 @@
         document.getElementById("timerValue").textContent = formatTimer(state.timer.seconds);
         document.getElementById("timerStart").textContent = state.timer.running ? "暂停" : (state.timer.seconds === 0 ? "重来" : "开始");
         document.getElementById("workoutSteps").innerHTML = workout.steps.map((step, index) => {
-          const done = Boolean(record.steps[step.id]);
+          const done = Boolean(workoutRecord.steps[step.id]);
           const guideLinks = guideKeysForStep(step).map((key) => `<button class="exercise-link" type="button" data-action="open-exercise" data-exercise="${key}">看${exerciseGuides[key].short}图</button>`).join("");
           return `<div class="workout-step ${done ? "done" : ""}">
             <div class="step-number">${index + 1}</div>
@@ -2590,8 +2751,16 @@
         }).join("");
         document.getElementById("workoutNote").textContent = workout.note;
         const complete = document.getElementById("completeWorkout");
-        complete.classList.toggle("done", Boolean(record.workoutDone));
-        complete.textContent = record.workoutDone ? "已完成今日训练 · 再次点击取消" : "完成今日训练";
+        const completingShifted = workoutDate !== state.selectedDate;
+        complete.classList.toggle("done", Boolean(workoutRecord.workoutDone));
+        complete.textContent = workoutRecord.workoutDone
+          ? completingShifted ? "已完成顺延训练 · 再次点击取消" : "已完成今日训练 · 再次点击取消"
+          : completingShifted ? `完成顺延训练 · 补${shortDateLabel.format(fromISO(workoutDate))}` : "完成今日训练";
+        const defer = document.getElementById("deferWorkout");
+        const canDefer = isPlanTrainingDay(state.selectedDate) && !record.workoutDone && dateDiff(state.selectedDate, todayISO) <= 0;
+        defer.hidden = !canDefer;
+        defer.classList.toggle("active", Boolean(record.deferred));
+        defer.textContent = record.deferred ? "已顺延 · 点击取消" : context.dynamic.shifted ? "继续顺延今天" : "今日顺延";
       }
 
       function renderCheckin() {
@@ -2606,16 +2775,19 @@
       function renderToday() {
         const context = getPlanContext();
         const {target, program} = context;
-        const index = dayIndex(fromISO(state.selectedDate));
-        document.getElementById("todayHeading").textContent = index === 6 ? "今日长距离安排" : index === 7 ? "今日休息安排" : "今日时间表";
+        const index = dayIndex(fromISO(workoutDateFor(state.selectedDate, getRecord().mode)));
+        document.getElementById("todayHeading").textContent = context.dynamic.shifted ? "今日补训安排" : index === 6 ? "今日长距离安排" : index === 7 ? "今日休息安排" : "今日时间表";
         document.getElementById("todayHeadingSub").textContent = index === 6
           ? `${context.stage} · ${target.load} / ${target.minutes}分钟 / ${target.ascent} · 先完成时间，再逐步增加负重`
           : index === 7
             ? `${context.stage} · 本周目标已列在上方，今天只做主动恢复`
-            : `${context.stage} · 按时间节点完成今天的训练`;
+            : context.dynamic.shifted
+              ? `${context.stage} · 顺延训练优先，完成后计划自动回到下一项`
+              : `${context.stage} · 按时间节点完成今天的训练`;
         document.getElementById("todayWeekLabel").textContent = `${program.shortLabel} · ${context.stage}`;
         renderReadiness();
         renderMode();
+        renderAdjustment();
         renderTimeline();
         renderWorkout();
         renderCheckin();
@@ -2651,6 +2823,7 @@
         const percent = Math.round((stats.done / 6) * 100);
         const monday = dates[0];
         const sunday = dates[6];
+        const dynamicNote = context.dynamic.shifted ? ` · 待补${context.dynamic.deferredCount}次` : "";
         document.getElementById("weekHeading").textContent = `${program.shortLabel} · ${context.stage}节奏`;
         document.getElementById("weekHeadingSub").textContent = `本周重点：${target.focus}。完成训练日，比一次练到力竭更重要`;
         document.getElementById("weekOverviewTitle").textContent = `${program.shortLabel} · ${context.stage}`;
@@ -2660,15 +2833,16 @@
         document.getElementById("weekDoneCount").textContent = `${Math.min(stats.done, 6)}/6`;
         document.getElementById("weekSleepAvg").textContent = stats.sleep === null ? "—" : `${stats.sleep.toFixed(1)}h`;
         document.getElementById("weekPackAvg").textContent = stats.pack === null ? "—" : `${stats.pack.toFixed(1)}kg`;
-        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · ${context.stage}周六目标 ${target.load} / ${target.minutes}分钟 · ${target.ascent}`;
+        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · ${context.stage}周六目标 ${target.load} / ${target.minutes}分钟 · ${target.ascent}${dynamicNote}`;
         document.getElementById("weekDays").innerHTML = dates.map((date) => {
           const iso = toISO(date);
           const record = store.records[iso];
           const complete = Boolean(record && record.workoutDone);
+          const deferred = Boolean(record && record.deferred && !complete);
           const isSelected = iso === state.selectedDate;
-          const isToday = iso === toISO(today);
-          return `<button class="day-button ${isSelected ? "selected" : ""} ${isToday ? "today" : ""} ${complete ? "complete" : ""}" type="button" data-action="select-date" data-date="${iso}">
-            <strong>${weekdayNames[date.getDay() === 0 ? 6 : date.getDay() - 1]}</strong><span>${date.getDate()}</span><em>${complete ? "已完成" : "查看"}</em>
+          const isToday = iso === todayISO;
+          return `<button class="day-button ${isSelected ? "selected" : ""} ${isToday ? "today" : ""} ${complete ? "complete" : ""} ${deferred ? "deferred" : ""}" type="button" data-action="select-date" data-date="${iso}">
+            <strong>${weekdayNames[date.getDay() === 0 ? 6 : date.getDay() - 1]}</strong><span>${date.getDate()}</span><em>${complete ? "已完成" : deferred ? "顺延" : "查看"}</em>
           </button>`;
         }).join("");
         document.getElementById("weekList").innerHTML = dates.map((date) => {
@@ -2676,6 +2850,7 @@
           const record = store.records[iso];
           const index = dayIndex(date);
           const done = Boolean(record && record.workoutDone);
+          const deferred = Boolean(record && record.deferred && !done);
           const dateContext = getPlanContext(iso);
           const workout = getWorkout(iso, record && record.mode ? record.mode : "standard");
           const detail = index === 6
@@ -2683,10 +2858,12 @@
             : index === 7
               ? "主动恢复 · 不安排力量和爬坡"
               : `${workout.tag} · ${dateContext.target.focus}`;
+          const statusText = done ? "✓" : deferred ? "↷" : "○";
+          const statusClass = done ? "complete" : deferred ? "deferred" : "pending";
           return `<button class="week-list-row" type="button" data-action="select-date" data-date="${iso}" style="width:100%;border-left:0;border-right:0;border-top:0;text-align:left;background:transparent">
             <span class="week-list-day">${weekdayNames[index - 1]}</span>
-            <span class="week-list-copy"><strong>${workout.title}</strong><span>${detail}</span></span>
-            <span class="week-list-status ${done ? "complete" : "pending"}" aria-label="${done ? "已完成" : "未完成"}">${done ? "✓" : "○"}</span>
+            <span class="week-list-copy"><strong>${workout.title}</strong><span>${deferred ? "已顺延 · " : ""}${detail}</span></span>
+            <span class="week-list-status ${statusClass}" aria-label="${done ? "已完成" : deferred ? "已顺延" : "未完成"}">${statusText}</span>
           </button>`;
         }).join("");
       }
@@ -2732,7 +2909,11 @@
       }
 
       function updateRecord(mutator, rerender = false) {
-        const record = getRecord();
+        updateRecordByDate(state.selectedDate, mutator, rerender);
+      }
+
+      function updateRecordByDate(date, mutator, rerender = false) {
+        const record = getRecord(date);
         mutator(record);
         record.updatedAt = new Date().toISOString();
         saveStore();
@@ -2905,12 +3086,28 @@
         }
         if (action === "toggle-step") {
           const key = actionElement.dataset.key;
-          updateRecord((record) => { record.steps[key] = !record.steps[key]; }, true);
+          const workoutDate = workoutDateFor(state.selectedDate, getRecord().mode);
+          updateRecordByDate(workoutDate, (record) => { record.steps[key] = !record.steps[key]; }, true);
           return;
         }
         if (action === "complete-workout") {
-          updateRecord((record) => { record.workoutDone = !record.workoutDone; }, true);
-          showToast(getRecord().workoutDone ? "今天的训练已打卡" : "已取消训练完成标记");
+          const workoutDate = workoutDateFor(state.selectedDate, getRecord().mode);
+          updateRecordByDate(workoutDate, (record) => {
+            record.workoutDone = !record.workoutDone;
+            if (record.workoutDone) record.deferred = false;
+          }, true);
+          showToast(getRecord(workoutDate).workoutDone ? "训练已打卡，计划已自动推进" : "已取消训练完成标记");
+          return;
+        }
+        if (action === "toggle-defer") {
+          updateRecord((record) => {
+            record.deferred = !record.deferred;
+            if (record.deferred) {
+              record.workoutDone = false;
+              record.mode = "recovery";
+            }
+          }, true);
+          showToast(getRecord().deferred ? "今天已顺延，下一次训练会优先补回" : "已取消今日顺延");
           return;
         }
         if (action === "set-energy") {
@@ -2931,9 +3128,13 @@
         }
         if (action === "weather-request") { requestWeather(); return; }
         if (action === "weather-use-recovery") {
-          state.selectedDate = toISO(today);
-          updateRecord((record) => { record.mode = "recovery"; }, true);
-          showToast("天气不佳，已切换为恢复版");
+          state.selectedDate = todayISO;
+          updateRecord((record) => {
+            record.mode = "recovery";
+            record.deferred = true;
+            record.workoutDone = false;
+          }, true);
+          showToast("天气不佳，今天已顺延并切换为恢复版");
           return;
         }
         if (action === "open-exercise") { openExercise(actionElement.dataset.exercise, actionElement); return; }
