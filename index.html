@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1b1a17">
-  <meta name="description" content="为徒步摄影装备设计的8周体能、作息与打卡计划。">
+  <meta name="description" content="为徒步摄影装备设计的8周体能、作息、天气建议与打卡计划。">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>徒步摄影体能计划</title>
@@ -296,6 +296,127 @@
     }
 
     .warn .status-action, .alert .status-action { display: inline-block; }
+
+    .weather-card {
+      min-width: 0;
+      margin-top: 10px;
+      padding: 11px 12px 10px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--yellow);
+      border-radius: var(--radius);
+      background: #fffdf8;
+    }
+
+    .weather-card.ready { border-left-color: var(--green); background: #fbfdfb; }
+    .weather-card.warn { border-left-color: var(--yellow); background: #fffdf8; }
+    .weather-card.alert { border-left-color: var(--coral); background: #fffaf8; }
+
+    .weather-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .weather-copy { min-width: 0; }
+
+    .weather-kicker {
+      margin: 0;
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+
+    .weather-location {
+      overflow-wrap: anywhere;
+      margin: 1px 0 0;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .weather-condition {
+      overflow-wrap: anywhere;
+      margin: 3px 0 0;
+      color: var(--ink-soft);
+      font-size: 11px;
+    }
+
+    .weather-symbol {
+      display: grid;
+      place-items: center;
+      width: 43px;
+      height: 43px;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: var(--green-dark);
+      background: var(--yellow-soft);
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .weather-facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    .weather-fact { min-width: 0; }
+    .weather-fact strong { display: block; overflow-wrap: anywhere; color: var(--ink); font-size: 15px; line-height: 1.2; }
+    .weather-fact span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.3; }
+
+    .weather-advice {
+      margin-top: 10px;
+      padding: 8px 9px;
+      border-left: 2px solid var(--yellow);
+      background: rgba(255,255,255,.5);
+    }
+
+    .weather-card.ready .weather-advice { border-left-color: var(--green); }
+    .weather-card.alert .weather-advice { border-left-color: var(--coral); }
+    .weather-advice strong { display: block; overflow-wrap: anywhere; color: var(--ink); font-size: 12px; line-height: 1.35; }
+    .weather-advice p { overflow-wrap: anywhere; margin: 3px 0 0; color: var(--ink-soft); font-size: 11px; line-height: 1.5; }
+
+    .weather-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      margin-top: 9px;
+    }
+
+    .weather-status {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .weather-buttons { display: flex; flex: 0 0 auto; gap: 5px; }
+
+    .weather-button {
+      min-height: 30px;
+      padding: 4px 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--ink-soft);
+      background: var(--paper);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .weather-button.primary { border-color: var(--ink); color: #f3d37a; background: var(--ink); }
+    .weather-button:hover { border-color: var(--green); background: var(--green-soft); }
+    .weather-button.primary:hover { color: #f3d37a; background: #302c24; }
+    .weather-button:disabled { cursor: wait; opacity: .65; }
+    .weather-button[hidden] { display: none; }
 
     .section-heading {
       display: flex;
@@ -1083,6 +1204,8 @@
       .timeline-row::before { left: 64px; }
       .timeline-group-title { margin-left: 67px; }
       .workout-step { grid-template-columns: 27px 58px 1fr 30px; gap: 7px; }
+      .weather-actions { grid-template-columns: 1fr; align-items: start; }
+      .weather-buttons { flex-wrap: wrap; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1125,6 +1248,33 @@
           </div>
           <button class="status-action" type="button" data-action="use-recovery">切换为恢复版</button>
         </div>
+
+        <section id="weatherCard" class="weather-card" aria-labelledby="weatherKicker">
+          <div class="weather-head">
+            <div class="weather-copy">
+              <p id="weatherKicker" class="weather-kicker">今日天气</p>
+              <h2 id="weatherLocation" class="weather-location">读取当前位置</h2>
+              <p id="weatherCondition" class="weather-condition">点击下方按钮后显示今日预报</p>
+            </div>
+            <div id="weatherSymbol" class="weather-symbol" aria-hidden="true">☼</div>
+          </div>
+          <div class="weather-facts" aria-label="今日天气数据">
+            <div class="weather-fact"><strong id="weatherTemperature">—</strong><span>当前气温</span></div>
+            <div class="weather-fact"><strong id="weatherRain">—</strong><span>降雨概率</span></div>
+            <div class="weather-fact"><strong id="weatherWind">—</strong><span>最大风速</span></div>
+          </div>
+          <div class="weather-advice">
+            <strong id="weatherAdviceTitle">先读取天气，再安排户外训练</strong>
+            <p id="weatherAdviceText">定位只在你点击后使用，天气结果保存在本机。</p>
+          </div>
+          <div class="weather-actions">
+            <span id="weatherStatus" class="weather-status" aria-live="polite">尚未读取</span>
+            <div class="weather-buttons">
+              <button id="weatherAction" class="weather-button primary" type="button" data-action="weather-request">读取位置天气</button>
+              <button id="weatherRecovery" class="weather-button" type="button" data-action="weather-use-recovery" hidden>切换恢复版</button>
+            </div>
+          </div>
+        </section>
 
         <div class="section-heading">
           <div>
@@ -1426,6 +1576,8 @@
       "use strict";
 
       const STORAGE_KEY = "photography-trail-training-v1";
+      const WEATHER_STORAGE_KEY = "photography-trail-weather-v1";
+      const WEATHER_CACHE_MAX_AGE = 6 * 60 * 60 * 1000;
       const today = new Date();
       const pad = (value) => String(value).padStart(2, "0");
       const toISO = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
@@ -1524,12 +1676,54 @@
         return matches;
       }
 
+      const weatherCodeInfo = {
+        0: {label: "晴", symbol: "☀"},
+        1: {label: "大部晴朗", symbol: "◒"},
+        2: {label: "局部多云", symbol: "◒"},
+        3: {label: "阴天", symbol: "☁"},
+        45: {label: "有雾", symbol: "≋"},
+        48: {label: "雾凇", symbol: "≋"},
+        51: {label: "小毛毛雨", symbol: "⋰"},
+        53: {label: "毛毛雨", symbol: "⋰"},
+        55: {label: "较强毛毛雨", symbol: "⋰"},
+        56: {label: "冻毛毛雨", symbol: "⋰"},
+        57: {label: "较强冻毛毛雨", symbol: "⋰"},
+        61: {label: "小雨", symbol: "☂"},
+        63: {label: "中雨", symbol: "☂"},
+        65: {label: "大雨", symbol: "☂"},
+        66: {label: "冻雨", symbol: "☂"},
+        67: {label: "较强冻雨", symbol: "☂"},
+        71: {label: "小雪", symbol: "❄"},
+        73: {label: "中雪", symbol: "❄"},
+        75: {label: "大雪", symbol: "❄"},
+        77: {label: "雪粒", symbol: "❄"},
+        80: {label: "小阵雨", symbol: "☂"},
+        81: {label: "阵雨", symbol: "☂"},
+        82: {label: "强阵雨", symbol: "☂"},
+        85: {label: "小阵雪", symbol: "❄"},
+        86: {label: "强阵雪", symbol: "❄"},
+        95: {label: "雷雨", symbol: "⚡"},
+        96: {label: "雷雨伴冰雹", symbol: "⚡"},
+        99: {label: "强雷雨伴冰雹", symbol: "⚡"}
+      };
+      const rainWeatherCodes = new Set([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82]);
+      const snowWeatherCodes = new Set([71, 73, 75, 77, 85, 86]);
+      const fogWeatherCodes = new Set([45, 48]);
+      const thunderWeatherCodes = new Set([95, 96, 99]);
+
       const defaultStart = toISO(getMonday(today));
       let store = loadStore();
       const state = {
         selectedDate: toISO(today),
         activeTab: "today",
         timer: {signature: "", seconds: 1800, running: false, interval: null}
+      };
+
+      const weatherState = {
+        status: "idle",
+        data: null,
+        error: "",
+        requestId: 0
       };
 
       function loadStore() {
@@ -1554,6 +1748,328 @@
           showToast("浏览器拒绝了本地保存，请检查隐私设置");
           return false;
         }
+      }
+
+      function asNumber(value) {
+        const number = Number(value);
+        return Number.isFinite(number) ? number : null;
+      }
+
+      function weatherInfo(code) {
+        const number = asNumber(code);
+        return weatherCodeInfo[number] || {label: "天气待确认", symbol: "·"};
+      }
+
+      function weatherCoordinates(latitude, longitude) {
+        return `${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°`;
+      }
+
+      function weatherDailyValue(daily, key) {
+        return daily && Array.isArray(daily[key]) ? asNumber(daily[key][0]) : null;
+      }
+
+      function saveWeatherCache(data) {
+        try {
+          localStorage.setItem(WEATHER_STORAGE_KEY, JSON.stringify({data}));
+        } catch (error) {
+          return false;
+        }
+        return true;
+      }
+
+      function restoreWeatherCache() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(WEATHER_STORAGE_KEY) || "null");
+          const data = saved && saved.data;
+          const fetchedAt = data && Date.parse(data.fetchedAt);
+          if (!data || typeof data !== "object" || !data.date || data.date !== toISO(new Date()) || !Number.isFinite(fetchedAt) || Date.now() - fetchedAt > WEATHER_CACHE_MAX_AGE || !data.current || !data.daily) return;
+          weatherState.data = data;
+          weatherState.status = "ready";
+        } catch (error) {
+          weatherState.data = null;
+        }
+      }
+
+      function makeForecastUrl(latitude, longitude) {
+        const params = new URLSearchParams({
+          latitude: latitude.toFixed(5),
+          longitude: longitude.toFixed(5),
+          current: "temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m",
+          daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max",
+          timezone: "auto",
+          forecast_days: "1",
+          temperature_unit: "celsius",
+          wind_speed_unit: "kmh"
+        });
+        return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+      }
+
+      function makeLocationUrl(latitude, longitude) {
+        const params = new URLSearchParams({
+          latitude: latitude.toFixed(5),
+          longitude: longitude.toFixed(5),
+          localityLanguage: "zh"
+        });
+        return `https://api.bigdatacloud.net/data/reverse-geocode-client?${params.toString()}`;
+      }
+
+      async function fetchJson(url) {
+        const controller = typeof AbortController === "function" ? new AbortController() : null;
+        const timeoutId = window.setTimeout(() => {
+          if (controller) controller.abort();
+        }, 12000);
+        const options = {cache: "no-store"};
+        if (controller) options.signal = controller.signal;
+        try {
+          const response = await fetch(url, options);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return await response.json();
+        } finally {
+          window.clearTimeout(timeoutId);
+        }
+      }
+
+      async function fetchLocationName(latitude, longitude) {
+        const payload = await fetchJson(makeLocationUrl(latitude, longitude));
+        const values = [payload.city, payload.locality, payload.principalSubdivision]
+          .map((value) => typeof value === "string" ? value.trim() : "")
+          .filter(Boolean)
+          .filter((value, index, list) => list.indexOf(value) === index);
+        return values.slice(0, 2).join(" · ");
+      }
+
+      function normalizeWeather(payload, latitude, longitude, locationName) {
+        const current = payload && payload.current;
+        const daily = payload && payload.daily;
+        const date = daily && Array.isArray(daily.time) ? daily.time[0] : "";
+        if (!current || !daily || !date) throw new Error("invalid-weather-response");
+        return {
+          date,
+          fetchedAt: new Date().toISOString(),
+          locationName: locationName || "当前位置",
+          coordinates: weatherCoordinates(latitude, longitude),
+          latitude,
+          longitude,
+          timezone: payload.timezone || "",
+          current: {
+            temperature: asNumber(current.temperature_2m),
+            apparentTemperature: asNumber(current.apparent_temperature),
+            precipitation: asNumber(current.precipitation),
+            weatherCode: asNumber(current.weather_code),
+            windSpeed: asNumber(current.wind_speed_10m)
+          },
+          daily: {
+            weatherCode: weatherDailyValue(daily, "weather_code"),
+            temperatureMax: weatherDailyValue(daily, "temperature_2m_max"),
+            temperatureMin: weatherDailyValue(daily, "temperature_2m_min"),
+            precipitationProbability: weatherDailyValue(daily, "precipitation_probability_max"),
+            precipitationSum: weatherDailyValue(daily, "precipitation_sum"),
+            windSpeedMax: weatherDailyValue(daily, "wind_speed_10m_max")
+          }
+        };
+      }
+
+      function locationErrorText(error) {
+        if (error && error.code === 1) return "定位权限未开启，请允许浏览器使用位置后重试。";
+        if (error && error.code === 2) return "暂时无法确定位置，请检查手机定位和网络后重试。";
+        if (error && error.code === 3) return "读取位置超时，请到室外或信号较好的地方重试。";
+        return "暂时无法读取位置，请稍后重试。";
+      }
+
+      async function fetchWeatherForPosition(position, requestId) {
+        const latitude = asNumber(position && position.coords && position.coords.latitude);
+        const longitude = asNumber(position && position.coords && position.coords.longitude);
+        if (latitude === null || longitude === null || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+          if (requestId === weatherState.requestId) {
+            weatherState.status = "error";
+            weatherState.error = "读取到的位置无效，请重新定位。";
+            renderWeather();
+          }
+          return;
+        }
+        try {
+          const payload = await fetchJson(makeForecastUrl(latitude, longitude));
+          const fallbackLocation = `当前位置 · ${weatherCoordinates(latitude, longitude)}`;
+          let locationName = fallbackLocation;
+          try {
+            locationName = (await fetchLocationName(latitude, longitude)) || fallbackLocation;
+          } catch (error) {
+            locationName = fallbackLocation;
+          }
+          const data = normalizeWeather(payload, latitude, longitude, locationName);
+          if (requestId !== weatherState.requestId) return;
+          weatherState.data = data;
+          weatherState.status = "ready";
+          weatherState.error = "";
+          saveWeatherCache(data);
+          renderWeather();
+        } catch (error) {
+          if (requestId !== weatherState.requestId) return;
+          weatherState.status = "error";
+          weatherState.error = "天气服务暂时不可用，请检查网络后重试。";
+          renderWeather();
+        }
+      }
+
+      function requestWeather() {
+        if (weatherState.status === "loading") return;
+        if (!navigator.geolocation) {
+          weatherState.status = "error";
+          weatherState.error = "当前浏览器不支持定位，请使用手机浏览器打开公开链接。";
+          renderWeather();
+          return;
+        }
+        const requestId = weatherState.requestId + 1;
+        weatherState.requestId = requestId;
+        weatherState.status = "loading";
+        weatherState.error = "";
+        renderWeather();
+        try {
+          navigator.geolocation.getCurrentPosition(
+            (position) => fetchWeatherForPosition(position, requestId),
+            (error) => {
+              if (requestId !== weatherState.requestId) return;
+              weatherState.status = "error";
+              weatherState.error = locationErrorText(error);
+              renderWeather();
+            },
+            {enableHighAccuracy: false, timeout: 12000, maximumAge: 15 * 60 * 1000}
+          );
+        } catch (error) {
+          if (requestId !== weatherState.requestId) return;
+          weatherState.status = "error";
+          weatherState.error = "当前页面无法调用定位，请使用 HTTPS 公开链接后重试。";
+          renderWeather();
+        }
+      }
+
+      function getWeatherAdvice(data) {
+        const current = data.current || {};
+        const daily = data.daily || {};
+        const code = daily.weatherCode !== null && daily.weatherCode !== undefined ? daily.weatherCode : current.weatherCode;
+        const numberCode = asNumber(code);
+        const info = weatherInfo(numberCode);
+        const rainProbability = asNumber(daily.precipitationProbability);
+        const rainAmount = asNumber(daily.precipitationSum);
+        const windSpeed = asNumber(daily.windSpeedMax !== null && daily.windSpeedMax !== undefined ? daily.windSpeedMax : current.windSpeed);
+        const temperatureMax = asNumber(daily.temperatureMax);
+        const temperatureMin = asNumber(daily.temperatureMin);
+        const reasons = [];
+        const addReason = (reason) => {
+          if (reason && !reasons.includes(reason)) reasons.push(reason);
+        };
+        const thunder = thunderWeatherCodes.has(numberCode);
+        const rain = rainWeatherCodes.has(numberCode);
+        const snow = snowWeatherCodes.has(numberCode);
+        const fog = fogWeatherCodes.has(numberCode);
+        const severeRain = (rainProbability !== null && rainProbability >= 80 && rain) || (rainAmount !== null && rainAmount >= 15);
+        const severe = thunder || (windSpeed !== null && windSpeed >= 45) || (temperatureMax !== null && temperatureMax >= 35) || (temperatureMin !== null && temperatureMin <= -10) || severeRain;
+        const caution = !severe && (rain || snow || fog || (rainProbability !== null && rainProbability >= 35) || (rainAmount !== null && rainAmount > .5) || (windSpeed !== null && windSpeed >= 25) || (temperatureMax !== null && temperatureMax >= 32) || (temperatureMin !== null && temperatureMin <= 0));
+        if (thunder) addReason("雷电");
+        if (windSpeed !== null && windSpeed >= 45) addReason(`大风${Math.round(windSpeed)} km/h`);
+        if (temperatureMax !== null && temperatureMax >= 35) addReason(`高温${Math.round(temperatureMax)}℃`);
+        if (temperatureMin !== null && temperatureMin <= -10) addReason(`低温${Math.round(temperatureMin)}℃`);
+        if (severeRain) addReason(rainAmount !== null && rainAmount >= 15 ? `预计降雨${Math.round(rainAmount)} mm` : `降雨概率${Math.round(rainProbability)}%`);
+        if (!severe && rain) addReason("有降雨");
+        if (!severe && snow) addReason("降雪或路滑");
+        if (!severe && fog) addReason("能见度较低");
+        if (!severe && windSpeed !== null && windSpeed >= 25) addReason(`风力${Math.round(windSpeed)} km/h`);
+        if (!severe && rainProbability !== null && rainProbability >= 35 && !rain) addReason(`降雨概率${Math.round(rainProbability)}%`);
+        if (!severe && temperatureMax !== null && temperatureMax >= 32) addReason(`高温${Math.round(temperatureMax)}℃`);
+        if (!severe && temperatureMin !== null && temperatureMin <= 0) addReason(`低温${Math.round(temperatureMin)}℃`);
+
+        const dateISO = toISO(new Date());
+        const dateIndex = dayIndex(fromISO(dateISO));
+        const todayRecord = getRecord(dateISO);
+        const workoutName = todayRecord.mode === "recovery" ? "恢复活动" : workoutNames[dateIndex];
+        if (severe) {
+          if (!reasons.length) addReason("天气风险较高");
+          return {
+            level: "alert",
+            symbol: "!",
+            title: "今天不适合户外负重",
+            text: `${reasons.join("、")}。${workoutName}改为室内恢复或平地轻松走，不背摄影包、不爬坡；雷电时留在室内。`,
+            recovery: true
+          };
+        }
+        if (caution) {
+          if (!reasons.length) addReason("路况或体感一般");
+          let text = `${reasons.join("、")}。`;
+          if (dateIndex === 6) text += "长距离安排建议延期；若必须出门，缩短路线、取消负重并避开湿滑路段。";
+          else if (dateIndex === 5) text += "坡走/楼梯改为平地快走，取消负重并避开湿滑路面。";
+          else if (todayRecord.mode === "recovery") text += "保持恢复活动即可，不为补进度加练。";
+          else text += "今天保留训练习惯，降一级强度，优先室内力量或平地快走。";
+          return {level: "warn", symbol: "~", title: "户外条件一般，降一级", text, recovery: false};
+        }
+        const range = [];
+        if (temperatureMax !== null) range.push(`高${Math.round(temperatureMax)}℃`);
+        if (temperatureMin !== null) range.push(`低${Math.round(temperatureMin)}℃`);
+        const rainText = rainProbability === null ? "降雨概率待确认" : `降雨概率${Math.round(rainProbability)}%`;
+        return {
+          level: "ready",
+          symbol: "✓",
+          title: "天气允许按计划训练",
+          text: `${info.label}${range.length ? `，${range.join(" / ")}` : ""}，${rainText}。今天${workoutName}按计划进行，带水并留意路面。`,
+          recovery: false
+        };
+      }
+
+      function weatherTime(value) {
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? "刚刚" : new Intl.DateTimeFormat("zh-CN", {hour: "2-digit", minute: "2-digit"}).format(date);
+      }
+
+      function weatherText(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+      }
+
+      function renderWeather() {
+        const card = document.getElementById("weatherCard");
+        if (!card) return;
+        const action = document.getElementById("weatherAction");
+        const recovery = document.getElementById("weatherRecovery");
+        const data = weatherState.data;
+        if (!data) {
+          card.className = `weather-card ${weatherState.status === "error" ? "alert" : ""}`;
+          weatherText("weatherLocation", weatherState.status === "loading" ? "正在读取位置…" : weatherState.status === "error" ? "天气暂不可用" : "读取当前位置");
+          weatherText("weatherCondition", weatherState.status === "loading" ? "正在获取今日预报" : weatherState.status === "error" ? weatherState.error : "点击下方按钮后显示今日预报");
+          weatherText("weatherSymbol", weatherState.status === "error" ? "!" : weatherState.status === "loading" ? "…" : "☼");
+          weatherText("weatherTemperature", "—");
+          weatherText("weatherRain", "—");
+          weatherText("weatherWind", "—");
+          weatherText("weatherAdviceTitle", weatherState.status === "error" ? "可以稍后重试" : weatherState.status === "loading" ? "正在查询天气" : "先读取天气，再安排户外训练");
+          weatherText("weatherAdviceText", weatherState.status === "error" ? "没有天气数据时，户外负重先按保守强度安排。" : weatherState.status === "loading" ? "请允许位置权限，稍候片刻。" : "定位只在你点击后使用，天气结果保存在本机。");
+          weatherText("weatherStatus", weatherState.status === "error" ? weatherState.error : weatherState.status === "loading" ? "正在读取位置…" : "尚未读取");
+          action.textContent = weatherState.status === "loading" ? "读取中…" : weatherState.status === "error" ? "重试" : "读取位置天气";
+          action.disabled = weatherState.status === "loading";
+          recovery.hidden = true;
+          return;
+        }
+
+        const code = data.daily.weatherCode !== null && data.daily.weatherCode !== undefined ? data.daily.weatherCode : data.current.weatherCode;
+        const info = weatherInfo(code);
+        const advice = getWeatherAdvice(data);
+        const currentTemperature = data.current.temperature === null ? "—" : `${Math.round(data.current.temperature)}℃`;
+        const range = [];
+        if (data.daily.temperatureMax !== null) range.push(`高${Math.round(data.daily.temperatureMax)}℃`);
+        if (data.daily.temperatureMin !== null) range.push(`低${Math.round(data.daily.temperatureMin)}℃`);
+        const condition = `${info.label}${range.length ? ` · ${range.join(" / ")}` : ""}`;
+        const rain = data.daily.precipitationProbability === null ? "—" : `${Math.round(data.daily.precipitationProbability)}%`;
+        const wind = data.daily.windSpeedMax === null ? "—" : `${Math.round(data.daily.windSpeedMax)} km/h`;
+        card.className = `weather-card ${advice.level}`;
+        weatherText("weatherLocation", data.locationName || "当前位置");
+        weatherText("weatherCondition", condition);
+        weatherText("weatherSymbol", info.symbol);
+        weatherText("weatherTemperature", currentTemperature);
+        weatherText("weatherRain", rain);
+        weatherText("weatherWind", wind);
+        weatherText("weatherAdviceTitle", advice.title);
+        weatherText("weatherAdviceText", advice.text);
+        weatherText("weatherStatus", weatherState.status === "loading" ? "正在更新天气…" : weatherState.error ? `${weatherState.error} 可重试` : `更新于${weatherTime(data.fetchedAt)} · ${data.coordinates}`);
+        action.textContent = weatherState.status === "loading" ? "刷新中…" : "刷新天气";
+        action.disabled = weatherState.status === "loading";
+        recovery.hidden = !advice.recovery;
       }
 
       function getRecord(date = state.selectedDate) {
@@ -1958,6 +2474,7 @@
         renderWorkout();
         renderCheckin();
         renderDateContext();
+        renderWeather();
       }
 
       function weekDates() {
@@ -2229,6 +2746,13 @@
           showToast("已切换为低睡眠恢复版");
           return;
         }
+        if (action === "weather-request") { requestWeather(); return; }
+        if (action === "weather-use-recovery") {
+          state.selectedDate = toISO(today);
+          updateRecord((record) => { record.mode = "recovery"; }, true);
+          showToast("天气不佳，已切换为恢复版");
+          return;
+        }
         if (action === "open-exercise") { openExercise(actionElement.dataset.exercise, actionElement); return; }
         if (action === "close-exercise") { closeExercise(); return; }
         if (action === "timer-start") { startTimer(); return; }
@@ -2276,6 +2800,7 @@
         if (event.key === "Escape") closeExercise();
       });
 
+      restoreWeatherCache();
       renderAll();
     })();
   </script>
