@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1b1a17">
-  <meta name="description" content="为徒步摄影装备设计的8周体能、作息、天气建议与打卡计划。">
+  <meta name="description" content="为徒步摄影装备设计的8周稳进或4–5周压缩体能、作息、天气建议与打卡计划。">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>徒步摄影体能计划</title>
@@ -477,6 +477,21 @@
       margin: -5px 0 10px;
       color: var(--muted);
       font-size: 12px;
+    }
+
+    .program-switch {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0 0 7px;
+    }
+
+    .program-switch button { min-height: 35px; }
+
+    .program-note {
+      overflow-wrap: anywhere;
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
     }
 
     .timeline {
@@ -1289,7 +1304,7 @@
           <button type="button" data-mode="overtime">加班日</button>
           <button type="button" data-mode="recovery">低睡眠</button>
         </div>
-        <p id="modeNote" class="mode-note">适用于18:30下班、19:00左右到家的一天。</p>
+        <p id="modeNote" class="mode-note">早晨固定预留07:25–08:25（1小时）洗漱、早餐和收拾，08:30出发。</p>
 
         <div id="timeline" class="timeline" aria-label="详细时间表"></div>
 
@@ -1379,11 +1394,17 @@
       <section id="planPanel" class="tab-panel" data-panel="plan">
         <div class="section-heading" style="margin-top:0">
           <div>
-            <h2>8 周进阶</h2>
-            <p>负重用水瓶替代器材，先练身体，再带相机</p>
+            <h2 id="planHeading">8周稳进版</h2>
+            <p id="planDescription">负重用水瓶替代器材，先练身体，再带相机</p>
           </div>
           <span id="planCurrentWeek" class="small-label">当前第 1 周</span>
         </div>
+
+        <div class="mode-switch program-switch" role="tablist" aria-label="训练计划版本">
+          <button type="button" data-program="eight" class="active">8周稳进</button>
+          <button type="button" data-program="compact">4–5周压缩</button>
+        </div>
+        <p id="programNote" class="program-note">适合从基础开始，给膝踝、肩背和睡眠留出适应余量。</p>
 
         <section class="gear-sheet" style="margin-top:0" aria-labelledby="gearTitle">
           <h2 id="gearTitle">先算清楚要背多少</h2>
@@ -1468,7 +1489,7 @@
           <details>
             <summary>周六 · 长距离徒步/负重步行</summary>
             <div class="detail-body">
-              <p>按上方8周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。</p>
+              <p id="longWalkTemplate">按上方8周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。</p>
               <ul><li>超过90分钟：每小时饮水约400–600 ml，按出汗量调整；每小时补30–45 g碳水。</li><li>第一次模拟不要带贵重相机，使用水瓶和沙袋把负重配平。</li><li>训练结束后记录脚底、膝、腰和肩带压力，第二天再决定是否升级。</li></ul>
             </div>
           </details>
@@ -1485,7 +1506,7 @@
           <table class="schedule-table">
             <thead><tr><th>情境</th><th>关键时间节点</th><th>执行重点</th></tr></thead>
             <tbody>
-              <tr><td>标准下班日</td><td>06:35起床 · 06:40训练 · 07:25洗漱收拾 · 08:30出发 · 18:30下班 · 22:50熄灯</td><td>晚饭后只散步或拉伸，不做第二次高强度训练。</td></tr>
+              <tr><td>标准下班日</td><td>06:35起床 · 06:40训练 · 07:25–08:25洗漱、早餐、收拾 · 08:30出发 · 18:30下班 · 22:50熄灯</td><td>晚饭后只散步或拉伸，不做第二次高强度训练。</td></tr>
               <tr><td>加班到21:00</td><td>18:30办公室轻食 · 21:00下班 · 21:30到家 · 22:05轻拉伸 · 22:50熄灯</td><td>不补做训练；第二天若睡眠不足，直接用恢复版。</td></tr>
               <tr><td>睡眠不足</td><td>06:55起床 · 07:00–07:12活动 · 07:25开始洗漱 · 22:40熄灯</td><td>取消负重、楼梯和间歇，把今天当恢复日。</td></tr>
               <tr><td>周六长走</td><td>07:30起床 · 08:00早餐 · 09:00出发 · 每45–60分钟补水休息</td><td>先完成时间，再逐步加负重；不要同时加距离和爬升。</td></tr>
@@ -1551,7 +1572,7 @@
     <nav class="bottom-nav" aria-label="主要页面">
       <button type="button" data-tab="today" class="active"><span aria-hidden="true">✓</span><span>今天</span></button>
       <button type="button" data-tab="week"><span aria-hidden="true">▦</span><span>本周</span></button>
-      <button type="button" data-tab="plan"><span aria-hidden="true">↗</span><span>8周计划</span></button>
+      <button type="button" data-tab="plan"><span aria-hidden="true">↗</span><span id="planTabLabel">8周计划</span></button>
       <button type="button" data-tab="recovery"><span aria-hidden="true">☼</span><span>恢复</span></button>
     </nav>
   </div>
@@ -1607,6 +1628,31 @@
         {week: 7, load: "10.5 kg", minutes: 180, ascent: "约500 m", focus: "接近真实摄影行走节奏", phase: "提升"},
         {week: 8, load: "12 kg", minutes: 210, ascent: "约600–800 m", focus: "完成一次完整模拟，不带贵重器材", phase: "模拟"}
       ];
+
+      const compactProgression = [
+        {week: 1, load: "5 kg", minutes: 75, ascent: "平地/约100 m", focus: "快速建立背包贴合与走姿习惯", phase: "适应"},
+        {week: 2, load: "7 kg", minutes: 105, ascent: "约200 m", focus: "延长持续时间，保持能说完整句子", phase: "建立"},
+        {week: 3, load: "8.5 kg", minutes: 135, ascent: "约300 m", focus: "加入短坡，练习补水和稳定下坡", phase: "提升"},
+        {week: 4, load: "6.5 kg", minutes: 105, ascent: "约200 m", focus: "减量周，确认第二天关节和睡眠恢复", phase: "减量"},
+        {week: 5, load: "10.5 kg", minutes: 180, ascent: "约500–600 m", focus: "完成一次接近真实的摄影徒步模拟", phase: "模拟"}
+      ];
+
+      const trainingPrograms = {
+        eight: {
+          label: "8周稳进版",
+          shortLabel: "8周",
+          duration: 8,
+          progression,
+          note: "适合从基础开始，给膝踝、肩背和睡眠留出适应余量。两版工作日都固定预留07:25–08:25（1小时）洗漱、早餐和收拾，08:30出发。"
+        },
+        compact: {
+          label: "4–5周压缩版",
+          shortLabel: "5周",
+          duration: 5,
+          progression: compactProgression,
+          note: "适合已有每周快走或健身基础的人：至少能轻松走90分钟、背5–6kg。表格按5周执行；只有4周时也要保留第4周减量，缩短最后模拟时间，不盲目加重。完整12.9–14.6kg器材仍需逐步验证。"
+        }
+      };
 
       const weekdayNames = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
       const workoutNames = {
@@ -1727,13 +1773,15 @@
       };
 
       function loadStore() {
-        const fallback = {records: {}, settings: {startDate: defaultStart}};
+        const fallback = {records: {}, settings: {startDate: defaultStart, programType: "eight"}};
         try {
           const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
           if (!saved || typeof saved !== "object") return fallback;
+          const settings = {...fallback.settings, ...(saved.settings || {})};
+          if (!trainingPrograms[settings.programType]) settings.programType = "eight";
           return {
             records: saved.records && typeof saved.records === "object" ? saved.records : {},
-            settings: {...fallback.settings, ...(saved.settings || {})}
+            settings
           };
         } catch (error) {
           return fallback;
@@ -1748,6 +1796,10 @@
           showToast("浏览器拒绝了本地保存，请检查隐私设置");
           return false;
         }
+      }
+
+      function activeProgram() {
+        return trainingPrograms[store.settings.programType] || trainingPrograms.eight;
       }
 
       function asNumber(value) {
@@ -2098,15 +2150,15 @@
 
       function currentProgramWeek(date = state.selectedDate) {
         const raw = Math.floor(dateDiff(date, store.settings.startDate) / 7) + 1;
-        return clamp(raw, 1, 8);
+        return clamp(raw, 1, activeProgram().duration);
       }
 
       function isAfterProgram(date = state.selectedDate) {
-        return dateDiff(date, store.settings.startDate) >= 56;
+        return dateDiff(date, store.settings.startDate) >= activeProgram().duration * 7;
       }
 
       function currentTarget(date = state.selectedDate) {
-        return progression[currentProgramWeek(date) - 1];
+        return activeProgram().progression[currentProgramWeek(date) - 1];
       }
 
       function getReadiness(record) {
@@ -2290,7 +2342,7 @@
           return [
             {phase: "早晨", time: "06:55", title: "起床、喝水、见光", detail: "多睡20分钟；喝300–500 ml水，接触自然光", key: "morning"},
             {phase: "早晨", time: "07:00–07:12", title: "恢复活动", detail: "踝泵、猫牛、胸椎旋转、髋部活动，不背包", key: "workout"},
-            {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾", detail: "早餐优先蛋白质和碳水，留出5分钟缓冲", key: "prepare"},
+            {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "早餐优先蛋白质和碳水，留出5分钟缓冲", key: "prepare"},
             {phase: "白天", time: "09:30", title: "必要时第一杯咖啡", detail: "按平时耐受量，下午14:00后不再摄入", key: "caffeine"},
             {phase: "白天", time: "12:35", title: "饭后走10分钟", detail: "帮助清醒和恢复，避免久坐", key: "lunchwalk"},
             {phase: "晚上", time: "18:30/21:00", title: "下班，按现实情况回家", detail: "不补做错过的训练，选择普通晚饭", key: "offwork"},
@@ -2304,7 +2356,7 @@
             {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "关节活动、原地走，逐步提高体温", key: "warmup"},
             {phase: "早晨", time: "06:47–07:17", title: "完成主训练", detail: "若昨晚睡眠不足，切换恢复版；不要用晚间加练补回", key: "workout"},
             {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
-            {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
+            {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
             {phase: "白天", time: "09:30", title: "必要时咖啡", detail: "下午14:00后停止咖啡因", key: "caffeine"},
             {phase: "白天", time: "12:35", title: "饭后走10分钟", detail: "哪怕只在楼下绕一圈，也比久坐更好", key: "lunchwalk"},
             {phase: "傍晚", time: "17:30", title: "加班前补小餐", detail: "酸奶/香蕉/全麦面包，避免21点暴食", key: "snack"},
@@ -2322,7 +2374,7 @@
           {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "原地走、踝泵、髋绕环、肩绕环", key: "warmup"},
           {phase: "早晨", time: "06:47–07:17", title: "完成主训练", detail: "按今日训练卡执行；动作质量优先", key: "workout"},
           {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
-          {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
+          {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
           {phase: "早晨", time: "08:30", title: "出发上班", detail: "通勤约30分钟，目标09:00左右到达", key: "leave"},
           {phase: "白天", time: "09:30", title: "必要时第一杯咖啡", detail: "按平时耐受量；下午14:00后不再摄入", key: "caffeine"},
           {phase: "白天", time: "10:30", title: "站起活动2分钟", detail: "活动踝、肩和髋，补几口水", key: "break"},
@@ -2341,8 +2393,9 @@
       function renderDateContext() {
         const date = fromISO(state.selectedDate);
         const isToday = state.selectedDate === toISO(today);
+        const program = activeProgram();
         document.getElementById("selectedDateLabel").textContent = isToday ? "今天 · " + dateLabel.format(date) : dateLabel.format(date);
-        document.getElementById("selectedDateSub").textContent = `${isAfterProgram(state.selectedDate) ? "巩固期" : "第" + currentProgramWeek(state.selectedDate) + "周"} · ${state.selectedDate}`;
+        document.getElementById("selectedDateSub").textContent = `${program.shortLabel} · ${isAfterProgram(state.selectedDate) ? "巩固期" : "第" + currentProgramWeek(state.selectedDate) + "周"} · ${state.selectedDate}`;
       }
 
       function renderReadiness() {
@@ -2361,9 +2414,9 @@
           button.classList.toggle("active", button.dataset.mode === record.mode);
         });
         const notes = {
-          standard: "适用于18:30下班、19:00左右到家的一天。",
-          overtime: "适用于当天加班到21:00；晚上不补做训练，优先按时睡觉。",
-          recovery: "适用于昨晚少于7小时、精力低或身体有不适的一天。"
+          standard: "06:35起床 → 06:40热身 → 06:47训练；07:25–08:25预留1小时洗漱、早餐、收拾；08:30出发。",
+          overtime: "加班到21:00也在早晨完成；07:25–08:25预留1小时洗漱、早餐、收拾，晚上不补训。",
+          recovery: "多睡20分钟；07:25–08:25预留1小时洗漱、早餐、收拾，训练只做恢复活动。"
         };
         document.getElementById("modeNote").textContent = notes[record.mode];
       }
@@ -2411,7 +2464,7 @@
       }
 
       function timerSignature(workout) {
-        return `${state.selectedDate}|${getRecord().mode}|${workout.title}`;
+        return `${state.selectedDate}|${getRecord().mode}|${activeProgram().shortLabel}|${workout.title}|${workout.minutes}`;
       }
 
       function ensureTimer(workout) {
@@ -2464,10 +2517,11 @@
 
       function renderToday() {
         const target = currentTarget();
+        const program = activeProgram();
         const index = dayIndex(fromISO(state.selectedDate));
         document.getElementById("todayHeading").textContent = index === 6 ? "今日长距离安排" : index === 7 ? "今日休息安排" : "今日时间表";
         document.getElementById("todayHeadingSub").textContent = index === 6 ? "先完成时间，再逐步增加负重" : "按时间节点走，不靠意志力硬撑";
-        document.getElementById("todayWeekLabel").textContent = isAfterProgram() ? "巩固期" : `第 ${target.week} 周`;
+        document.getElementById("todayWeekLabel").textContent = isAfterProgram() ? `${program.shortLabel} · 巩固期` : `${program.shortLabel} · 第 ${target.week} 周`;
         renderReadiness();
         renderMode();
         renderTimeline();
@@ -2499,12 +2553,13 @@
 
       function renderWeek() {
         const target = currentTarget();
+        const program = activeProgram();
         const dates = weekDates();
         const stats = weekStats();
         const percent = Math.round((stats.done / 6) * 100);
         const monday = dates[0];
         const sunday = dates[6];
-        document.getElementById("weekOverviewTitle").textContent = isAfterProgram(state.selectedDate) ? "巩固期" : `第 ${target.week} 周`;
+        document.getElementById("weekOverviewTitle").textContent = isAfterProgram(state.selectedDate) ? `${program.shortLabel} · 巩固期` : `${program.shortLabel} · 第 ${target.week} 周`;
         document.getElementById("weekPhaseLabel").textContent = target.phase;
         document.getElementById("weekPercent").textContent = `${Math.min(100, percent)}%`;
         document.getElementById("weekProgressFill").style.width = `${Math.min(100, percent)}%`;
@@ -2536,10 +2591,20 @@
       }
 
       function renderPlan() {
+        const program = activeProgram();
+        const programType = trainingPrograms[store.settings.programType] ? store.settings.programType : "eight";
         document.getElementById("startDateInput").value = store.settings.startDate;
         const current = currentProgramWeek();
+        document.getElementById("planHeading").textContent = program.label;
+        document.getElementById("planDescription").textContent = program.duration === 8 ? "负重用水瓶替代器材，先练身体，再带相机" : "已有基础再压缩周期，保留减量周，不用赶进度硬扛";
         document.getElementById("planCurrentWeek").textContent = isAfterProgram() ? "当前巩固期" : `当前第 ${current} 周`;
-        document.getElementById("progressionList").innerHTML = progression.map((item) => `<div class="progression-row ${item.week === current ? "current" : ""}">
+        document.getElementById("programNote").textContent = program.note;
+        document.getElementById("planTabLabel").textContent = `${program.shortLabel}计划`;
+        document.getElementById("longWalkTemplate").textContent = `按上方${program.duration}周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。`;
+        document.querySelectorAll("[data-program]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.program === programType);
+        });
+        document.getElementById("progressionList").innerHTML = program.progression.map((item) => `<div class="progression-row ${item.week === current ? "current" : ""}">
           <div class="progression-week">第${item.week}周</div>
           <div class="progression-copy"><strong>${item.focus}</strong><span>周六 ${item.minutes}分钟 · ${item.ascent} · ${item.phase}阶段</span></div>
           <div class="progression-load">${item.load}</div>
@@ -2664,9 +2729,11 @@
             const payload = JSON.parse(String(reader.result || ""));
             if (!payload || typeof payload !== "object" || !payload.records || typeof payload.records !== "object") throw new Error("invalid");
             if (!window.confirm("导入会覆盖当前浏览器中的打卡记录，确定继续吗？")) return;
+            const importedSettings = {...store.settings, ...(payload.settings || {})};
+            if (!trainingPrograms[importedSettings.programType]) importedSettings.programType = "eight";
             store = {
               records: payload.records,
-              settings: {...store.settings, ...(payload.settings || {})}
+              settings: importedSettings
             };
             saveStore();
             renderAll();
@@ -2689,6 +2756,16 @@
         const modeButton = event.target.closest("[data-mode]");
         if (modeButton) {
           updateRecord((record) => { record.mode = modeButton.dataset.mode; }, true);
+          return;
+        }
+        const programButton = event.target.closest("[data-program]");
+        if (programButton) {
+          const programType = programButton.dataset.program;
+          if (!trainingPrograms[programType] || programType === store.settings.programType) return;
+          store.settings.programType = programType;
+          saveStore();
+          renderAll();
+          showToast(`已切换为${trainingPrograms[programType].label}`);
           return;
         }
         const actionElement = event.target.closest("[data-action]");
@@ -2761,7 +2838,7 @@
         if (action === "import-data") { document.getElementById("importInput").click(); return; }
         if (action === "clear-data") {
           if (!window.confirm("确定清空本机所有打卡记录吗？此操作无法撤销。")) return;
-          store = {records: {}, settings: {startDate: defaultStart}};
+          store = {records: {}, settings: {startDate: defaultStart, programType: "eight"}};
           saveStore();
           renderAll();
           showToast("本机打卡记录已清空");
