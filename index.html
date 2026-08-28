@@ -91,11 +91,13 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
+      max-width: 100%;
       margin: 0 0 8px;
       color: #eed99b;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: .04em;
+      overflow-wrap: anywhere;
     }
 
     .eyebrow::before {
@@ -478,6 +480,41 @@
       color: var(--muted);
       font-size: 12px;
     }
+
+    .plan-summary {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2px 9px;
+      align-items: baseline;
+      margin: 0 0 12px;
+      padding: 9px 10px;
+      border-left: 3px solid var(--green);
+      background: var(--green-soft);
+    }
+
+    .plan-summary > span:first-child {
+      grid-column: 1 / -1;
+      color: var(--green-dark);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .plan-summary strong {
+      min-width: 0;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .plan-summary > span:last-child {
+      min-width: 0;
+      color: var(--ink-soft);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .plan-summary-plan { margin-bottom: 13px; }
 
     .program-switch {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -978,6 +1015,8 @@
       font-size: 12px;
     }
 
+    .info-band > span { display: block; }
+
     .info-band strong { display: block; margin-bottom: 2px; color: #4d3d16; font-size: 13px; }
 
     .gear-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
@@ -1231,13 +1270,13 @@
 <body>
   <div class="app-shell">
     <header class="hero">
-      <p class="eyebrow">8 周 · 负重适应</p>
+      <p id="heroEyebrow" class="eyebrow">8 周 · 第 1 周 · 适应</p>
       <h1>摄影徒步训练</h1>
-      <p class="hero-subtitle">负重、作息和打卡，今天只做下一步。</p>
+      <p id="heroSubtitle" class="hero-subtitle">负重、作息和打卡，今天只做下一步。</p>
       <div class="hero-metrics" aria-label="计划摘要">
-        <div class="hero-metric"><strong>12.9–14.6</strong><span>kg 路上负重</span></div>
-        <div class="hero-metric"><strong>8 周</strong><span>进阶周期</span></div>
-        <div class="hero-metric"><strong>22:50</strong><span>熄灯时间</span></div>
+        <div class="hero-metric"><strong id="heroLoad">4 kg</strong><span id="heroLoadLabel">本周负重目标</span></div>
+        <div class="hero-metric"><strong id="heroProgress">第 1/8 周</strong><span id="heroProgressLabel">训练进度</span></div>
+        <div class="hero-metric"><strong id="heroWalk">75 分钟</strong><span id="heroWalkLabel">周六长走目标</span></div>
       </div>
     </header>
 
@@ -1306,6 +1345,12 @@
         </div>
         <p id="modeNote" class="mode-note">早晨固定预留07:25–08:25（1小时）洗漱、早餐和收拾，08:30出发。</p>
 
+        <div class="plan-summary" aria-live="polite">
+          <span id="todayPlanKicker">本周目标</span>
+          <strong id="todayPlanTarget">4 kg · 75 分钟</strong>
+          <span id="todayPlanFocus">熟悉背包贴合、鞋袜与走姿</span>
+        </div>
+
         <div id="timeline" class="timeline" aria-label="详细时间表"></div>
 
         <section class="workout-sheet" aria-labelledby="workoutTitle">
@@ -1368,8 +1413,8 @@
       <section id="weekPanel" class="tab-panel" data-panel="week">
         <div class="section-heading" style="margin-top:0">
           <div>
-            <h2>本周节奏</h2>
-            <p>完成训练日，比一次练到力竭更重要</p>
+            <h2 id="weekHeading">本周节奏</h2>
+            <p id="weekHeadingSub">完成训练日，比一次练到力竭更重要</p>
           </div>
           <span id="weekPhaseLabel" class="small-label">基础期</span>
         </div>
@@ -1405,6 +1450,11 @@
           <button type="button" data-program="compact">4–5周压缩</button>
         </div>
         <p id="programNote" class="program-note">适合从基础开始，给膝踝、肩背和睡眠留出适应余量。</p>
+        <div class="plan-summary plan-summary-plan" aria-live="polite">
+          <span id="planTargetKicker">当前周目标</span>
+          <strong id="planTargetSummary">第 1 周 · 4 kg · 75 分钟</strong>
+          <span id="planTargetFocus">熟悉背包贴合、鞋袜与走姿</span>
+        </div>
 
         <section class="gear-sheet" style="margin-top:0" aria-labelledby="gearTitle">
           <h2 id="gearTitle">先算清楚要背多少</h2>
@@ -1480,14 +1530,14 @@
             </div>
           </details>
           <details>
-            <summary>周五 · 负重楼梯/坡走（30分钟）</summary>
+            <summary id="templateFridaySummary">周五 · 负重楼梯/坡走（30分钟）</summary>
             <div class="detail-body">
               <p>背包按本周目标的50–70%装水。热身6分钟，然后做5–8轮：上楼或上坡2分钟（RPE 6/10）+ 平地恢复1分钟，最后慢走和小腿放松。</p>
               <ul><li>全程不跑；出现膝痛就立刻改平地，并把下周负重冻结。</li><li>每一轮都应留一点余力，模拟山路的持续输出。</li></ul>
             </div>
           </details>
           <details>
-            <summary>周六 · 长距离徒步/负重步行</summary>
+            <summary id="templateSaturdaySummary">周六 · 长距离徒步/负重步行</summary>
             <div class="detail-body">
               <p id="longWalkTemplate">按上方8周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。</p>
               <ul><li>超过90分钟：每小时饮水约400–600 ml，按出汗量调整；每小时补30–45 g碳水。</li><li>第一次模拟不要带贵重相机，使用水瓶和沙袋把负重配平。</li><li>训练结束后记录脚底、膝、腰和肩带压力，第二天再决定是否升级。</li></ul>
@@ -1509,7 +1559,7 @@
               <tr><td>标准下班日</td><td>06:35起床 · 06:40训练 · 07:25–08:25洗漱、早餐、收拾 · 08:30出发 · 18:30下班 · 22:50熄灯</td><td>晚饭后只散步或拉伸，不做第二次高强度训练。</td></tr>
               <tr><td>加班到21:00</td><td>18:30办公室轻食 · 21:00下班 · 21:30到家 · 22:05轻拉伸 · 22:50熄灯</td><td>不补做训练；第二天若睡眠不足，直接用恢复版。</td></tr>
               <tr><td>睡眠不足</td><td>06:55起床 · 07:00–07:12活动 · 07:25开始洗漱 · 22:40熄灯</td><td>取消负重、楼梯和间歇，把今天当恢复日。</td></tr>
-              <tr><td>周六长走</td><td>07:30起床 · 08:00早餐 · 09:00出发 · 每45–60分钟补水休息</td><td>先完成时间，再逐步加负重；不要同时加距离和爬升。</td></tr>
+              <tr><td>周六长走</td><td>07:30起床 · 08:00早餐 · 09:00出发 · 每45–60分钟补水休息</td><td id="scheduleLongWalkFocus">先完成本周目标，再逐步加负重；不要同时加距离和爬升。</td></tr>
             </tbody>
           </table>
         </div>
@@ -1521,12 +1571,12 @@
             <h2>提神与恢复</h2>
             <p>清醒不是靠透支换来的</p>
           </div>
-          <span class="small-label">每天可执行</span>
+          <span id="recoveryContextLabel" class="small-label">当前第 1 周</span>
         </div>
 
         <div class="info-band">
-          <strong>你的睡眠底线</strong>
-          标准作息按22:50–06:35安排，约7小时45分钟。连续两天低于7小时，就把下一次爬坡或负重训练改为恢复版，优先补回睡眠。
+          <strong id="recoveryPlanTitle">你的睡眠底线</strong>
+          <span id="recoveryPlanText">标准作息按22:50–06:35安排，约7小时45分钟。连续两天低于7小时，就把下一次爬坡或负重训练改为恢复版，优先补回睡眠。</span>
         </div>
 
         <div class="recovery-card">
@@ -1655,15 +1705,6 @@
       };
 
       const weekdayNames = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
-      const workoutNames = {
-        1: "下肢与核心",
-        2: "有氧与坡度",
-        3: "上肢与核心",
-        4: "恢复与灵活性",
-        5: "负重楼梯/坡走",
-        6: "长距离徒步",
-        7: "休息与复盘"
-      };
 
       const exerciseGuides = {
         squat: {
@@ -2033,20 +2074,22 @@
         const dateISO = toISO(new Date());
         const dateIndex = dayIndex(fromISO(dateISO));
         const todayRecord = getRecord(dateISO);
-        const workoutName = todayRecord.mode === "recovery" ? "恢复活动" : workoutNames[dateIndex];
+        const todayPlan = getPlanContext(dateISO);
+        const workoutName = todayRecord.mode === "recovery" ? "恢复活动" : getWorkout(dateISO, todayRecord.mode).title;
+        const plannedActivity = `${workoutName}（${todayPlan.stage}目标${todayPlan.target.load}）`;
         if (severe) {
           if (!reasons.length) addReason("天气风险较高");
           return {
             level: "alert",
             symbol: "!",
             title: "今天不适合户外负重",
-            text: `${reasons.join("、")}。${workoutName}改为室内恢复或平地轻松走，不背摄影包、不爬坡；雷电时留在室内。`,
+            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不背摄影包、不爬坡；雷电时留在室内。`,
             recovery: true
           };
         }
         if (caution) {
           if (!reasons.length) addReason("路况或体感一般");
-          let text = `${reasons.join("、")}。`;
+          let text = `${reasons.join("、")}。${plannedActivity}：`;
           if (dateIndex === 6) text += "长距离安排建议延期；若必须出门，缩短路线、取消负重并避开湿滑路段。";
           else if (dateIndex === 5) text += "坡走/楼梯改为平地快走，取消负重并避开湿滑路面。";
           else if (todayRecord.mode === "recovery") text += "保持恢复活动即可，不为补进度加练。";
@@ -2061,7 +2104,7 @@
           level: "ready",
           symbol: "✓",
           title: "天气允许按计划训练",
-          text: `${info.label}${range.length ? `，${range.join(" / ")}` : ""}，${rainText}。今天${workoutName}按计划进行，带水并留意路面。`,
+          text: `${info.label}${range.length ? `，${range.join(" / ")}` : ""}，${rainText}。今天${plannedActivity}按计划进行，带水并留意路面。`,
           recovery: false
         };
       }
@@ -2161,6 +2204,48 @@
         return activeProgram().progression[currentProgramWeek(date) - 1];
       }
 
+      function getPlanContext(date = state.selectedDate) {
+        const program = activeProgram();
+        const week = currentProgramWeek(date);
+        const target = currentTarget(date);
+        const after = isAfterProgram(date);
+        return {
+          program,
+          week,
+          target,
+          after,
+          stage: after ? "巩固期" : `第${week}周`
+        };
+      }
+
+      function renderPlanContext() {
+        const context = getPlanContext();
+        const {program, target} = context;
+        const stage = context.stage;
+        const heroEyebrow = `${program.label} · ${stage} · ${target.phase}`;
+        const heroSubtitle = context.after
+          ? `沿用第${context.week}周目标：${target.focus}。按身体反馈维持，不急着加重。`
+          : `${target.focus}。本周先完成${target.minutes}分钟长走，再考虑增加负重。`;
+        const targetSummary = `${stage} · ${target.load} · ${target.minutes}分钟 · ${target.ascent}`;
+        document.getElementById("heroEyebrow").textContent = heroEyebrow;
+        document.getElementById("heroSubtitle").textContent = heroSubtitle;
+        document.getElementById("heroLoad").textContent = target.load;
+        document.getElementById("heroLoadLabel").textContent = "本周负重目标";
+        document.getElementById("heroProgress").textContent = `第 ${context.week}/${program.duration} 周`;
+        document.getElementById("heroProgressLabel").textContent = context.after ? "训练阶段" : "训练进度";
+        document.getElementById("heroWalk").textContent = `${target.minutes} 分钟`;
+        document.getElementById("heroWalkLabel").textContent = "周六长走目标";
+        document.getElementById("todayPlanKicker").textContent = `${program.shortLabel} · 本周目标`;
+        document.getElementById("todayPlanTarget").textContent = targetSummary;
+        document.getElementById("todayPlanFocus").textContent = target.focus;
+        document.getElementById("planTargetKicker").textContent = `${program.shortLabel} · 当前周目标`;
+        document.getElementById("planTargetSummary").textContent = targetSummary;
+        document.getElementById("planTargetFocus").textContent = target.focus;
+        document.getElementById("recoveryContextLabel").textContent = `${program.shortLabel} · ${stage}`;
+        document.getElementById("recoveryPlanText").textContent = `${program.shortLabel} · ${stage}的周六目标为${target.load}、${target.minutes}分钟、${target.ascent}。标准作息按22:50–06:35安排，约7小时45分钟；连续两天低于7小时，就把下一次爬坡或负重训练改为恢复版，优先补回睡眠。`;
+        document.title = `${program.shortLabel}徒步训练 · ${stage}`;
+      }
+
       function getReadiness(record) {
         if (record.pain === "sharp" || record.pain === "joint" || record.sleep < 5.5 || record.energy <= 1) {
           return {
@@ -2192,11 +2277,12 @@
 
       function getWorkout(date = state.selectedDate, mode = getRecord(date).mode) {
         const index = dayIndex(fromISO(date));
-        const target = currentTarget(date);
+        const context = getPlanContext(date);
+        const target = context.target;
         if (mode === "recovery") {
           return {
             title: "恢复版 · 轻松活动",
-            subtitle: "把今天的目标改成恢复，不背包、不爬坡",
+            subtitle: `${context.stage} · 原计划${target.load}/${target.minutes}分钟，今天改为恢复，不背包、不爬坡`,
             tag: "12 分钟",
             minutes: 12,
             note: "今天不追求训练量。若活动后疼痛、头晕或气短增加，立即停止并休息。",
@@ -2211,7 +2297,7 @@
         if (index === 6) {
           return {
             title: "长距离徒步/负重步行",
-            subtitle: `第${target.week}周目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}`,
+            subtitle: `${context.stage}目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}`,
             tag: `${target.minutes} 分钟`,
             minutes: target.minutes,
             note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加负重；不要在同一周同时大幅增加距离和爬升。",
@@ -2226,7 +2312,7 @@
         if (index === 7) {
           return {
             title: "休息与复盘",
-            subtitle: "轻松走20–30分钟，整理装备，不安排力量和爬坡",
+            subtitle: `${context.stage} · 轻松走20–30分钟，整理装备，不安排力量和爬坡`,
             tag: "20 分钟",
             minutes: 20,
             note: "休息日不是躺平考核：轻微活动有助于恢复，但不要为了补进度加练。",
@@ -2240,7 +2326,7 @@
         if (index === 1) {
           return {
             title: "下肢与核心",
-            subtitle: `30分钟力量基础 · 本周负重目标${target.load}`,
+            subtitle: `30分钟力量基础 · ${context.stage}周六目标${target.load}`,
             tag: "30 分钟",
             minutes: 30,
             note: "深蹲和上步只用能保持膝盖对准脚尖的重量；如果膝痛，改坐站或低台阶，不要硬完成次数。",
@@ -2256,7 +2342,7 @@
         if (index === 2) {
           return {
             title: "有氧与坡度",
-            subtitle: "保持能说话的节奏，建立山路发动机",
+            subtitle: `${context.stage} · 保持能说话的节奏，建立山路发动机`,
             tag: "30 分钟",
             minutes: 30,
             note: "优先快走，不跑楼梯。若前一晚加班或睡眠不足，直接改恢复版。",
@@ -2271,7 +2357,7 @@
         if (index === 3) {
           return {
             title: "上肢与核心",
-            subtitle: "肩胛稳定，让相机重量落在骨盆和背包上",
+            subtitle: `${context.stage} · 肩胛稳定，让相机重量落在骨盆和背包上`,
             tag: "30 分钟",
             minutes: 30,
             note: "动作质量优先于次数。肩前侧刺痛、麻木或耸肩明显时，停止俯卧撑和划船。",
@@ -2287,7 +2373,7 @@
         if (index === 4) {
           return {
             title: "恢复与灵活性",
-            subtitle: "给周末负重留下余量",
+            subtitle: `${context.stage} · 给周末${target.load}负重留下余量`,
             tag: "25 分钟",
             minutes: 25,
             note: "全程只到拉伸感，不追求疼痛。若身体特别疲劳，可以只做一轮并提前睡觉。",
@@ -2301,7 +2387,7 @@
         }
         return {
           title: "负重楼梯/坡走",
-          subtitle: `短时坡度训练 · 背包建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`,
+          subtitle: `${context.stage}短时坡度训练 · 背包建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`,
           tag: "30 分钟",
           minutes: 30,
           note: "不跑楼梯，不追配速。若膝、踝或腰出现刺痛，马上改平地慢走并记录。",
@@ -2316,12 +2402,14 @@
 
       function makeSchedule(date, mode) {
         const index = dayIndex(fromISO(date));
-        const target = currentTarget(date);
+        const context = getPlanContext(date);
+        const target = context.target;
+        const plannedWorkout = getWorkout(date, mode);
         if (index === 6 && mode !== "recovery") {
           return [
             {phase: "上午", time: "07:30", title: "起床、喝水、自然光", detail: "喝300–500 ml水，接触自然光5–10分钟", key: "morning"},
             {phase: "上午", time: "08:00", title: "早餐与装包", detail: `早餐含蛋白质和碳水；今天目标${target.load}`, key: "breakfast"},
-            {phase: "上午", time: "09:00", title: "开始长距离步行", detail: `${target.minutes}分钟 · ${target.ascent} · RPE 4–5/10`, key: "workout"},
+            {phase: "上午", time: "09:00", title: "开始长距离步行", detail: `${context.stage}目标 ${target.load} · ${target.minutes}分钟 · ${target.ascent} · RPE 4–5/10`, key: "workout"},
             {phase: "途中", time: "每45–60′", title: "补水与短休息", detail: "休息5–8分钟，检查脚底、膝和肩带", key: "fuel"},
             {phase: "结束", time: "结束后10′", title: "慢走收尾", detail: "不要突然停下，回家后换干袜", key: "cooldown"},
             {phase: "晚上", time: "22:30", title: "屏幕降噪", detail: "调暗灯光，准备下周训练", key: "winddown"},
@@ -2354,7 +2442,7 @@
           return [
             {phase: "早晨", time: "06:35", title: "起床、喝水、自然光", detail: "喝300–500 ml水，拉开窗帘或出门5分钟", key: "morning"},
             {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "关节活动、原地走，逐步提高体温", key: "warmup"},
-            {phase: "早晨", time: "06:47–07:17", title: "完成主训练", detail: "若昨晚睡眠不足，切换恢复版；不要用晚间加练补回", key: "workout"},
+            {phase: "早晨", time: "06:47–07:17", title: `完成${plannedWorkout.title}`, detail: `${plannedWorkout.tag} · 若昨晚睡眠不足，切换恢复版；不要用晚间加练补回`, key: "workout"},
             {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
             {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
             {phase: "白天", time: "09:30", title: "必要时咖啡", detail: "下午14:00后停止咖啡因", key: "caffeine"},
@@ -2372,7 +2460,7 @@
         return [
           {phase: "早晨", time: "06:35", title: "起床、喝水、自然光", detail: "喝300–500 ml水，拉开窗帘或出门5分钟", key: "morning"},
           {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "原地走、踝泵、髋绕环、肩绕环", key: "warmup"},
-          {phase: "早晨", time: "06:47–07:17", title: "完成主训练", detail: "按今日训练卡执行；动作质量优先", key: "workout"},
+          {phase: "早晨", time: "06:47–07:17", title: `完成${plannedWorkout.title}`, detail: `${plannedWorkout.tag} · ${context.stage}周六目标${target.load}；按今日训练卡执行，动作质量优先`, key: "workout"},
           {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
           {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
           {phase: "早晨", time: "08:30", title: "出发上班", detail: "通勤约30分钟，目标09:00左右到达", key: "leave"},
@@ -2393,9 +2481,9 @@
       function renderDateContext() {
         const date = fromISO(state.selectedDate);
         const isToday = state.selectedDate === toISO(today);
-        const program = activeProgram();
+        const context = getPlanContext();
         document.getElementById("selectedDateLabel").textContent = isToday ? "今天 · " + dateLabel.format(date) : dateLabel.format(date);
-        document.getElementById("selectedDateSub").textContent = `${program.shortLabel} · ${isAfterProgram(state.selectedDate) ? "巩固期" : "第" + currentProgramWeek(state.selectedDate) + "周"} · ${state.selectedDate}`;
+        document.getElementById("selectedDateSub").textContent = `${context.program.shortLabel} · ${context.stage} · ${state.selectedDate}`;
       }
 
       function renderReadiness() {
@@ -2516,12 +2604,16 @@
       }
 
       function renderToday() {
-        const target = currentTarget();
-        const program = activeProgram();
+        const context = getPlanContext();
+        const {target, program} = context;
         const index = dayIndex(fromISO(state.selectedDate));
         document.getElementById("todayHeading").textContent = index === 6 ? "今日长距离安排" : index === 7 ? "今日休息安排" : "今日时间表";
-        document.getElementById("todayHeadingSub").textContent = index === 6 ? "先完成时间，再逐步增加负重" : "按时间节点走，不靠意志力硬撑";
-        document.getElementById("todayWeekLabel").textContent = isAfterProgram() ? `${program.shortLabel} · 巩固期` : `${program.shortLabel} · 第 ${target.week} 周`;
+        document.getElementById("todayHeadingSub").textContent = index === 6
+          ? `${context.stage} · ${target.load} / ${target.minutes}分钟 / ${target.ascent} · 先完成时间，再逐步增加负重`
+          : index === 7
+            ? `${context.stage} · 本周目标已列在上方，今天只做主动恢复`
+            : `${context.stage} · 按时间节点完成今天的训练`;
+        document.getElementById("todayWeekLabel").textContent = `${program.shortLabel} · ${context.stage}`;
         renderReadiness();
         renderMode();
         renderTimeline();
@@ -2552,21 +2644,23 @@
       }
 
       function renderWeek() {
-        const target = currentTarget();
-        const program = activeProgram();
+        const context = getPlanContext();
+        const {target, program} = context;
         const dates = weekDates();
         const stats = weekStats();
         const percent = Math.round((stats.done / 6) * 100);
         const monday = dates[0];
         const sunday = dates[6];
-        document.getElementById("weekOverviewTitle").textContent = isAfterProgram(state.selectedDate) ? `${program.shortLabel} · 巩固期` : `${program.shortLabel} · 第 ${target.week} 周`;
-        document.getElementById("weekPhaseLabel").textContent = target.phase;
+        document.getElementById("weekHeading").textContent = `${program.shortLabel} · ${context.stage}节奏`;
+        document.getElementById("weekHeadingSub").textContent = `本周重点：${target.focus}。完成训练日，比一次练到力竭更重要`;
+        document.getElementById("weekOverviewTitle").textContent = `${program.shortLabel} · ${context.stage}`;
+        document.getElementById("weekPhaseLabel").textContent = context.after ? "巩固" : target.phase;
         document.getElementById("weekPercent").textContent = `${Math.min(100, percent)}%`;
         document.getElementById("weekProgressFill").style.width = `${Math.min(100, percent)}%`;
         document.getElementById("weekDoneCount").textContent = `${Math.min(stats.done, 6)}/6`;
         document.getElementById("weekSleepAvg").textContent = stats.sleep === null ? "—" : `${stats.sleep.toFixed(1)}h`;
         document.getElementById("weekPackAvg").textContent = stats.pack === null ? "—" : `${stats.pack.toFixed(1)}kg`;
-        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · 周六目标 ${target.load} / ${target.minutes}分钟`;
+        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · ${context.stage}周六目标 ${target.load} / ${target.minutes}分钟 · ${target.ascent}`;
         document.getElementById("weekDays").innerHTML = dates.map((date) => {
           const iso = toISO(date);
           const record = store.records[iso];
@@ -2582,25 +2676,36 @@
           const record = store.records[iso];
           const index = dayIndex(date);
           const done = Boolean(record && record.workoutDone);
+          const dateContext = getPlanContext(iso);
+          const workout = getWorkout(iso, record && record.mode ? record.mode : "standard");
+          const detail = index === 6
+            ? `${dateContext.target.load} · ${dateContext.target.minutes}分钟 · ${dateContext.target.ascent}`
+            : index === 7
+              ? "主动恢复 · 不安排力量和爬坡"
+              : `${workout.tag} · ${dateContext.target.focus}`;
           return `<button class="week-list-row" type="button" data-action="select-date" data-date="${iso}" style="width:100%;border-left:0;border-right:0;border-top:0;text-align:left;background:transparent">
             <span class="week-list-day">${weekdayNames[index - 1]}</span>
-            <span class="week-list-copy"><strong>${workoutNames[index]}</strong><span>${index === 6 ? `${target.load} · ${target.minutes}分钟` : index === 7 ? "主动恢复" : "早晨主训练"}</span></span>
+            <span class="week-list-copy"><strong>${workout.title}</strong><span>${detail}</span></span>
             <span class="week-list-status ${done ? "complete" : "pending"}" aria-label="${done ? "已完成" : "未完成"}">${done ? "✓" : "○"}</span>
           </button>`;
         }).join("");
       }
 
       function renderPlan() {
-        const program = activeProgram();
+        const context = getPlanContext();
+        const {program, target} = context;
         const programType = trainingPrograms[store.settings.programType] ? store.settings.programType : "eight";
         document.getElementById("startDateInput").value = store.settings.startDate;
-        const current = currentProgramWeek();
+        const current = context.week;
         document.getElementById("planHeading").textContent = program.label;
         document.getElementById("planDescription").textContent = program.duration === 8 ? "负重用水瓶替代器材，先练身体，再带相机" : "已有基础再压缩周期，保留减量周，不用赶进度硬扛";
-        document.getElementById("planCurrentWeek").textContent = isAfterProgram() ? "当前巩固期" : `当前第 ${current} 周`;
+        document.getElementById("planCurrentWeek").textContent = context.after ? "当前巩固期" : `当前第 ${current} 周`;
         document.getElementById("programNote").textContent = program.note;
         document.getElementById("planTabLabel").textContent = `${program.shortLabel}计划`;
-        document.getElementById("longWalkTemplate").textContent = `按上方${program.duration}周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。`;
+        document.getElementById("longWalkTemplate").textContent = `当前${context.stage}周六目标为${target.load}、${target.minutes}分钟、${target.ascent}。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。`;
+        document.getElementById("templateFridaySummary").textContent = `周五 · 负重楼梯/坡走（30分钟） · 建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`;
+        document.getElementById("templateSaturdaySummary").textContent = `周六 · 长距离徒步/负重步行 · ${target.load} / ${target.minutes}分钟`;
+        document.getElementById("scheduleLongWalkFocus").textContent = `${context.stage}周六目标：${target.load}、${target.minutes}分钟、${target.ascent}；先完成时间，再逐步加负重，不要同时增加距离和爬升。`;
         document.querySelectorAll("[data-program]").forEach((button) => {
           button.classList.toggle("active", button.dataset.program === programType);
         });
@@ -2612,6 +2717,7 @@
       }
 
       function renderAll() {
+        renderPlanContext();
         renderDateContext();
         renderToday();
         renderWeek();
