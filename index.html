@@ -1911,41 +1911,104 @@
         return dayIndex(fromISO(date)) <= 6;
       }
 
-      function deferredDatesBefore(date = state.selectedDate) {
-        const dates = [];
-        let cursor = fromISO(store.settings.startDate || defaultStart);
+      function programEndDate() {
+        return addDays(fromISO(store.settings.startDate || defaultStart), activeProgram().duration * 7 - 1);
+      }
+
+      function isWithinProgram(date) {
+        return dateDiff(date, store.settings.startDate || defaultStart) >= 0 && dateDiff(date, toISO(programEndDate())) <= 0;
+      }
+
+      function remainingTrainingSlots(date = state.selectedDate) {
+        let cursor = fromISO(date);
+        const end = programEndDate();
+        let slots = 0;
         let guard = 0;
-        while (dateDiff(toISO(cursor), date) < 0 && guard < 500) {
-          const iso = toISO(cursor);
-          if (dateDiff(iso, todayISO) > 0) break;
-          if (isPlanTrainingDay(iso)) {
-            const record = store.records[iso];
-            if (!record || (!record.updatedAt && !record.deferred)) {
-              cursor = addDays(cursor, 1);
-              guard += 1;
-              continue;
-            }
-            const done = Boolean(record && record.workoutDone);
-            const explicitToday = iso === todayISO && Boolean(record.deferred);
-            const alreadyPast = dateDiff(iso, todayISO) < 0;
-            if (!done && (record.deferred || alreadyPast || explicitToday)) dates.push(iso);
-          }
+        while (dateDiff(toISO(cursor), toISO(end)) <= 0 && guard < 500) {
+          slots += 1;
           cursor = addDays(cursor, 1);
           guard += 1;
         }
-        return dates;
+        return slots;
       }
 
-      function dynamicPlanForDate(date = state.selectedDate) {
-        const pending = deferredDatesBefore(date);
-        const carryDate = pending[0] || "";
+      function pushUnique(list, value) {
+        if (value && !list.includes(value)) list.push(value);
+      }
+
+      function shouldCarryOriginal(date, assignedDate) {
+        if (!isPlanTrainingDay(date) || !isWithinProgram(date)) return false;
+        const record = store.records[date];
+        if (record && record.workoutDone) return false;
+        if (record && record.deferred) return true;
+        return Boolean(record && record.updatedAt && dateDiff(date, todayISO) < 0);
+      }
+
+      function scheduleStateForDate(date = state.selectedDate) {
+        const endISO = toISO(programEndDate());
+        const targetAfterEnd = dateDiff(date, endISO) > 0;
+        const cappedDate = targetAfterEnd ? endISO : date;
+        const lastDate = cappedDate;
+        let cursor = fromISO(store.settings.startDate || defaultStart);
+        let pending = [];
+        let assignment = "";
+        let pendingBefore = [];
+        let guard = 0;
+
+        while (dateDiff(toISO(cursor), lastDate) <= 0 && guard < 500) {
+          const iso = toISO(cursor);
+          const record = store.records[iso];
+          const futureWithoutRecord = dateDiff(iso, todayISO) > 0 && !record;
+          if (futureWithoutRecord) {
+            if (iso === date) {
+              pendingBefore = pending.slice();
+              assignment = pending[0] || "";
+            }
+            cursor = addDays(cursor, 1);
+            guard += 1;
+            continue;
+          }
+          pendingBefore = pending.slice();
+          const canUseSlot = isWithinProgram(iso) && (isPlanTrainingDay(iso) || pending.length > 0);
+          assignment = canUseSlot ? (pending.shift() || (isPlanTrainingDay(iso) ? iso : "")) : "";
+          if (shouldCarryOriginal(iso, assignment)) pushUnique(pending, iso);
+          cursor = addDays(cursor, 1);
+          guard += 1;
+        }
+
+        if (targetAfterEnd) {
+          return {
+            pendingBefore: pending.slice(),
+            pendingAfter: pending.slice(),
+            carryDate: "",
+            effectiveDate: date,
+            shifted: false,
+            deferredCount: pending.length,
+            fixedEndDate: endISO,
+            remainingSlots: 0,
+            overflowCount: pending.length,
+            canMakeUpToday: false
+          };
+        }
+
+        const canMakeUpToday = isWithinProgram(date) && (isPlanTrainingDay(date) || pendingBefore.length > 0);
+        const carryDate = canMakeUpToday && assignment && assignment !== date ? assignment : "";
         return {
-          pending,
+          pendingBefore,
+          pendingAfter: pending,
           carryDate,
           effectiveDate: carryDate || date,
           shifted: Boolean(carryDate),
-          deferredCount: pending.length
+          deferredCount: pendingBefore.length,
+          fixedEndDate: endISO,
+          remainingSlots: remainingTrainingSlots(date),
+          overflowCount: Math.max(0, pendingBefore.length - remainingTrainingSlots(date)),
+          canMakeUpToday
         };
+      }
+
+      function dynamicPlanForDate(date = state.selectedDate) {
+        return scheduleStateForDate(date);
       }
 
       function workoutDateFor(date = state.selectedDate, mode = getRecord(date).mode) {
@@ -2193,7 +2256,7 @@
             level: "alert",
             symbol: "!",
             title: "今天不适合户外负重",
-            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不背摄影包、不爬坡；可点“切换恢复版”，系统会把今天顺延。`,
+            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不背摄影包、不爬坡；可点“切换恢复版”，系统会在原周期内重排补训。`,
             recovery: true
           };
         }
@@ -2201,9 +2264,9 @@
           if (!reasons.length) addReason("路况或体感一般");
           let text = `${reasons.join("、")}。${plannedActivity}：`;
           if (dateIndex === 6) text += "长距离安排建议延期；若必须出门，缩短路线、取消负重并避开湿滑路段。";
-          else if (dateIndex === 5) text += "坡走/楼梯可顺延一天，今天改平地快走并避开湿滑路面。";
+          else if (dateIndex === 5) text += "坡走/楼梯可放入后续补训，今天改平地快走并避开湿滑路面。";
           else if (todayRecord.mode === "recovery") text += "保持恢复活动即可，不为补进度加练。";
-          else text += "今天保留训练习惯，降一级强度；若没有完成，明天会优先显示这次训练。";
+          else text += "今天保留训练习惯，降一级强度；若没有完成，系统会在剩余计划内优先补这次训练。";
           return {level: "warn", symbol: "~", title: "户外条件一般，降一级", text, recovery: false};
         }
         const range = [];
@@ -2309,12 +2372,11 @@
       }
 
       function currentProgramWeek(date = state.selectedDate) {
-        return baseProgramWeek(dynamicPlanForDate(date).effectiveDate);
+        return baseProgramWeek(date);
       }
 
       function isAfterProgram(date = state.selectedDate) {
-        const effectiveDate = dynamicPlanForDate(date).effectiveDate;
-        return dateDiff(effectiveDate, store.settings.startDate) >= activeProgram().duration * 7;
+        return isAfterBaseProgram(date);
       }
 
       function isAfterBaseProgram(date = state.selectedDate) {
@@ -2328,16 +2390,16 @@
       function getPlanContext(date = state.selectedDate) {
         const program = activeProgram();
         const dynamic = dynamicPlanForDate(date);
-        const week = baseProgramWeek(dynamic.effectiveDate);
+        const week = baseProgramWeek(date);
         const target = program.progression[week - 1];
-        const after = isAfterBaseProgram(dynamic.effectiveDate);
+        const after = isAfterBaseProgram(date);
         return {
           program,
           week,
           target,
           after,
           dynamic,
-          stage: after ? "巩固期" : dynamic.shifted ? `顺延第${week}周` : `第${week}周`
+          stage: after ? "巩固期" : `第${week}周`
         };
       }
 
@@ -2349,7 +2411,7 @@
         const heroSubtitle = context.after
           ? `沿用第${context.week}周目标：${target.focus}。按身体反馈维持，不急着加重。`
           : context.dynamic.shifted
-            ? `有${context.dynamic.deferredCount}次训练顺延，今天先补${shortDateLabel.format(fromISO(context.dynamic.carryDate))}的内容。`
+            ? `有${context.dynamic.deferredCount}次训练待补，今天先补${shortDateLabel.format(fromISO(context.dynamic.carryDate))}的内容；总周期不延长。`
             : `${target.focus}。本周先完成${target.minutes}分钟长走，再考虑增加负重。`;
         const targetSummary = `${stage} · ${target.load} · ${target.minutes}分钟 · ${target.ascent}`;
         document.getElementById("heroEyebrow").textContent = heroEyebrow;
@@ -2646,21 +2708,23 @@
         const selectedIsTrainingDay = isPlanTrainingDay(state.selectedDate);
         const title = dynamic.shifted ? "训练已顺延" : record.deferred ? "今日已顺延" : "动态调整";
         let text = "没有待补训练，今天按计划执行。";
-        let meta = "自动顺延已开启";
+        let meta = `固定结束日：${shortDateLabel.format(programEndDate())}`;
         if (dynamic.shifted) {
           const carryDate = fromISO(dynamic.carryDate);
           const carryWorkout = getWorkout(dynamic.carryDate, "standard");
           text = `当前有${dynamic.deferredCount}次训练待补，今天优先补${shortDateLabel.format(carryDate)}的${carryWorkout.title}。`;
-          meta = `顺延后仍按${context.stage} · ${context.target.load} · ${context.target.minutes}分钟执行`;
+          meta = dynamic.overflowCount > 0
+            ? `剩余时间不足，可能有${dynamic.overflowCount}次只能降级为恢复训练`
+            : `在原${context.program.duration}周内重排，不延长总时间`;
         } else if (record.deferred) {
-          text = "今天已标记为顺延，不算失败；下一次训练日会优先补回。";
+          text = "今天已标记为顺延，不算失败；后续会在原周期内优先补回。";
           meta = "天气、加班、睡眠不足都可以这样处理";
         } else if (selectedIsFuture) {
           text = "未来日期会自动承接之前未完成的训练；完成后再推进下一项。";
-          meta = "计划跟随真实完成情况更新";
+          meta = "计划跟随真实完成情况更新，总周期不变";
         } else if (!selectedIsTrainingDay) {
-          text = "今天是休息复盘日，不会被算作漏练。";
-          meta = "恢复日不强行补训练";
+          text = dynamic.pendingBefore.length ? "今天可作为补训缓冲日，只补一项，不叠加高强度。" : "今天是休息复盘日，不会被算作漏练。";
+          meta = "恢复日只在需要补训时启用";
         }
         document.getElementById("adjustmentTitle").textContent = title;
         document.getElementById("adjustmentText").textContent = text;
@@ -3096,6 +3160,13 @@
             record.workoutDone = !record.workoutDone;
             if (record.workoutDone) record.deferred = false;
           }, true);
+          if (workoutDate !== state.selectedDate && isPlanTrainingDay(state.selectedDate)) {
+            updateRecordByDate(state.selectedDate, (record) => {
+              record.deferred = getRecord(workoutDate).workoutDone;
+              record.displacedBy = record.deferred ? workoutDate : "";
+              if (record.deferred) record.workoutDone = false;
+            }, true);
+          }
           showToast(getRecord(workoutDate).workoutDone ? "训练已打卡，计划已自动推进" : "已取消训练完成标记");
           return;
         }
