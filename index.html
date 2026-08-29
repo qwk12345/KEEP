@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1b1a17">
-  <meta name="description" content="为徒步摄影装备设计的8周稳进或4–5周压缩体能、作息、天气建议与打卡计划。">
+  <meta name="description" content="为徒步摄影设计的8周稳进或4–5周压缩空身体能、作息、天气建议与打卡计划。">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>徒步摄影体能计划</title>
@@ -1399,9 +1399,9 @@
     <header class="hero">
       <p id="heroEyebrow" class="eyebrow">8 周 · 第 1 周 · 适应</p>
       <h1>摄影徒步训练</h1>
-      <p id="heroSubtitle" class="hero-subtitle">负重、作息和打卡，今天只做下一步。</p>
+      <p id="heroSubtitle" class="hero-subtitle">空身训练、作息和打卡，今天只做下一步。</p>
       <div class="hero-metrics" aria-label="计划摘要">
-        <div class="hero-metric"><strong id="heroLoad">4 kg</strong><span id="heroLoadLabel">本周负重目标</span></div>
+        <div class="hero-metric"><strong id="heroLoad">空身</strong><span id="heroLoadLabel">本周训练方式</span></div>
         <div class="hero-metric"><strong id="heroProgress">第 1/8 周</strong><span id="heroProgressLabel">训练进度</span></div>
         <div class="hero-metric"><strong id="heroWalk">75 分钟</strong><span id="heroWalkLabel">周六长走目标</span></div>
       </div>
@@ -1475,7 +1475,7 @@
         <div class="plan-summary" aria-live="polite">
           <span id="todayPlanKicker">本周目标</span>
           <strong id="todayPlanTarget">4 kg · 75 分钟</strong>
-          <span id="todayPlanFocus">熟悉背包贴合、鞋袜与走姿</span>
+          <span id="todayPlanFocus">建立步行习惯、鞋袜与走姿</span>
         </div>
         <div id="adjustmentCard" class="adjustment-card" aria-live="polite">
           <strong id="adjustmentTitle">动态调整</strong>
@@ -1520,8 +1520,8 @@
               </div>
             </div>
             <div class="field">
-              <label for="packInput">今天训练负重（公斤）</label>
-              <input id="packInput" type="number" min="0" max="30" step="0.5" inputmode="decimal" placeholder="例如 5">
+              <label for="packInput">今日训练时长（分钟，可空）</label>
+              <input id="packInput" type="number" min="0" max="300" step="5" inputmode="numeric" placeholder="例如 30">
             </div>
             <div class="field full">
               <label>起床精力（1=很差，5=很好）</label>
@@ -1559,7 +1559,7 @@
           <div class="week-stats">
             <div class="stat-cell"><strong id="weekDoneCount">0/6</strong><span>训练完成</span></div>
             <div class="stat-cell"><strong id="weekSleepAvg">—</strong><span>平均睡眠</span></div>
-            <div class="stat-cell"><strong id="weekPackAvg">—</strong><span>平均负重</span></div>
+            <div class="stat-cell"><strong id="weekPackAvg">—</strong><span>平均训练时长</span></div>
           </div>
           <p id="weekRange" class="week-range"></p>
         </div>
@@ -1575,7 +1575,7 @@
         <div class="section-heading" style="margin-top:0">
           <div>
             <h2 id="planHeading">8周稳进版</h2>
-            <p id="planDescription">负重用水瓶替代器材，先练身体，再带相机</p>
+            <p id="planDescription">日常尽量空身训练，先练身体，再考虑带相机</p>
           </div>
           <span id="planCurrentWeek" class="small-label">当前第 1 周</span>
         </div>
@@ -1588,12 +1588,12 @@
         <div class="plan-summary plan-summary-plan" aria-live="polite">
           <span id="planTargetKicker">当前周目标</span>
           <strong id="planTargetSummary">第 1 周 · 4 kg · 75 分钟</strong>
-          <span id="planTargetFocus">熟悉背包贴合、鞋袜与走姿</span>
+          <span id="planTargetFocus">建立步行习惯、鞋袜与走姿</span>
         </div>
 
         <section class="gear-sheet" style="margin-top:0" aria-labelledby="gearTitle">
-          <h2 id="gearTitle">先算清楚要背多少</h2>
-          <p class="checkin-intro">以下按你列出的器材做区间估算；型号、脚架云台和配件会造成差异。</p>
+          <h2 id="gearTitle">最终器材参考</h2>
+          <p class="checkin-intro">以下只作为真实上山前的重量参考；日常训练按空身执行，不要求背这些东西。</p>
           <div class="gear-table-wrap">
             <table class="gear-table">
               <thead><tr><th>装备</th><th>估算依据</th><th>重量</th></tr></thead>
@@ -1614,9 +1614,9 @@
           </div>
           <p class="gear-note">注：如果你说的其实是 RF 28–70 F2 L USM（约 1.43 kg），器材包还要再增加约 0.94 kg。200–800 与 70–200 有焦段重叠，日常路线可按拍摄目的减掉一支。</p>
           <div class="benchmark-grid" aria-label="上山前体力门槛">
-            <div class="benchmark-item"><strong>入门门槛</strong><span>能以轻松对话速度连续快走60–90分钟；训练包4–6 kg，第二天膝踝没有持续疼痛。</span></div>
-            <div class="benchmark-item"><strong>建议出发标准</strong><span>能完成3小时、10–12 kg负重、约500 m爬升；下坡后仍能正常走路，24小时内恢复。</span></div>
-            <div class="benchmark-item"><strong>负重比例提醒</strong><span>先从体重的约10%开始，适应后再逐步接近15–20%；完整器材超过体重20%时，优先减镜头或缩短路线。</span></div>
+            <div class="benchmark-item"><strong>入门门槛</strong><span>空身连续快走60–90分钟；第二天膝踝没有持续疼痛。</span></div>
+            <div class="benchmark-item"><strong>建议出发标准</strong><span>空身完成3小时、约500 m爬升；下坡后仍能正常走路，24小时内恢复。</span></div>
+            <div class="benchmark-item"><strong>器材提醒</strong><span>真正带相机时先减镜头、缩短路线；不要第一次就背完整器材上山。</span></div>
           </div>
         </section>
 
@@ -1646,8 +1646,8 @@
             <div class="detail-body">
               <p>06:40–06:47 热身；06:47–07:17 主训练；07:17–07:25 放松。</p>
               <ul>
-                <li>背包深蹲 10次、反向箭步蹲 每侧8次、小腿提踵15次，循环2轮。</li>
-                <li>髋铰链/背包硬拉12次、台阶上步 每侧8次、臀桥12次，循环2轮。</li>
+                <li>徒手深蹲 10次、反向箭步蹲 每侧8次、小腿提踵15次，循环2轮。</li>
+                <li>髋铰链12次、台阶上步 每侧8次、臀桥12次，循环2轮。</li>
                 <li>死虫 每侧8次 + 平板支撑30秒，做2轮；动作变形就立即减量。</li>
               </ul>
             </div>
@@ -1662,8 +1662,8 @@
           <details>
             <summary>周三 · 上肢、肩胛与核心（30分钟）</summary>
             <div class="detail-body">
-              <p>俯卧撑（可跪姿）8–12次、背包划船12次、墙天使8次、侧桥每侧20–30秒，循环3轮，组间休息30–45秒。</p>
-              <ul><li>相机主要压在肩带和腰带，肩胛稳定比追求大重量更重要。</li><li>背包划船时保持背部平直，不要耸肩或借腰甩。</li></ul>
+              <p>俯卧撑（可跪姿）8–12次、俯身Y-T举各8次、墙天使8次、侧桥每侧20–30秒，循环3轮，组间休息30–45秒。</p>
+              <ul><li>肩胛稳定比追求大重量更重要。</li><li>全程空手完成，动作慢，不耸肩、不借腰甩。</li></ul>
             </div>
           </details>
           <details>
@@ -1674,23 +1674,23 @@
             </div>
           </details>
           <details>
-            <summary id="templateFridaySummary">周五 · 负重楼梯/坡走（30分钟）</summary>
+            <summary id="templateFridaySummary">周五 · 坡走/楼梯耐力（30分钟）</summary>
             <div class="detail-body">
-              <p>背包按本周目标的50–70%装水。热身6分钟，然后做5–8轮：上楼或上坡2分钟（RPE 6/10）+ 平地恢复1分钟，最后慢走和小腿放松。</p>
-              <ul><li>全程不跑；出现膝痛就立刻改平地，并把下周负重冻结。</li><li>每一轮都应留一点余力，模拟山路的持续输出。</li></ul>
+              <p>空身完成。热身6分钟，然后做5–8轮：上楼或上坡2分钟（RPE 6/10）+ 平地恢复1分钟，最后慢走和小腿放松。</p>
+              <ul><li>全程不跑；出现膝痛就立刻改平地，并降低下一次坡度训练。</li><li>每一轮都应留一点余力，模拟山路的持续输出。</li></ul>
             </div>
           </details>
           <details>
-            <summary id="templateSaturdaySummary">周六 · 长距离徒步/负重步行</summary>
+            <summary id="templateSaturdaySummary">周六 · 长距离空身步行</summary>
             <div class="detail-body">
               <p id="longWalkTemplate">按上方8周表执行。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。</p>
-              <ul><li>超过90分钟：每小时饮水约400–600 ml，按出汗量调整；每小时补30–45 g碳水。</li><li>第一次模拟不要带贵重相机，使用水瓶和沙袋把负重配平。</li><li>训练结束后记录脚底、膝、腰和肩带压力，第二天再决定是否升级。</li></ul>
+              <ul><li>超过90分钟：每小时饮水约400–600 ml，按出汗量调整；每小时补30–45 g碳水。</li><li>日常空身完成；如要测试器材，单独选短路线，不和长距离叠加。</li><li>训练结束后记录脚底、膝、腰和疲劳程度，第二天再决定是否升级。</li></ul>
             </div>
           </details>
           <details>
             <summary>周日 · 休息与复盘</summary>
             <div class="detail-body">
-              <p>不安排力量和爬坡。轻松走20–30分钟，做10分钟踝、髋、胸椎活动；整理鞋袜和背包，检查下周路线。</p>
+              <p>不安排力量和爬坡。轻松走20–30分钟，做10分钟踝、髋、胸椎活动；整理鞋袜，检查下周路线。</p>
             </div>
           </details>
         </div>
@@ -1702,8 +1702,8 @@
             <tbody>
               <tr><td>标准下班日</td><td>06:35起床 · 06:40训练 · 07:25–08:25洗漱、早餐、收拾 · 08:30出发 · 18:30下班 · 22:50熄灯</td><td>晚饭后只散步或拉伸，不做第二次高强度训练。</td></tr>
               <tr><td>加班到21:00</td><td>18:30办公室轻食 · 21:00下班 · 21:30到家 · 22:05轻拉伸 · 22:50熄灯</td><td>不补做训练；第二天若睡眠不足，直接用恢复版。</td></tr>
-              <tr><td>睡眠不足</td><td>06:55起床 · 07:00–07:12活动 · 07:25开始洗漱 · 22:40熄灯</td><td>取消负重、楼梯和间歇，把今天当恢复日。</td></tr>
-              <tr><td>周六长走</td><td>07:30起床 · 08:00早餐 · 09:00出发 · 每45–60分钟补水休息</td><td id="scheduleLongWalkFocus">先完成本周目标，再逐步加负重；不要同时加距离和爬升。</td></tr>
+              <tr><td>睡眠不足</td><td>06:55起床 · 07:00–07:12活动 · 07:25开始洗漱 · 22:40熄灯</td><td>取消楼梯和间歇，把今天当恢复日。</td></tr>
+              <tr><td>周六长走</td><td>07:30起床 · 08:00早餐 · 09:00出发 · 每45–60分钟补水休息</td><td id="scheduleLongWalkFocus">先完成本周空身时长，再逐步增加距离或爬升；不要同时加距离和爬升。</td></tr>
             </tbody>
           </table>
         </div>
@@ -1720,7 +1720,7 @@
 
         <div class="info-band">
           <strong id="recoveryPlanTitle">你的睡眠底线</strong>
-          <span id="recoveryPlanText">标准作息按22:50–06:35安排，约7小时45分钟。连续两天低于7小时，就把下一次爬坡或负重训练改为恢复版，优先补回睡眠。</span>
+          <span id="recoveryPlanText">标准作息按22:50–06:35安排，约7小时45分钟。连续两天低于7小时，就把下一次爬坡或长走改为恢复版，优先补回睡眠。</span>
         </div>
 
         <div class="recovery-card">
@@ -1745,7 +1745,7 @@
         </div>
         <div class="recovery-card">
           <h3>什么时候必须停下来</h3>
-          <p>胸痛、晕厥感、异常气短、心悸不缓解、关节刺痛或麻木时立即停止训练；有心血管、血压、膝踝腰部旧伤或长期久坐基础疾病，开始负重计划前先咨询医生或康复师。</p>
+          <p>胸痛、晕厥感、异常气短、心悸不缓解、关节刺痛或麻木时立即停止训练；有心血管、血压、膝踝腰部旧伤或长期久坐基础疾病，开始计划前先咨询医生或康复师。</p>
         </div>
 
         <section class="data-sheet" aria-labelledby="dataTitle">
@@ -1760,7 +1760,7 @@
         </section>
       </section>
 
-      <p class="footer-note">这是通用训练安排，不替代医疗建议。负重目标以“动作稳定、第二天关节无持续疼痛”为准；路线、天气和身体反馈优先于计划数字。</p>
+      <p class="footer-note">这是通用训练安排，不替代医疗建议。训练目标以“动作稳定、第二天关节无持续疼痛”为准；路线、天气和身体反馈优先于计划数字。</p>
     </main>
 
     <nav class="bottom-nav" aria-label="主要页面">
@@ -1813,22 +1813,22 @@
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
       const progression = [
-        {week: 1, load: "4 kg", minutes: 75, ascent: "平地/约100 m", focus: "熟悉背包贴合、鞋袜与走姿", phase: "适应"},
-        {week: 2, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "保持能说完整句子的强度", phase: "适应"},
-        {week: 3, load: "6 kg", minutes: 105, ascent: "约200 m", focus: "加入短坡，练习稳定下坡", phase: "建立"},
-        {week: 4, load: "5 kg", minutes: 90, ascent: "约150 m", focus: "减量周，检查膝踝和肩带反馈", phase: "减量"},
-        {week: 5, load: "7.5 kg", minutes: 120, ascent: "约300 m", focus: "延长持续时间，不追求速度", phase: "建立"},
-        {week: 6, load: "9 kg", minutes: 150, ascent: "约400 m", focus: "练习补水、补能量和短休息", phase: "提升"},
-        {week: 7, load: "10.5 kg", minutes: 180, ascent: "约500 m", focus: "接近真实摄影行走节奏", phase: "提升"},
-        {week: 8, load: "12 kg", minutes: 210, ascent: "约600–800 m", focus: "完成一次完整模拟，不带贵重器材", phase: "模拟"}
+        {week: 1, load: "空身", minutes: 75, ascent: "平地/约100 m", focus: "建立步行习惯、鞋袜与走姿", phase: "适应"},
+        {week: 2, load: "空身", minutes: 90, ascent: "约150 m", focus: "保持可持续节奏，不追速度", phase: "适应"},
+        {week: 3, load: "空身", minutes: 105, ascent: "约200 m", focus: "加入短坡，练习稳定下坡", phase: "建立"},
+        {week: 4, load: "空身", minutes: 90, ascent: "约150 m", focus: "减量周，检查膝踝和睡眠反馈", phase: "减量"},
+        {week: 5, load: "空身", minutes: 120, ascent: "约300 m", focus: "延长持续时间，不追求速度", phase: "建立"},
+        {week: 6, load: "空身", minutes: 150, ascent: "约400 m", focus: "练习补水、补能量和短休息", phase: "提升"},
+        {week: 7, load: "空身", minutes: 180, ascent: "约500 m", focus: "接近真实摄影行走节奏", phase: "提升"},
+        {week: 8, load: "空身", minutes: 210, ascent: "约600–800 m", focus: "完成一次空身长线模拟", phase: "模拟"}
       ];
 
       const compactProgression = [
-        {week: 1, load: "5 kg", minutes: 75, ascent: "平地/约100 m", focus: "快速建立背包贴合与走姿习惯", phase: "适应"},
-        {week: 2, load: "7 kg", minutes: 105, ascent: "约200 m", focus: "延长持续时间，保持能说完整句子", phase: "建立"},
-        {week: 3, load: "8.5 kg", minutes: 135, ascent: "约300 m", focus: "加入短坡，练习补水和稳定下坡", phase: "提升"},
-        {week: 4, load: "6.5 kg", minutes: 105, ascent: "约200 m", focus: "减量周，确认第二天关节和睡眠恢复", phase: "减量"},
-        {week: 5, load: "10.5 kg", minutes: 180, ascent: "约500–600 m", focus: "完成一次接近真实的摄影徒步模拟", phase: "模拟"}
+        {week: 1, load: "空身", minutes: 75, ascent: "平地/约100 m", focus: "快速建立走姿和训练习惯", phase: "适应"},
+        {week: 2, load: "空身", minutes: 105, ascent: "约200 m", focus: "延长持续时间，保持稳定节奏", phase: "建立"},
+        {week: 3, load: "空身", minutes: 135, ascent: "约300 m", focus: "加入短坡，练习补水和稳定下坡", phase: "提升"},
+        {week: 4, load: "空身", minutes: 105, ascent: "约200 m", focus: "减量周，确认第二天关节和睡眠恢复", phase: "减量"},
+        {week: 5, load: "空身", minutes: 180, ascent: "约500–600 m", focus: "完成一次空身摄影徒步模拟", phase: "模拟"}
       ];
 
       const trainingPrograms = {
@@ -1837,14 +1837,14 @@
           shortLabel: "8周",
           duration: 8,
           progression,
-          note: "适合从基础开始，给膝踝、肩背和睡眠留出适应余量。两版工作日都固定预留07:25–08:25（1小时）洗漱、早餐和收拾，08:30出发。"
+          note: "适合从基础开始，日常不背包，给膝踝、心肺和睡眠留出适应余量。两版工作日都固定预留07:25–08:25（1小时）洗漱、早餐和收拾，08:30出发。"
         },
         compact: {
           label: "4–5周压缩版",
           shortLabel: "5周",
           duration: 5,
           progression: compactProgression,
-          note: "适合已有每周快走或健身基础的人：至少能轻松走90分钟、背5–6kg。表格按5周执行；只有4周时也要保留第4周减量，缩短最后模拟时间，不盲目加重。完整12.9–14.6kg器材仍需逐步验证。"
+          note: "适合已有每周快走或健身基础的人：至少能空身轻松走90分钟。表格按5周执行；只有4周时也要保留第4周减量，缩短最后模拟时间，不盲目加量。完整12.9–14.6kg器材只作为真实出行参考。"
         }
       };
 
@@ -1853,10 +1853,10 @@
       const exerciseGuides = {
         squat: {
           short: "深蹲",
-          title: "背包深蹲",
+          title: "徒手深蹲",
           image: "assets/exercise-squat.svg",
           summary: "臀部向后坐，保持脚掌稳定，起身时把地面踩开。",
-          cues: ["脚尖自然向外，膝盖跟着脚尖方向走。", "下到能保持腰背中立的位置，不必追求深度。", "背包贴背，先用轻重量熟悉动作。"]
+          cues: ["脚尖自然向外，膝盖跟着脚尖方向走。", "下到能保持腰背中立的位置，不必追求深度。", "全程空手完成，先把动作做稳。"]
         },
         lunge: {
           short: "箭步",
@@ -2331,21 +2331,21 @@
         const todayRecord = getRecord(dateISO);
         const todayPlan = getPlanContext(dateISO);
         const workoutName = todayRecord.mode === "recovery" ? "恢复活动" : getWorkout(dateISO, todayRecord.mode).title;
-        const plannedActivity = `${workoutName}（${todayPlan.stage}目标${todayPlan.target.load}）`;
+        const plannedActivity = `${workoutName}（${todayPlan.stage} · ${todayPlan.target.load}）`;
         if (severe) {
           if (!reasons.length) addReason("天气风险较高");
           return {
             level: "alert",
             symbol: "!",
-            title: "今天不适合户外负重",
-            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不背摄影包、不爬坡；可点“切换恢复版”，系统会在原周期内重排补训。`,
+            title: "今天不适合户外训练",
+            text: `${reasons.join("、")}。${plannedActivity}改为室内恢复或平地轻松走，不爬坡；可点“切换恢复版”，系统会在原周期内重排补训。`,
             recovery: true
           };
         }
         if (caution) {
           if (!reasons.length) addReason("路况或体感一般");
           let text = `${reasons.join("、")}。${plannedActivity}：`;
-          if (dateIndex === 6) text += "长距离安排建议延期；若必须出门，缩短路线、取消负重并避开湿滑路段。";
+          if (dateIndex === 6) text += "长距离安排建议延期；若必须出门，缩短路线并避开湿滑路段。";
           else if (dateIndex === 5) text += "坡走/楼梯可放入后续补训，今天改平地快走并避开湿滑路面。";
           else if (todayRecord.mode === "recovery") text += "保持恢复活动即可，不为补进度加练。";
           else text += "今天保留训练习惯，降一级强度；若没有完成，系统会在剩余计划内优先补这次训练。";
@@ -2389,7 +2389,7 @@
           weatherText("weatherRain", "—");
           weatherText("weatherWind", "—");
           weatherText("weatherAdviceTitle", weatherState.status === "error" ? "可以稍后重试" : weatherState.status === "loading" ? "正在查询天气" : "先读取天气，再安排户外训练");
-          weatherText("weatherAdviceText", weatherState.status === "error" ? "没有天气数据时，户外负重先按保守强度安排。" : weatherState.status === "loading" ? "请允许位置权限，稍候片刻。" : "定位只在你点击后使用，天气结果保存在本机。");
+          weatherText("weatherAdviceText", weatherState.status === "error" ? "没有天气数据时，户外训练先按保守强度安排。" : weatherState.status === "loading" ? "请允许位置权限，稍候片刻。" : "定位只在你点击后使用，天气结果保存在本机。");
           weatherText("weatherStatus", weatherState.status === "error" ? weatherState.error : weatherState.status === "loading" ? "正在读取位置…" : "尚未读取");
           action.textContent = weatherState.status === "loading" ? "读取中…" : weatherState.status === "error" ? "重试" : "读取位置天气";
           action.disabled = weatherState.status === "loading";
@@ -2502,12 +2502,12 @@
           ? `沿用第${context.week}周目标：${target.focus}。按身体反馈维持，不急着加重。`
           : context.dynamic.shifted
             ? `有${context.dynamic.deferredCount}次训练待补，今天先补${shortDateLabel.format(fromISO(context.dynamic.carryDate))}的内容；总周期不延长。`
-            : `${target.focus}。本周先完成${target.minutes}分钟长走，再考虑增加负重。`;
+            : `${target.focus}。本周先空身完成${target.minutes}分钟长走，再考虑增加距离或爬升。`;
         const targetSummary = `${stage} · ${target.load} · ${target.minutes}分钟 · ${target.ascent}`;
         document.getElementById("heroEyebrow").textContent = heroEyebrow;
         document.getElementById("heroSubtitle").textContent = heroSubtitle;
         document.getElementById("heroLoad").textContent = target.load;
-        document.getElementById("heroLoadLabel").textContent = "本周负重目标";
+        document.getElementById("heroLoadLabel").textContent = "本周训练方式";
         document.getElementById("heroProgress").textContent = `第 ${context.week}/${program.duration} 周`;
         document.getElementById("heroProgressLabel").textContent = context.after ? "训练阶段" : "训练进度";
         document.getElementById("heroWalk").textContent = `${target.minutes} 分钟`;
@@ -2519,7 +2519,7 @@
         document.getElementById("planTargetSummary").textContent = targetSummary;
         document.getElementById("planTargetFocus").textContent = target.focus;
         document.getElementById("recoveryContextLabel").textContent = `${program.shortLabel} · ${stage}`;
-        document.getElementById("recoveryPlanText").textContent = `${program.shortLabel} · ${stage}的周六目标为${target.load}、${target.minutes}分钟、${target.ascent}。标准作息按22:50–06:35安排，约7小时45分钟；连续两天低于7小时，就把下一次爬坡或负重训练改为恢复版，优先补回睡眠。`;
+        document.getElementById("recoveryPlanText").textContent = `${program.shortLabel} · ${stage}的周六目标为空身、${target.minutes}分钟、${target.ascent}。标准作息按22:50–06:35安排，约7小时45分钟；连续两天低于7小时，就把下一次爬坡或长走改为恢复版，优先补回睡眠。`;
         document.title = `${program.shortLabel}徒步训练 · ${stage}`;
       }
 
@@ -2529,7 +2529,7 @@
             level: "alert",
             symbol: "!",
             title: "今天先保身体",
-            text: record.pain === "sharp" || record.pain === "joint" ? "有疼痛或异常反馈，取消负重和楼梯，只做轻松走与活动；症状持续请就医。" : "睡眠或精力明显不足，今天用恢复版，把训练时间还给身体。"
+            text: record.pain === "sharp" || record.pain === "joint" ? "有疼痛或异常反馈，取消楼梯和爬坡，只做轻松走与活动；症状持续请就医。" : "睡眠或精力明显不足，今天用恢复版，把训练时间还给身体。"
           };
         }
         if (record.sleep < 7 || record.energy === 2 || record.pain === "muscle") {
@@ -2537,7 +2537,7 @@
             level: "warn",
             symbol: "~",
             title: "状态一般，降一级训练",
-            text: "保留活动习惯，但去掉负重、间歇或最后一轮；全程以能说话为准。"
+            text: "保留活动习惯，但去掉楼梯、间歇或最后一轮；全程以能说话为准。"
           };
         }
         return {
@@ -2562,7 +2562,7 @@
         if (mode === "recovery") {
           return {
             title: "恢复版 · 轻松活动",
-            subtitle: `${context.stage} · 原计划${target.load}/${target.minutes}分钟，今天改为恢复，不背包、不爬坡`,
+            subtitle: `${context.stage} · 原计划空身/${target.minutes}分钟，今天改为恢复，不爬坡`,
             tag: "12 分钟",
             minutes: 12,
             note: "今天不追求训练量。若活动后疼痛、头晕或气短增加，立即停止并休息。",
@@ -2576,44 +2576,44 @@
         }
         if (index === 6) {
           return {
-            title: "长距离徒步/负重步行",
+            title: "长距离徒步/空身步行",
             subtitle: `${stage}目标：${target.load} · ${target.minutes}分钟 · ${target.ascent}${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
             tag: `${target.minutes} 分钟`,
             minutes: target.minutes,
-            note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加负重；不要在同一周同时大幅增加距离和爬升。",
+            note: "超过90分钟：每小时饮水约400–600 ml，补30–45 g碳水。先完成时间，再增加距离或爬升；不要在同一周同时大幅增加距离和爬升。",
             steps: makeSteps([
-              {time: "0–10′", title: "慢走热身", detail: "空包或轻包，检查鞋带、肩带和腰带是否压迫。"},
-              {time: `10–${Math.round(target.minutes * .42)}′`, title: "稳定主段", detail: `负重${target.load}，RPE 4–5/10，能说完整句子；每15分钟快速检查脚底和肩带。`},
+              {time: "0–10′", title: "慢走热身", detail: "空身出发，检查鞋带、袜口和脚底感觉。"},
+              {time: `10–${Math.round(target.minutes * .42)}′`, title: "稳定主段", detail: `空身完成，RPE 4–5/10，能说完整句子；每15分钟快速检查脚底和膝踝。`},
               {time: `${Math.round(target.minutes * .42)}–${Math.round(target.minutes * .82)}′`, title: "补水与短休息", detail: "每45–60分钟休息5–8分钟，休息时不要完全坐死，活动脚踝。"},
-              {time: `${Math.round(target.minutes * .82)}–${target.minutes}′`, title: "收尾与记录", detail: "最后一段降速，回家后记录膝、踝、腰、肩和脚底反馈。"}
+              {time: `${Math.round(target.minutes * .82)}–${target.minutes}′`, title: "收尾与记录", detail: "最后一段降速，回家后记录膝、踝、腰和脚底反馈。"}
             ])
           };
         }
         if (index === 7) {
           return {
             title: "休息与复盘",
-            subtitle: `${stage} · 轻松走20–30分钟，整理装备，不安排力量和爬坡${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
+            subtitle: `${stage} · 轻松走20–30分钟，整理鞋袜，不安排力量和爬坡${context.dynamic.shifted ? ` · 补${shortDateLabel.format(fromISO(workoutDate))}` : ""}`,
             tag: "20 分钟",
             minutes: 20,
             note: "休息日不是躺平考核：轻微活动有助于恢复，但不要为了补进度加练。",
             steps: makeSteps([
               {time: "0–10′", title: "轻松散步", detail: "平地、能轻松聊天的速度。"},
               {time: "10–15′", title: "踝与髋活动", detail: "踝关节前移、髋屈肌拉伸，每侧各30–45秒。"},
-              {time: "15–20′", title: "装备复盘", detail: "检查鞋袜、背包贴合、三脚架固定和下周路线。"}
+              {time: "15–20′", title: "路线复盘", detail: "检查鞋袜、补水、天气和下周路线。"}
             ])
           };
         }
         if (index === 1) {
           return {
             title: "下肢与核心",
-            subtitle: `30分钟力量基础 · ${stage}周六目标${target.load}`,
+            subtitle: `30分钟力量基础 · ${stage}周六空身长走`,
             tag: "30 分钟",
             minutes: 30,
             note: "深蹲和上步只用能保持膝盖对准脚尖的重量；如果膝痛，改坐站或低台阶，不要硬完成次数。",
             steps: makeSteps([
               {time: "0–3′", title: "原地快走与关节唤醒", detail: "抬膝、髋绕环、踝泵，逐步提高体温。"},
-              {time: "3–13′", title: "下肢循环 A × 2轮", detail: "背包深蹲10次；反向箭步蹲每侧8次；小腿提踵15次。"},
-              {time: "13–23′", title: "下肢循环 B × 2轮", detail: "髋铰链/背包硬拉12次；台阶上步每侧8次；臀桥12次。"},
+              {time: "3–13′", title: "下肢循环 A × 2轮", detail: "徒手深蹲10次；反向箭步蹲每侧8次；小腿提踵15次。"},
+              {time: "13–23′", title: "下肢循环 B × 2轮", detail: "髋铰链12次；台阶上步每侧8次；臀桥12次。"},
               {time: "23–28′", title: "核心稳定 × 2轮", detail: "死虫每侧8次 + 平板支撑30秒，腰部不离地。"},
               {time: "28–30′", title: "呼吸收尾", detail: "慢走，做4次长呼气，记录膝踝反馈。"}
             ])
@@ -2637,23 +2637,23 @@
         if (index === 3) {
           return {
             title: "上肢与核心",
-            subtitle: `${stage} · 肩胛稳定，让相机重量落在骨盆和背包上`,
+            subtitle: `${stage} · 肩胛稳定和核心控制，减少长走疲劳`,
             tag: "30 分钟",
             minutes: 30,
             note: "动作质量优先于次数。肩前侧刺痛、麻木或耸肩明显时，停止俯卧撑和划船。",
             steps: makeSteps([
               {time: "0–5′", title: "肩胛热身", detail: "肩绕环、墙滑、胸椎旋转，逐步扩大范围。"},
-              {time: "5–16′", title: "推拉循环 × 3轮", detail: "俯卧撑8–12次（可跪姿） + 背包划船12次，休息30–45秒。"},
+              {time: "5–16′", title: "推拉控制 × 3轮", detail: "俯卧撑8–12次（可跪姿） + 俯身Y-T举各8次，休息30–45秒。"},
               {time: "16–24′", title: "肩胛控制 × 2轮", detail: "墙天使8次 + 俯身Y举8次，动作慢而轻。"},
               {time: "24–28′", title: "侧桥核心", detail: "每侧20–30秒，骨盆保持水平，做2轮。"},
-              {time: "28–30′", title: "放松呼吸", detail: "放下背包，做长呼气和胸口打开。"}
+              {time: "28–30′", title: "放松呼吸", detail: "做长呼气和胸口打开。"}
             ])
           };
         }
         if (index === 4) {
           return {
             title: "恢复与灵活性",
-            subtitle: `${stage} · 给周末${target.load}负重留下余量`,
+            subtitle: `${stage} · 给周末空身长走留下余量`,
             tag: "25 分钟",
             minutes: 25,
             note: "全程只到拉伸感，不追求疼痛。若身体特别疲劳，可以只做一轮并提前睡觉。",
@@ -2666,8 +2666,8 @@
           };
         }
         return {
-          title: "负重楼梯/坡走",
-          subtitle: `${stage}短时坡度训练 · 背包建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`,
+          title: "坡走/楼梯耐力",
+          subtitle: `${stage}短时坡度训练 · 空身完成，稳定比速度重要`,
           tag: "30 分钟",
           minutes: 30,
           note: "不跑楼梯，不追配速。若膝、踝或腰出现刺痛，马上改平地慢走并记录。",
@@ -2689,9 +2689,9 @@
         if (index === 6 && mode !== "recovery") {
           return [
             {phase: "上午", time: "07:30", title: "起床、喝水、自然光", detail: "喝300–500 ml水，接触自然光5–10分钟", key: "morning"},
-            {phase: "上午", time: "08:00", title: "早餐与装包", detail: `早餐含蛋白质和碳水；今天目标${target.load}`, key: "breakfast"},
-            {phase: "上午", time: "09:00", title: "开始长距离步行", detail: `${context.stage}目标 ${target.load} · ${target.minutes}分钟 · ${target.ascent} · RPE 4–5/10`, key: "workout"},
-            {phase: "途中", time: "每45–60′", title: "补水与短休息", detail: "休息5–8分钟，检查脚底、膝和肩带", key: "fuel"},
+            {phase: "上午", time: "08:00", title: "早餐与出门准备", detail: "早餐含蛋白质和碳水；今天空身长走", key: "breakfast"},
+            {phase: "上午", time: "09:00", title: "开始长距离步行", detail: `${context.stage}目标 空身 · ${target.minutes}分钟 · ${target.ascent} · RPE 4–5/10`, key: "workout"},
+            {phase: "途中", time: "每45–60′", title: "补水与短休息", detail: "休息5–8分钟，检查脚底、膝踝和呼吸", key: "fuel"},
             {phase: "结束", time: "结束后10′", title: "慢走收尾", detail: "不要突然停下，回家后换干袜", key: "cooldown"},
             {phase: "晚上", time: "22:30", title: "屏幕降噪", detail: "调暗灯光，准备下周训练", key: "winddown"},
             {phase: "晚上", time: "22:50", title: "熄灯睡觉", detail: "目标睡眠至少7小时45分钟", key: "sleep"}
@@ -2701,7 +2701,7 @@
           return [
             {phase: "上午", time: "08:00", title: "自然醒与喝水", detail: "不要用长时间赖床换恢复", key: "morning"},
             {phase: "上午", time: "10:00", title: "轻松散步", detail: "平地20–30分钟，能轻松聊天", key: "workout"},
-            {phase: "下午", time: "15:00", title: "装备与路线复盘", detail: "整理鞋袜、背包、补水和下周路线", key: "review"},
+            {phase: "下午", time: "15:00", title: "路线复盘", detail: "整理鞋袜、补水和下周路线", key: "review"},
             {phase: "晚上", time: "21:45", title: "温和拉伸", detail: "踝、髋、胸椎各几分钟，不做力量训练", key: "stretch"},
             {phase: "晚上", time: "22:30", title: "屏幕降噪", detail: "把明天衣物和早餐准备好", key: "winddown"},
             {phase: "晚上", time: "22:50", title: "熄灯睡觉", detail: "目标睡眠至少7小时45分钟", key: "sleep"}
@@ -2710,7 +2710,7 @@
         if (mode === "recovery") {
           return [
             {phase: "早晨", time: "06:55", title: "起床、喝水、见光", detail: "多睡20分钟；喝300–500 ml水，接触自然光", key: "morning"},
-            {phase: "早晨", time: "07:00–07:12", title: "恢复活动", detail: "踝泵、猫牛、胸椎旋转、髋部活动，不背包", key: "workout"},
+            {phase: "早晨", time: "07:00–07:12", title: "恢复活动", detail: "踝泵、猫牛、胸椎旋转、髋部活动", key: "workout"},
             {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "早餐优先蛋白质和碳水，留出5分钟缓冲", key: "prepare"},
             {phase: "白天", time: "09:30", title: "必要时第一杯咖啡", detail: "按平时耐受量，下午14:00后不再摄入", key: "caffeine"},
             {phase: "白天", time: "12:35", title: "饭后走10分钟", detail: "帮助清醒和恢复，避免久坐", key: "lunchwalk"},
@@ -2741,7 +2741,7 @@
         return [
           {phase: "早晨", time: "06:35", title: "起床、喝水、自然光", detail: "喝300–500 ml水，拉开窗帘或出门5分钟", key: "morning"},
           {phase: "早晨", time: "06:40–06:47", title: "热身", detail: "原地走、踝泵、髋绕环、肩绕环", key: "warmup"},
-          {phase: "早晨", time: "06:47–07:17", title: `完成${plannedWorkout.title}`, detail: `${plannedWorkout.tag} · ${context.stage}周六目标${target.load}；按今日训练卡执行，动作质量优先`, key: "workout"},
+          {phase: "早晨", time: "06:47–07:17", title: `完成${plannedWorkout.title}`, detail: `${plannedWorkout.tag} · ${context.stage}周六空身长走；按今日训练卡执行，动作质量优先`, key: "workout"},
           {phase: "早晨", time: "07:17–07:25", title: "放松与喝水", detail: "慢走、长呼气，补水后开始洗漱", key: "cooldown"},
           {phase: "早晨", time: "07:25–08:25", title: "洗漱、早餐、收拾（1小时）", detail: "07:25–07:45洗漱；07:45–08:05早餐；08:05–08:25装包和缓冲", key: "prepare"},
           {phase: "早晨", time: "08:30", title: "出发上班", detail: "通勤约30分钟，目标09:00左右到达", key: "leave"},
@@ -2934,7 +2934,7 @@
         const index = dayIndex(fromISO(workoutDateFor(state.selectedDate, getRecord().mode)));
         document.getElementById("todayHeading").textContent = context.dynamic.shifted ? "今日补训安排" : index === 6 ? "今日长距离安排" : index === 7 ? "今日休息安排" : "今日时间表";
         document.getElementById("todayHeadingSub").textContent = index === 6
-          ? `${context.stage} · ${target.load} / ${target.minutes}分钟 / ${target.ascent} · 先完成时间，再逐步增加负重`
+          ? `${context.stage} · 空身 / ${target.minutes}分钟 / ${target.ascent} · 先完成时间，再逐步增加距离或爬升`
           : index === 7
             ? `${context.stage} · 本周目标已列在上方，今天只做主动恢复`
             : context.dynamic.shifted
@@ -2977,11 +2977,11 @@
         const {target} = context;
         if (index === 1) return {title: "下肢与核心", detail: `30分钟 · ${context.stage} · 深蹲、上步、核心稳定`};
         if (index === 2) return {title: "有氧与坡度", detail: `30分钟 · ${context.stage} · 快走和短坡度间歇`};
-        if (index === 3) return {title: "上肢与核心", detail: `30分钟 · ${context.stage} · 肩胛稳定和背包划船`};
+        if (index === 3) return {title: "上肢与核心", detail: `30分钟 · ${context.stage} · 肩胛稳定和核心控制`};
         if (index === 4) return {title: "恢复与灵活性", detail: `25分钟 · ${context.stage} · 踝、髋、胸椎活动`};
-        if (index === 5) return {title: "负重楼梯/坡走", detail: `30分钟 · 背包约${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg · 不跑楼梯`};
-        if (index === 6) return {title: "长距离徒步/负重步行", detail: `${target.minutes}分钟 · ${target.load} · ${target.ascent}`};
-        return {title: "休息与复盘", detail: "主动恢复 · 整理装备和路线"};
+        if (index === 5) return {title: "坡走/楼梯耐力", detail: "30分钟 · 空身完成 · 不跑楼梯"};
+        if (index === 6) return {title: "长距离徒步/空身步行", detail: `${target.minutes}分钟 · 空身 · ${target.ascent}`};
+        return {title: "休息与复盘", detail: "主动恢复 · 整理鞋袜和路线"};
       }
 
       function clampPreviewStartDate() {
@@ -3042,8 +3042,8 @@
         document.getElementById("weekProgressFill").style.width = `${Math.min(100, percent)}%`;
         document.getElementById("weekDoneCount").textContent = `${Math.min(stats.done, 6)}/6`;
         document.getElementById("weekSleepAvg").textContent = stats.sleep === null ? "—" : `${stats.sleep.toFixed(1)}h`;
-        document.getElementById("weekPackAvg").textContent = stats.pack === null ? "—" : `${stats.pack.toFixed(1)}kg`;
-        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · ${context.stage}周六目标 ${target.load} / ${target.minutes}分钟 · ${target.ascent}${dynamicNote}`;
+        document.getElementById("weekPackAvg").textContent = stats.pack === null ? "—" : `${Math.round(stats.pack)}分`;
+        document.getElementById("weekRange").textContent = `${shortDateLabel.format(monday)} – ${shortDateLabel.format(sunday)} · ${context.stage}周六空身目标 ${target.minutes}分钟 · ${target.ascent}${dynamicNote}`;
         document.getElementById("weekDays").innerHTML = dates.map((date) => {
           const iso = toISO(date);
           const record = store.records[iso];
@@ -3064,7 +3064,7 @@
           const dateContext = getPlanContext(iso);
           const workout = getWorkout(iso, record && record.mode ? record.mode : "standard");
           const detail = index === 6
-            ? `${dateContext.target.load} · ${dateContext.target.minutes}分钟 · ${dateContext.target.ascent}`
+            ? `空身 · ${dateContext.target.minutes}分钟 · ${dateContext.target.ascent}`
             : index === 7
               ? "主动恢复 · 不安排力量和爬坡"
               : `${workout.tag} · ${dateContext.target.focus}`;
@@ -3085,14 +3085,14 @@
         document.getElementById("startDateInput").value = store.settings.startDate;
         const current = context.week;
         document.getElementById("planHeading").textContent = program.label;
-        document.getElementById("planDescription").textContent = program.duration === 8 ? "负重用水瓶替代器材，先练身体，再带相机" : "已有基础再压缩周期，保留减量周，不用赶进度硬扛";
+        document.getElementById("planDescription").textContent = program.duration === 8 ? "日常空身训练，先练身体，再带相机" : "已有基础再压缩周期，保留减量周，不用赶进度硬扛";
         document.getElementById("planCurrentWeek").textContent = context.after ? "当前巩固期" : `当前第 ${current} 周`;
         document.getElementById("programNote").textContent = program.note;
         document.getElementById("planTabLabel").textContent = `${program.shortLabel}计划`;
-        document.getElementById("longWalkTemplate").textContent = `当前${context.stage}周六目标为${target.load}、${target.minutes}分钟、${target.ascent}。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。`;
-        document.getElementById("templateFridaySummary").textContent = `周五 · 负重楼梯/坡走（30分钟） · 建议${Math.max(2, Math.round(parseFloat(target.load) * .6 * 10) / 10)} kg左右`;
-        document.getElementById("templateSaturdaySummary").textContent = `周六 · 长距离徒步/负重步行 · ${target.load} / ${target.minutes}分钟`;
-        document.getElementById("scheduleLongWalkFocus").textContent = `${context.stage}周六目标：${target.load}、${target.minutes}分钟、${target.ascent}；先完成时间，再逐步加负重，不要同时增加距离和爬升。`;
+        document.getElementById("longWalkTemplate").textContent = `当前${context.stage}周六目标为空身、${target.minutes}分钟、${target.ascent}。前10分钟慢走热身，中段保持RPE 4–5/10，每45–60分钟休息5–8分钟，最后10分钟慢走收尾。`;
+        document.getElementById("templateFridaySummary").textContent = "周五 · 坡走/楼梯耐力（30分钟） · 空身";
+        document.getElementById("templateSaturdaySummary").textContent = `周六 · 长距离空身步行 · ${target.minutes}分钟`;
+        document.getElementById("scheduleLongWalkFocus").textContent = `${context.stage}周六目标：空身、${target.minutes}分钟、${target.ascent}；先完成时间，再逐步增加距离或爬升。`;
         document.querySelectorAll("[data-program]").forEach((button) => {
           button.classList.toggle("active", button.dataset.program === programType);
         });
