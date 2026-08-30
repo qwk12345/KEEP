@@ -1086,6 +1086,10 @@
     .trend-chart svg { display: block; width: 100%; height: auto; aspect-ratio: 640 / 230; }
     .trend-empty { display: grid; place-items: center; min-height: 190px; padding: 24px; color: var(--muted); font-size: 12px; text-align: center; }
 
+    .trend-more { margin-top: 12px; border-bottom: 1px solid var(--line); }
+    .trend-more > summary { min-height: 42px; color: var(--green-dark); font-size: 12px; }
+    .trend-more-body { padding-bottom: 10px; }
+
     .history-heading {
       display: flex;
       align-items: center;
@@ -1459,11 +1463,18 @@
     .health-dialog-body { padding: 0 14px 15px; }
     .health-dialog-body .form-grid { gap: 11px; }
     .health-dialog-note { margin: 0 0 11px; color: var(--muted); font-size: 11px; }
+    .health-more { margin-top: 9px; }
+    .health-more > summary { min-height: 40px; color: var(--green-dark); font-size: 12px; }
+    .health-more .form-grid { padding-bottom: 10px; }
     .modal-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 14px; }
     .modal-actions .health-primary, .modal-actions .health-secondary { padding-inline: 12px; }
 
     .shortcut-copy { padding: 0 14px 15px; }
     .shortcut-copy > p { margin: 0 0 10px; color: var(--ink-soft); font-size: 12px; }
+    .shortcut-simple { padding: 10px 11px; border-left: 3px solid var(--green); background: var(--green-soft); }
+    .shortcut-details { margin-top: 9px; }
+    .shortcut-details > summary { min-height: 42px; color: var(--green-dark); font-size: 12px; }
+    .shortcut-details-body { padding-bottom: 2px; }
     .shortcut-copy ol { margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: 12px; }
     .shortcut-copy li { margin: 7px 0; }
     .shortcut-template { margin-top: 12px; }
@@ -1700,7 +1711,7 @@
           <div class="health-head">
             <div>
               <h2 id="healthTitle">健身数据</h2>
-              <p class="checkin-intro">保存 Apple Watch、运动 App 或手动记录的数据。</p>
+              <p class="checkin-intro">完成今日训练后自动记录。</p>
             </div>
             <span id="healthStatus" class="health-status">尚未记录</span>
           </div>
@@ -1711,10 +1722,10 @@
             <div class="health-fact"><strong id="healthHeartRate">—</strong><span>平均心率</span></div>
           </div>
           <div class="health-actions">
-            <button class="health-primary" type="button" data-action="open-health-entry">记录一次运动</button>
-            <button class="health-secondary" type="button" data-action="open-shortcut-guide">连接 Apple 健康</button>
+            <button class="health-primary" type="button" data-action="open-health-entry">补记其他运动</button>
+            <button class="health-secondary" type="button" data-action="open-shortcut-guide">Apple 同步（可选）</button>
           </div>
-          <p id="healthTodayNote" class="health-note">网页无法直接读取 HealthKit；通过 iPhone 快捷指令授权后同步，数据仍只保存在本机。</p>
+          <p id="healthTodayNote" class="health-note">正常使用无需设置 Apple 健康；点“完成今日训练”即可生成趋势。</p>
         </section>
 
         <section class="checkin-sheet" aria-labelledby="checkinTitle">
@@ -1780,21 +1791,7 @@
           <div class="trend-head">
             <div>
               <h2 id="trendTitle">训练趋势</h2>
-              <p id="trendRangeLabel" class="checkin-intro">当前训练周期</p>
-            </div>
-          </div>
-          <div class="trend-controls">
-            <select id="trendMetric" aria-label="趋势指标">
-              <option value="duration">运动分钟</option>
-              <option value="active">活动能量</option>
-              <option value="steps">步数</option>
-              <option value="distance">运动距离</option>
-              <option value="heartRate">平均心率</option>
-            </select>
-            <div class="trend-range" role="group" aria-label="趋势时间范围">
-              <button type="button" data-trend-range="7">7天</button>
-              <button type="button" data-trend-range="30">30天</button>
-              <button type="button" data-trend-range="cycle" class="active">本周期</button>
+              <p id="trendRangeLabel" class="checkin-intro">最近30天</p>
             </div>
           </div>
           <div class="trend-summary">
@@ -1803,8 +1800,27 @@
             <div><strong id="trendBest">—</strong><span>单日最高</span></div>
           </div>
           <div id="trendChart" class="trend-chart" aria-live="polite"></div>
-          <div class="history-heading"><strong>运动记录</strong><span id="healthHistoryCount">0 条</span></div>
-          <div id="healthHistory" class="health-history"></div>
+          <details class="trend-more">
+            <summary>更多指标与运动记录</summary>
+            <div class="trend-more-body">
+              <div class="trend-controls">
+                <select id="trendMetric" aria-label="趋势指标">
+                  <option value="duration">运动分钟</option>
+                  <option value="active">活动能量</option>
+                  <option value="steps">步数</option>
+                  <option value="distance">运动距离</option>
+                  <option value="heartRate">平均心率</option>
+                </select>
+                <div class="trend-range" role="group" aria-label="趋势时间范围">
+                  <button type="button" data-trend-range="7">7天</button>
+                  <button type="button" data-trend-range="30" class="active">30天</button>
+                  <button type="button" data-trend-range="cycle">本周期</button>
+                </div>
+              </div>
+              <div class="history-heading"><strong>运动记录</strong><span id="healthHistoryCount">0 条</span></div>
+              <div id="healthHistory" class="health-history"></div>
+            </div>
+          </details>
         </section>
 
         <div class="info-band" style="margin-top:18px">
@@ -2035,19 +2051,12 @@
         <button class="exercise-close" type="button" data-action="close-health-entry" aria-label="关闭健身记录">×</button>
       </div>
       <form id="healthForm" class="health-dialog-body">
-        <p class="health-dialog-note">除日期、类型和时长外，其余项目可以留空。</p>
+        <p class="health-dialog-note">已带入当前计划，确认时长后直接保存即可。</p>
         <div class="form-grid">
-          <div class="field">
-            <label for="healthDateInput">日期</label>
-            <input id="healthDateInput" type="date" required>
-          </div>
-          <div class="field">
-            <label for="healthTimeInput">开始时间</label>
-            <input id="healthTimeInput" type="time">
-          </div>
           <div class="field">
             <label for="healthTypeInput">运动类型</label>
             <select id="healthTypeInput" required>
+              <option id="healthPlannedType" value="今日计划训练">今日计划训练</option>
               <option value="户外步行">户外步行</option>
               <option value="徒步">徒步</option>
               <option value="楼梯训练">楼梯训练</option>
@@ -2063,23 +2072,36 @@
             <label for="healthDurationInput">时长（分钟）</label>
             <input id="healthDurationInput" type="number" min="1" max="1440" step="1" inputmode="numeric" required placeholder="例如 30">
           </div>
-          <div class="field">
-            <label for="healthCaloriesInput">活动能量（千卡）</label>
-            <input id="healthCaloriesInput" type="number" min="0" max="10000" step="1" inputmode="decimal" placeholder="可空">
-          </div>
-          <div class="field">
-            <label for="healthDistanceInput">距离（公里）</label>
-            <input id="healthDistanceInput" type="number" min="0" max="1000" step="0.01" inputmode="decimal" placeholder="可空">
-          </div>
-          <div class="field">
-            <label for="healthHeartRateInput">平均心率（次/分）</label>
-            <input id="healthHeartRateInput" type="number" min="30" max="240" step="1" inputmode="numeric" placeholder="可空">
-          </div>
-          <div class="field">
-            <label for="healthStepsInput">当天步数</label>
-            <input id="healthStepsInput" type="number" min="0" max="200000" step="1" inputmode="numeric" placeholder="可空">
-          </div>
         </div>
+        <details class="health-more">
+          <summary>补充日期、热量、距离或心率</summary>
+          <div class="form-grid">
+            <div class="field">
+              <label for="healthDateInput">日期</label>
+              <input id="healthDateInput" type="date" required>
+            </div>
+            <div class="field">
+              <label for="healthTimeInput">开始时间</label>
+              <input id="healthTimeInput" type="time">
+            </div>
+            <div class="field">
+              <label for="healthCaloriesInput">活动能量（千卡）</label>
+              <input id="healthCaloriesInput" type="number" min="0" max="10000" step="1" inputmode="decimal" placeholder="可空">
+            </div>
+            <div class="field">
+              <label for="healthDistanceInput">距离（公里）</label>
+              <input id="healthDistanceInput" type="number" min="0" max="1000" step="0.01" inputmode="decimal" placeholder="可空">
+            </div>
+            <div class="field">
+              <label for="healthHeartRateInput">平均心率（次/分）</label>
+              <input id="healthHeartRateInput" type="number" min="30" max="240" step="1" inputmode="numeric" placeholder="可空">
+            </div>
+            <div class="field">
+              <label for="healthStepsInput">当天步数</label>
+              <input id="healthStepsInput" type="number" min="0" max="200000" step="1" inputmode="numeric" placeholder="可空">
+            </div>
+          </div>
+        </details>
         <div class="modal-actions">
           <button class="health-primary" type="submit">保存运动记录</button>
           <button class="health-secondary" type="button" data-action="close-health-entry">取消</button>
@@ -2096,22 +2118,26 @@
         <button class="exercise-close" type="button" data-action="close-shortcut-guide" aria-label="关闭同步说明">×</button>
       </div>
       <div class="shortcut-copy">
-        <p>Apple 不允许网页直接读取 HealthKit。快捷指令会在你授权后读取最近一次训练，再打开 KEEP 保存。</p>
-        <ol>
-          <li>在 iPhone“快捷指令”中新建指令，添加“查找健康样本”，类型选择健身记录，按开始日期倒序，只取最新一条。</li>
-          <li>读取这条记录的开始日期、运动类型、时长、活动能量、距离；平均心率和当天步数可选。</li>
-          <li>添加“文本”，粘贴下方网址，把方括号内容替换成对应的快捷指令变量。日期格式设为 yyyy-MM-dd，时间格式设为 HH:mm。</li>
-          <li>最后添加“打开 URL”。训练唯一标识可直接用“日期-时间-运动类型”组合；每次训练结束后运行一次，重复运行不会重复保存。</li>
-        </ol>
-        <div class="shortcut-template">
-          <label for="shortcutTemplate">同步网址模板</label>
-          <textarea id="shortcutTemplate" readonly></textarea>
-        </div>
-        <div class="shortcut-actions">
-          <button class="health-primary" type="button" data-action="copy-health-template">复制网址模板</button>
-          <a class="shortcut-open" href="shortcuts://create-shortcut">打开快捷指令</a>
-        </div>
-        <p class="shortcut-privacy">健康权限只授予你创建的快捷指令。KEEP 不会把健康数据上传到服务器；请固定使用同一个 Safari 浏览器，并定期下载备份。</p>
+        <p class="shortcut-simple">这项设置完全可选。暂时不连接 Apple Watch，也不影响训练打卡和趋势图。</p>
+        <details class="shortcut-details">
+          <summary>查看 Apple Watch 同步步骤</summary>
+          <div class="shortcut-details-body">
+            <ol>
+              <li>在 iPhone“快捷指令”中新建指令，查找最近一条健身记录。</li>
+              <li>读取日期、类型和时长；热量、距离、心率、步数都可以不加。</li>
+              <li>在“文本”中粘贴下方网址并替换对应变量，最后添加“打开 URL”。</li>
+            </ol>
+            <div class="shortcut-template">
+              <label for="shortcutTemplate">同步网址模板</label>
+              <textarea id="shortcutTemplate" readonly></textarea>
+            </div>
+            <div class="shortcut-actions">
+              <button class="health-primary" type="button" data-action="copy-health-template">复制模板</button>
+              <a class="shortcut-open" href="shortcuts://create-shortcut">打开快捷指令</a>
+            </div>
+            <p class="shortcut-privacy">Apple 不允许网页直接读取 HealthKit，因此无法做到网页一键授权。数据仍只保存在当前浏览器。</p>
+          </div>
+        </details>
       </div>
     </section>
   </div>
@@ -2356,7 +2382,7 @@
         previewStartDate: todayISO,
         activeTab: "today",
         trendMetric: "duration",
-        trendRange: "cycle",
+        trendRange: "30",
         timer: {signature: "", seconds: 1800, running: false, interval: null}
       };
 
@@ -2435,6 +2461,31 @@
         return {session, created: true};
       }
 
+      function syncCompletedWorkoutSession(workoutDate, actualDate, completed) {
+        const idPrefix = `keep:${workoutDate}:`;
+        store.health.sessions = store.health.sessions.filter((session) => !session.id.startsWith(idPrefix));
+        if (!completed) {
+          saveStore();
+          return;
+        }
+        if (store.health.sessions.some((session) => session.date === actualDate && session.source === "Apple 健康")) {
+          saveStore();
+          return;
+        }
+        const record = getRecord(actualDate);
+        const workout = getWorkout(actualDate, record.mode);
+        const enteredMinutes = numericValue(record.pack, 1, 1440);
+        saveHealthSession({
+          id: `${idPrefix}${actualDate}`,
+          date: actualDate,
+          type: workout.title,
+          durationMinutes: enteredMinutes === null ? workout.minutes : enteredMinutes,
+          source: "KEEP 打卡",
+          syncedAt: new Date().toISOString()
+        });
+        saveStore();
+      }
+
       function updateDailyHealth(date, changes) {
         if (!validDate(date)) return false;
         const current = store.health.daily[date] || {};
@@ -2485,6 +2536,7 @@
         const distanceMeters = numericValue(params.get("distanceMeters"), 0, 1000000);
         let sessionResult = {session: null, created: false};
         if (durationMinutes !== null) {
+          store.health.sessions = store.health.sessions.filter((session) => !(session.date === date && session.source === "KEEP 打卡"));
           const sessionId = cleanText(params.get("sessionId"), `apple:${start || `${date}T${time}`}:${type}:${Math.round(durationMinutes * 10)}`, 180);
           sessionResult = saveHealthSession({
             id: sessionId,
@@ -3469,14 +3521,14 @@
         document.getElementById("healthSteps").textContent = Number.isFinite(summary.steps) ? Math.round(summary.steps).toLocaleString("zh-CN") : "—";
         document.getElementById("healthActiveEnergy").textContent = Number.isFinite(summary.activeKcal) ? `${Math.round(summary.activeKcal)} 千卡` : "—";
         document.getElementById("healthHeartRate").textContent = Number.isFinite(summary.avgHeartRate) ? `${Math.round(summary.avgHeartRate)} 次/分` : "—";
-        document.getElementById("healthStatus").textContent = summary.sessions.length ? `${summary.sessions.length} 次运动` : hasData ? "已同步" : "尚未记录";
+        document.getElementById("healthStatus").textContent = summary.sessions.length ? `${summary.sessions.length} 次运动` : hasData ? "已同步" : "等待打卡";
         const latest = summary.latestSync ? new Date(summary.latestSync) : null;
         const latestText = latest && !Number.isNaN(latest.getTime())
           ? new Intl.DateTimeFormat("zh-CN", {month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit"}).format(latest)
           : "";
         document.getElementById("healthTodayNote").textContent = hasData
           ? `${summary.sessions.length ? `已保存${summary.sessions.length}次运动` : "已保存当日汇总"}${latestText ? ` · 最近同步 ${latestText}` : ""}。计划完成状态仍由你确认。`
-          : "网页无法直接读取 HealthKit；通过 iPhone 快捷指令授权后同步，数据仍只保存在本机。";
+          : "点“完成今日训练”会自动记录时长；只有额外运动才需要手动补记。";
       }
 
       function renderToday() {
@@ -3576,7 +3628,7 @@
       function trendChartMarkup(points, metric) {
         const definition = trendMetrics[metric];
         const known = points.filter((point) => Number.isFinite(point.value));
-        if (!known.length) return `<div class="trend-empty">还没有${definition.label}数据。可先记录一次运动，或用快捷指令同步 Apple 健康。</div>`;
+        if (!known.length) return `<div class="trend-empty">完成一次训练后，这里会自动出现${definition.label}趋势。</div>`;
         const width = 640;
         const height = 230;
         const left = 52;
@@ -3857,10 +3909,16 @@
       function openHealthEntry(trigger) {
         const modal = document.getElementById("healthModal");
         const now = new Date();
+        const record = getRecord();
+        const workout = getWorkout(state.selectedDate, record.mode);
+        const plannedOption = document.getElementById("healthPlannedType");
+        plannedOption.value = workout.title;
+        plannedOption.textContent = workout.title;
         document.getElementById("healthDateInput").value = state.selectedDate;
         document.getElementById("healthTimeInput").value = state.selectedDate === todayISO ? `${pad(now.getHours())}:${pad(now.getMinutes())}` : "";
-        document.getElementById("healthTypeInput").value = "户外步行";
-        ["healthDurationInput", "healthCaloriesInput", "healthDistanceInput", "healthHeartRateInput", "healthStepsInput"].forEach((id) => { document.getElementById(id).value = ""; });
+        document.getElementById("healthTypeInput").value = workout.title;
+        document.getElementById("healthDurationInput").value = numericValue(record.pack, 1, 1440) ?? workout.minutes;
+        ["healthCaloriesInput", "healthDistanceInput", "healthHeartRateInput", "healthStepsInput"].forEach((id) => { document.getElementById(id).value = ""; });
         lastHealthTrigger = trigger;
         modal.hidden = false;
         setModalOpen(true);
@@ -4144,7 +4202,10 @@
               if (record.deferred) record.workoutDone = false;
             }, true);
           }
-          showToast(getRecord(workoutDate).workoutDone ? "训练已打卡，计划已自动推进" : "已取消训练完成标记");
+          const completed = getRecord(workoutDate).workoutDone;
+          syncCompletedWorkoutSession(workoutDate, state.selectedDate, completed);
+          renderAll();
+          showToast(completed ? "训练已完成，时长已自动记录" : "已取消训练完成标记");
           return;
         }
         if (action === "toggle-defer") {
