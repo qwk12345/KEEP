@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1b1a17">
-  <meta name="description" content="为徒步摄影设计的8周稳进或4–5周压缩空身体能、作息、天气建议与打卡计划。">
+  <meta name="description" content="为徒步摄影设计的空身体能计划，支持天气建议、Apple 健康记录、趋势图和动态打卡。">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" href="data:,">
   <title>徒步摄影体能计划</title>
   <style>
     :root {
@@ -704,7 +705,7 @@
     .check-button:hover { border-color: var(--green); }
     .timeline-row.done .check-button { border-color: var(--ink); color: #f3d37a; background: var(--ink); }
 
-    .workout-sheet, .checkin-sheet, .data-sheet, .gear-sheet {
+    .workout-sheet, .checkin-sheet, .health-sheet, .trend-sheet, .data-sheet, .gear-sheet {
       margin-top: 19px;
       border-top: 2px solid var(--ink);
       padding-top: 11px;
@@ -717,7 +718,7 @@
       gap: 12px;
     }
 
-    .workout-head h2, .checkin-sheet h2, .data-sheet h2, .gear-sheet h2 {
+    .workout-head h2, .checkin-sheet h2, .health-sheet h2, .trend-sheet h2, .data-sheet h2, .gear-sheet h2 {
       margin: 0;
       font-size: 19px;
       line-height: 1.25;
@@ -895,7 +896,7 @@
       font-weight: 700;
     }
 
-    .field input[type="number"], .field input[type="date"], .field select, .field textarea {
+    .field input[type="number"], .field input[type="date"], .field input[type="time"], .field input[type="text"], .field select, .field textarea {
       width: 100%;
       min-height: 40px;
       padding: 8px 10px;
@@ -950,6 +951,170 @@
       font-size: 11px;
       text-align: right;
     }
+
+    .health-head, .trend-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .health-status {
+      flex: 0 0 auto;
+      padding: 4px 7px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .health-facts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 11px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--line);
+    }
+
+    .health-fact {
+      min-width: 0;
+      padding: 10px 8px;
+      background: var(--paper);
+    }
+
+    .health-fact strong, .health-fact span { display: block; overflow-wrap: anywhere; }
+    .health-fact strong { font-size: 16px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+    .health-fact span { margin-top: 3px; color: var(--muted); font-size: 10px; }
+
+    .health-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .health-primary {
+      min-height: 40px;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      color: #f3d37a;
+      background: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .health-secondary {
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      color: var(--ink-soft);
+      background: var(--paper);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .health-note { margin: 8px 0 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+
+    .trend-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      margin-top: 11px;
+    }
+
+    .trend-controls select {
+      width: 100%;
+      min-height: 38px;
+      padding: 6px 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .trend-range {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+    }
+
+    .trend-range button {
+      min-height: 36px;
+      padding: 5px 8px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      color: var(--ink-soft);
+      background: var(--paper);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .trend-range button:last-child { border-right: 0; }
+    .trend-range button.active { color: #f3d37a; background: var(--ink); }
+
+    .trend-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .trend-summary div { min-width: 0; }
+    .trend-summary strong, .trend-summary span { display: block; overflow-wrap: anywhere; }
+    .trend-summary strong { font-size: 16px; font-variant-numeric: tabular-nums; }
+    .trend-summary span { margin-top: 2px; color: var(--muted); font-size: 10px; }
+
+    .trend-chart {
+      width: 100%;
+      min-height: 190px;
+      margin-top: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--canvas);
+    }
+
+    .trend-chart svg { display: block; width: 100%; height: auto; aspect-ratio: 640 / 230; }
+    .trend-empty { display: grid; place-items: center; min-height: 190px; padding: 24px; color: var(--muted); font-size: 12px; text-align: center; }
+
+    .history-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history-heading strong { font-size: 13px; }
+    .history-heading span { color: var(--muted); font-size: 10px; }
+    .health-history-empty { padding: 17px 0; color: var(--muted); font-size: 12px; text-align: center; }
+
+    .health-history-row {
+      display: grid;
+      grid-template-columns: 64px 1fr 32px;
+      gap: 9px;
+      align-items: center;
+      min-height: 61px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .health-history-date { color: var(--green); font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .health-history-copy { min-width: 0; }
+    .health-history-copy strong { display: block; overflow: hidden; font-size: 12px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+    .health-history-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+    .history-delete { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); background: var(--paper); font-size: 17px; }
 
     .week-overview {
       padding: 15px;
@@ -1117,7 +1282,8 @@
 
     .program-start label { display: block; color: var(--ink-soft); font-size: 12px; font-weight: 700; }
     .program-start input { display: block; width: 100%; min-height: 38px; margin-top: 5px; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 5px; }
-    .program-start span { max-width: 130px; color: var(--muted); font-size: 11px; text-align: right; }
+    .program-start span { max-width: 190px; color: var(--muted); font-size: 11px; text-align: right; }
+    .program-start span strong { display: block; margin-bottom: 2px; color: var(--green-dark); font-size: 12px; }
 
     .progression-list { margin-top: 13px; border-top: 1px solid var(--line); }
     .progression-row {
@@ -1289,6 +1455,23 @@
     .exercise-modal-copy p { margin: 0; color: var(--ink-soft); font-size: 13px; }
     .exercise-modal-copy ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-soft); font-size: 12px; }
     .exercise-modal-copy li { margin: 4px 0; }
+
+    .health-dialog-body { padding: 0 14px 15px; }
+    .health-dialog-body .form-grid { gap: 11px; }
+    .health-dialog-note { margin: 0 0 11px; color: var(--muted); font-size: 11px; }
+    .modal-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 14px; }
+    .modal-actions .health-primary, .modal-actions .health-secondary { padding-inline: 12px; }
+
+    .shortcut-copy { padding: 0 14px 15px; }
+    .shortcut-copy > p { margin: 0 0 10px; color: var(--ink-soft); font-size: 12px; }
+    .shortcut-copy ol { margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: 12px; }
+    .shortcut-copy li { margin: 7px 0; }
+    .shortcut-template { margin-top: 12px; }
+    .shortcut-template label { display: block; margin-bottom: 5px; color: var(--ink-soft); font-size: 11px; font-weight: 800; }
+    .shortcut-template textarea { width: 100%; min-height: 92px; padding: 8px; border: 1px solid var(--line-strong); border-radius: 5px; color: var(--ink-soft); background: var(--canvas); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; resize: none; }
+    .shortcut-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 9px; }
+    .shortcut-open { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 6px; color: var(--ink-soft); background: var(--paper); font-size: 12px; font-weight: 800; text-decoration: none; }
+    .shortcut-privacy { margin-top: 11px !important; padding: 9px 10px; border-left: 3px solid var(--green); color: var(--green-dark) !important; background: var(--green-soft); font-size: 11px !important; }
     body.modal-open { overflow: hidden; }
 
     .footer-note {
@@ -1387,6 +1570,12 @@
       .workout-step { grid-template-columns: 27px 58px 1fr 30px; gap: 7px; }
       .weather-actions { grid-template-columns: 1fr; align-items: start; }
       .weather-buttons { flex-wrap: wrap; }
+      .health-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .trend-controls { grid-template-columns: 1fr; }
+      .trend-range { grid-template-columns: repeat(3, 1fr); }
+      .health-history-row { grid-template-columns: 57px 1fr 30px; gap: 7px; }
+      .program-start { grid-template-columns: 1fr; align-items: start; }
+      .program-start span { max-width: none; text-align: left; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1507,6 +1696,27 @@
           </div>
         </section>
 
+        <section class="health-sheet" aria-labelledby="healthTitle">
+          <div class="health-head">
+            <div>
+              <h2 id="healthTitle">健身数据</h2>
+              <p class="checkin-intro">保存 Apple Watch、运动 App 或手动记录的数据。</p>
+            </div>
+            <span id="healthStatus" class="health-status">尚未记录</span>
+          </div>
+          <div class="health-facts" aria-label="当日健身数据">
+            <div class="health-fact"><strong id="healthExerciseMinutes">—</strong><span>运动分钟</span></div>
+            <div class="health-fact"><strong id="healthSteps">—</strong><span>步数</span></div>
+            <div class="health-fact"><strong id="healthActiveEnergy">—</strong><span>活动能量</span></div>
+            <div class="health-fact"><strong id="healthHeartRate">—</strong><span>平均心率</span></div>
+          </div>
+          <div class="health-actions">
+            <button class="health-primary" type="button" data-action="open-health-entry">记录一次运动</button>
+            <button class="health-secondary" type="button" data-action="open-shortcut-guide">连接 Apple 健康</button>
+          </div>
+          <p id="healthTodayNote" class="health-note">网页无法直接读取 HealthKit；通过 iPhone 快捷指令授权后同步，数据仍只保存在本机。</p>
+        </section>
+
         <section class="checkin-sheet" aria-labelledby="checkinTitle">
           <h2 id="checkinTitle">今日打卡</h2>
           <p class="checkin-intro">数据只保存在当前浏览器；每次修改会自动保存。</p>
@@ -1565,6 +1775,38 @@
         </div>
         <div id="weekDays" class="week-days" aria-label="本周日期"></div>
         <div id="weekList" class="week-list"></div>
+
+        <section class="trend-sheet" aria-labelledby="trendTitle">
+          <div class="trend-head">
+            <div>
+              <h2 id="trendTitle">训练趋势</h2>
+              <p id="trendRangeLabel" class="checkin-intro">当前训练周期</p>
+            </div>
+          </div>
+          <div class="trend-controls">
+            <select id="trendMetric" aria-label="趋势指标">
+              <option value="duration">运动分钟</option>
+              <option value="active">活动能量</option>
+              <option value="steps">步数</option>
+              <option value="distance">运动距离</option>
+              <option value="heartRate">平均心率</option>
+            </select>
+            <div class="trend-range" role="group" aria-label="趋势时间范围">
+              <button type="button" data-trend-range="7">7天</button>
+              <button type="button" data-trend-range="30">30天</button>
+              <button type="button" data-trend-range="cycle" class="active">本周期</button>
+            </div>
+          </div>
+          <div class="trend-summary">
+            <div><strong id="trendTotal">—</strong><span id="trendTotalLabel">合计</span></div>
+            <div><strong id="trendAverage">—</strong><span>日均</span></div>
+            <div><strong id="trendBest">—</strong><span>单日最高</span></div>
+          </div>
+          <div id="trendChart" class="trend-chart" aria-live="polite"></div>
+          <div class="history-heading"><strong>运动记录</strong><span id="healthHistoryCount">0 条</span></div>
+          <div id="healthHistory" class="health-history"></div>
+        </section>
+
         <div class="info-band" style="margin-top:18px">
           <strong>本周判断标准</strong>
           训练后第二天能正常上下楼、关节没有持续疼痛，才进入下一周。没有达标就原周复练，进度不会白费。
@@ -1589,6 +1831,14 @@
           <span id="planTargetKicker">当前周目标</span>
           <strong id="planTargetSummary">第 1 周 · 4 kg · 75 分钟</strong>
           <span id="planTargetFocus">建立步行习惯、鞋袜与走姿</span>
+        </div>
+
+        <div class="program-start">
+          <div>
+            <label for="startDateInput">训练周期开始日期</label>
+            <input id="startDateInput" type="date">
+          </div>
+          <span><strong id="programDateRange">周期日期计算中</strong>可自由选择任意日期，已有记录不会删除。</span>
         </div>
 
         <section class="gear-sheet" style="margin-top:0" aria-labelledby="gearTitle">
@@ -1619,14 +1869,6 @@
             <div class="benchmark-item"><strong>器材提醒</strong><span>真正带相机时先减镜头、缩短路线；不要第一次就背完整器材上山。</span></div>
           </div>
         </section>
-
-        <div class="program-start">
-          <div>
-            <label for="startDateInput">计划开始日</label>
-            <input id="startDateInput" type="date">
-          </div>
-          <span>改日期后，周数和周末目标会自动重算。</span>
-        </div>
 
         <div id="progressionList" class="progression-list"></div>
 
@@ -1749,8 +1991,8 @@
         </div>
 
         <section class="data-sheet" aria-labelledby="dataTitle">
-          <h2 id="dataTitle">打卡数据</h2>
-          <p class="checkin-intro">数据保存在当前浏览器；可定期导出备份，也可以在另一台设备导入。</p>
+          <h2 id="dataTitle">数据备份</h2>
+          <p class="checkin-intro">打卡、周期设置和健身记录都保存在当前浏览器；可定期导出，也可以在另一台设备导入。</p>
           <div class="data-actions">
             <button class="text-button" type="button" data-action="export-data">下载打卡记录</button>
             <button class="text-button" type="button" data-action="import-data">导入打卡记录</button>
@@ -1784,6 +2026,95 @@
       </div>
     </section>
   </div>
+
+  <div id="healthModal" class="exercise-modal" hidden>
+    <div class="exercise-backdrop" data-action="close-health-entry" aria-hidden="true"></div>
+    <section class="exercise-dialog" role="dialog" aria-modal="true" aria-labelledby="healthModalTitle">
+      <div class="exercise-dialog-header">
+        <div><p class="exercise-kicker">健身记录</p><h2 id="healthModalTitle">记录一次运动</h2></div>
+        <button class="exercise-close" type="button" data-action="close-health-entry" aria-label="关闭健身记录">×</button>
+      </div>
+      <form id="healthForm" class="health-dialog-body">
+        <p class="health-dialog-note">除日期、类型和时长外，其余项目可以留空。</p>
+        <div class="form-grid">
+          <div class="field">
+            <label for="healthDateInput">日期</label>
+            <input id="healthDateInput" type="date" required>
+          </div>
+          <div class="field">
+            <label for="healthTimeInput">开始时间</label>
+            <input id="healthTimeInput" type="time">
+          </div>
+          <div class="field">
+            <label for="healthTypeInput">运动类型</label>
+            <select id="healthTypeInput" required>
+              <option value="户外步行">户外步行</option>
+              <option value="徒步">徒步</option>
+              <option value="楼梯训练">楼梯训练</option>
+              <option value="力量训练">力量训练</option>
+              <option value="核心训练">核心训练</option>
+              <option value="灵活性训练">灵活性训练</option>
+              <option value="跑步">跑步</option>
+              <option value="骑行">骑行</option>
+              <option value="其他训练">其他训练</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="healthDurationInput">时长（分钟）</label>
+            <input id="healthDurationInput" type="number" min="1" max="1440" step="1" inputmode="numeric" required placeholder="例如 30">
+          </div>
+          <div class="field">
+            <label for="healthCaloriesInput">活动能量（千卡）</label>
+            <input id="healthCaloriesInput" type="number" min="0" max="10000" step="1" inputmode="decimal" placeholder="可空">
+          </div>
+          <div class="field">
+            <label for="healthDistanceInput">距离（公里）</label>
+            <input id="healthDistanceInput" type="number" min="0" max="1000" step="0.01" inputmode="decimal" placeholder="可空">
+          </div>
+          <div class="field">
+            <label for="healthHeartRateInput">平均心率（次/分）</label>
+            <input id="healthHeartRateInput" type="number" min="30" max="240" step="1" inputmode="numeric" placeholder="可空">
+          </div>
+          <div class="field">
+            <label for="healthStepsInput">当天步数</label>
+            <input id="healthStepsInput" type="number" min="0" max="200000" step="1" inputmode="numeric" placeholder="可空">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="health-primary" type="submit">保存运动记录</button>
+          <button class="health-secondary" type="button" data-action="close-health-entry">取消</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div id="shortcutModal" class="exercise-modal" hidden>
+    <div class="exercise-backdrop" data-action="close-shortcut-guide" aria-hidden="true"></div>
+    <section class="exercise-dialog" role="dialog" aria-modal="true" aria-labelledby="shortcutModalTitle">
+      <div class="exercise-dialog-header">
+        <div><p class="exercise-kicker">Apple 健康</p><h2 id="shortcutModalTitle">用快捷指令同步</h2></div>
+        <button class="exercise-close" type="button" data-action="close-shortcut-guide" aria-label="关闭同步说明">×</button>
+      </div>
+      <div class="shortcut-copy">
+        <p>Apple 不允许网页直接读取 HealthKit。快捷指令会在你授权后读取最近一次训练，再打开 KEEP 保存。</p>
+        <ol>
+          <li>在 iPhone“快捷指令”中新建指令，添加“查找健康样本”，类型选择健身记录，按开始日期倒序，只取最新一条。</li>
+          <li>读取这条记录的开始日期、运动类型、时长、活动能量、距离；平均心率和当天步数可选。</li>
+          <li>添加“文本”，粘贴下方网址，把方括号内容替换成对应的快捷指令变量。日期格式设为 yyyy-MM-dd，时间格式设为 HH:mm。</li>
+          <li>最后添加“打开 URL”。训练唯一标识可直接用“日期-时间-运动类型”组合；每次训练结束后运行一次，重复运行不会重复保存。</li>
+        </ol>
+        <div class="shortcut-template">
+          <label for="shortcutTemplate">同步网址模板</label>
+          <textarea id="shortcutTemplate" readonly></textarea>
+        </div>
+        <div class="shortcut-actions">
+          <button class="health-primary" type="button" data-action="copy-health-template">复制网址模板</button>
+          <a class="shortcut-open" href="shortcuts://create-shortcut">打开快捷指令</a>
+        </div>
+        <p class="shortcut-privacy">健康权限只授予你创建的快捷指令。KEEP 不会把健康数据上传到服务器；请固定使用同一个 Safari 浏览器，并定期下载备份。</p>
+      </div>
+    </section>
+  </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -1793,6 +2124,8 @@
       const STORAGE_KEY = "photography-trail-training-v1";
       const WEATHER_STORAGE_KEY = "photography-trail-weather-v1";
       const WEATHER_CACHE_MAX_AGE = 6 * 60 * 60 * 1000;
+      const PUBLIC_APP_URL = "https://qwk12345.github.io/KEEP/";
+      const HEALTH_QUERY_KEYS = ["health", "date", "time", "start", "type", "workout", "duration", "durationMinutes", "durationSeconds", "calories", "active", "distance", "distanceMeters", "dailyDistance", "heartRate", "restingHeartRate", "steps", "exercise", "sessionId", "source"];
       const today = new Date();
       const pad = (value) => String(value).padStart(2, "0");
       const toISO = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
@@ -1811,6 +2144,79 @@
       const shortDateLabel = new Intl.DateTimeFormat("zh-CN", {month: "numeric", day: "numeric"});
       const dateDiff = (first, second) => Math.round((fromISO(first) - fromISO(second)) / 86400000);
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const escapeHTML = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"}[character]));
+      const cleanText = (value, fallback = "", maxLength = 60) => String(value ?? "").trim().slice(0, maxLength) || fallback;
+
+      const trendMetrics = {
+        duration: {label: "运动分钟", unit: "分", decimals: 0},
+        active: {label: "活动能量", unit: "千卡", decimals: 0},
+        steps: {label: "步数", unit: "步", decimals: 0},
+        distance: {label: "运动距离", unit: "公里", decimals: 1},
+        heartRate: {label: "平均心率", unit: "次/分", decimals: 0}
+      };
+
+      function validDate(value) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return false;
+        return toISO(fromISO(value)) === value;
+      }
+
+      function numericValue(value, min = 0, max = Number.MAX_SAFE_INTEGER) {
+        if (value === null || value === undefined || value === "") return null;
+        const match = String(value).replace(",", ".").match(/-?\d+(?:\.\d+)?/);
+        if (!match) return null;
+        const number = Number(match[0]);
+        return Number.isFinite(number) ? clamp(number, min, max) : null;
+      }
+
+      function normalizeHealthSession(raw) {
+        if (!raw || typeof raw !== "object" || !validDate(raw.date)) return null;
+        const durationMinutes = numericValue(raw.durationMinutes ?? raw.duration, 1, 1440);
+        if (durationMinutes === null) return null;
+        const startTime = /^\d{2}:\d{2}$/.test(String(raw.startTime || raw.time || "")) ? String(raw.startTime || raw.time) : "";
+        const type = cleanText(raw.type, "其他训练", 40);
+        const source = cleanText(raw.source, "手动记录", 30);
+        const fallbackId = `${source}:${raw.date}:${startTime}:${type}:${Math.round(durationMinutes * 10)}`;
+        return {
+          id: cleanText(raw.id, fallbackId, 180),
+          date: raw.date,
+          startTime,
+          type,
+          durationMinutes: Math.round(durationMinutes * 10) / 10,
+          activeKcal: numericValue(raw.activeKcal ?? raw.calories, 0, 10000),
+          distanceKm: numericValue(raw.distanceKm ?? raw.distance, 0, 1000),
+          avgHeartRate: numericValue(raw.avgHeartRate ?? raw.heartRate, 30, 240),
+          source,
+          syncedAt: cleanText(raw.syncedAt, new Date().toISOString(), 40)
+        };
+      }
+
+      function normalizeHealthStore(raw) {
+        const daily = {};
+        const rawDaily = raw && raw.daily && typeof raw.daily === "object" ? raw.daily : {};
+        Object.entries(rawDaily).forEach(([date, entry]) => {
+          if (!validDate(date) || !entry || typeof entry !== "object") return;
+          daily[date] = {
+            steps: numericValue(entry.steps, 0, 200000),
+            exerciseMinutes: numericValue(entry.exerciseMinutes, 0, 1440),
+            activeKcal: numericValue(entry.activeKcal, 0, 20000),
+            distanceKm: numericValue(entry.distanceKm, 0, 1000),
+            avgHeartRate: numericValue(entry.avgHeartRate, 30, 240),
+            restingHeartRate: numericValue(entry.restingHeartRate, 30, 240),
+            source: cleanText(entry.source, "Apple 健康", 30),
+            syncedAt: cleanText(entry.syncedAt, "", 40)
+          };
+        });
+        const sessions = [];
+        const ids = new Set();
+        const rawSessions = raw && Array.isArray(raw.sessions) ? raw.sessions : [];
+        rawSessions.forEach((entry) => {
+          const session = normalizeHealthSession(entry);
+          if (!session || ids.has(session.id)) return;
+          ids.add(session.id);
+          sessions.push(session);
+        });
+        return {daily, sessions};
+      }
 
       const progression = [
         {week: 1, load: "空身", minutes: 75, ascent: "平地/约100 m", focus: "建立步行习惯、鞋袜与走姿", phase: "适应"},
@@ -1949,6 +2355,8 @@
         selectedDate: todayISO,
         previewStartDate: todayISO,
         activeTab: "today",
+        trendMetric: "duration",
+        trendRange: "cycle",
         timer: {signature: "", seconds: 1800, running: false, interval: null}
       };
 
@@ -1960,15 +2368,17 @@
       };
 
       function loadStore() {
-        const fallback = {records: {}, settings: {startDate: defaultStart, programType: "eight"}};
+        const fallback = {records: {}, settings: {startDate: defaultStart, programType: "eight"}, health: {daily: {}, sessions: []}};
         try {
           const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
           if (!saved || typeof saved !== "object") return fallback;
           const settings = {...fallback.settings, ...(saved.settings || {})};
           if (!trainingPrograms[settings.programType]) settings.programType = "eight";
+          if (!validDate(settings.startDate)) settings.startDate = defaultStart;
           return {
             records: saved.records && typeof saved.records === "object" ? saved.records : {},
-            settings
+            settings,
+            health: normalizeHealthStore(saved.health)
           };
         } catch (error) {
           return fallback;
@@ -1983,6 +2393,130 @@
           showToast("浏览器拒绝了本地保存，请检查隐私设置");
           return false;
         }
+      }
+
+      function healthSessionsOn(date) {
+        return store.health.sessions.filter((session) => session.date === date);
+      }
+
+      function healthSummary(date) {
+        const daily = store.health.daily[date] || {};
+        const sessions = healthSessionsOn(date);
+        const sumKnown = (key) => {
+          const values = sessions.map((session) => session[key]).filter((value) => Number.isFinite(value));
+          return values.length ? values.reduce((sum, value) => sum + value, 0) : null;
+        };
+        const heartRateSessions = sessions.filter((session) => Number.isFinite(session.avgHeartRate));
+        const weightedHeartRate = heartRateSessions.length
+          ? heartRateSessions.reduce((sum, session) => sum + session.avgHeartRate * session.durationMinutes, 0) / heartRateSessions.reduce((sum, session) => sum + session.durationMinutes, 0)
+          : null;
+        const syncTimes = [daily.syncedAt, ...sessions.map((session) => session.syncedAt)].filter(Boolean).sort();
+        return {
+          sessions,
+          steps: Number.isFinite(daily.steps) ? daily.steps : null,
+          exerciseMinutes: Number.isFinite(daily.exerciseMinutes) ? daily.exerciseMinutes : sumKnown("durationMinutes"),
+          activeKcal: Number.isFinite(daily.activeKcal) ? daily.activeKcal : sumKnown("activeKcal"),
+          distanceKm: Number.isFinite(daily.distanceKm) ? daily.distanceKm : sumKnown("distanceKm"),
+          avgHeartRate: Number.isFinite(daily.avgHeartRate) ? daily.avgHeartRate : weightedHeartRate,
+          restingHeartRate: Number.isFinite(daily.restingHeartRate) ? daily.restingHeartRate : null,
+          latestSync: syncTimes.length ? syncTimes[syncTimes.length - 1] : ""
+        };
+      }
+
+      function saveHealthSession(raw) {
+        const session = normalizeHealthSession(raw);
+        if (!session) return {session: null, created: false};
+        const existingIndex = store.health.sessions.findIndex((item) => item.id === session.id);
+        if (existingIndex >= 0) {
+          store.health.sessions[existingIndex] = session;
+          return {session, created: false};
+        }
+        store.health.sessions.push(session);
+        return {session, created: true};
+      }
+
+      function updateDailyHealth(date, changes) {
+        if (!validDate(date)) return false;
+        const current = store.health.daily[date] || {};
+        const next = {...current};
+        let changed = false;
+        Object.entries(changes).forEach(([key, value]) => {
+          if (value === null || value === undefined || value === "") return;
+          next[key] = value;
+          changed = true;
+        });
+        if (changed) store.health.daily[date] = next;
+        return changed;
+      }
+
+      function healthTemplateURL() {
+        return `${PUBLIC_APP_URL}?health=1&date=[日期yyyy-MM-dd]&time=[时间HH:mm]&type=[运动类型]&duration=[时长分钟]&calories=[活动能量千卡]&distance=[距离公里]&heartRate=[平均心率]&steps=[当天步数]&exercise=[当天锻炼分钟]&active=[当天活动能量千卡]&sessionId=[日期yyyy-MM-dd]-[时间HH:mm]-[运动类型]`;
+      }
+
+      function removeHealthQuery() {
+        const cleanURL = new URL(window.location.href);
+        HEALTH_QUERY_KEYS.forEach((key) => cleanURL.searchParams.delete(key));
+        const next = `${cleanURL.pathname}${cleanURL.search}${cleanURL.hash}`;
+        window.history.replaceState({}, "", next || "/");
+      }
+
+      function syncHealthFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("health") !== "1") return "";
+        let date = params.get("date") || todayISO;
+        let time = params.get("time") || "";
+        const start = params.get("start");
+        if (start) {
+          const parsedStart = new Date(start);
+          if (!Number.isNaN(parsedStart.getTime())) {
+            date = toISO(parsedStart);
+            time = `${pad(parsedStart.getHours())}:${pad(parsedStart.getMinutes())}`;
+          }
+        }
+        if (!validDate(date)) {
+          removeHealthQuery();
+          return "同步链接中的日期格式不正确";
+        }
+        const rawDuration = params.get("durationMinutes") ?? params.get("duration");
+        const durationSeconds = numericValue(params.get("durationSeconds"), 0, 86400);
+        const durationMinutes = rawDuration === null ? (durationSeconds === null ? null : durationSeconds / 60) : numericValue(rawDuration, 1, 1440);
+        const type = cleanText(params.get("type") || params.get("workout"), "Apple Watch 训练", 40);
+        const source = cleanText(params.get("source"), "Apple 健康", 30);
+        const distanceMeters = numericValue(params.get("distanceMeters"), 0, 1000000);
+        let sessionResult = {session: null, created: false};
+        if (durationMinutes !== null) {
+          const sessionId = cleanText(params.get("sessionId"), `apple:${start || `${date}T${time}`}:${type}:${Math.round(durationMinutes * 10)}`, 180);
+          sessionResult = saveHealthSession({
+            id: sessionId,
+            date,
+            startTime: time,
+            type,
+            durationMinutes,
+            activeKcal: numericValue(params.get("calories"), 0, 10000),
+            distanceKm: distanceMeters === null ? numericValue(params.get("distance"), 0, 1000) : distanceMeters / 1000,
+            avgHeartRate: numericValue(params.get("heartRate"), 30, 240),
+            source,
+            syncedAt: new Date().toISOString()
+          });
+        }
+        const dailyValues = {
+          steps: numericValue(params.get("steps"), 0, 200000),
+          exerciseMinutes: numericValue(params.get("exercise"), 0, 1440),
+          activeKcal: numericValue(params.get("active"), 0, 20000),
+          distanceKm: numericValue(params.get("dailyDistance"), 0, 1000),
+          avgHeartRate: durationMinutes === null ? numericValue(params.get("heartRate"), 30, 240) : null,
+          restingHeartRate: numericValue(params.get("restingHeartRate"), 30, 240)
+        };
+        const hasDailyValues = Object.values(dailyValues).some((value) => value !== null);
+        const dailyChanged = hasDailyValues ? updateDailyHealth(date, {...dailyValues, source, syncedAt: new Date().toISOString()}) : false;
+        removeHealthQuery();
+        if (!sessionResult.session && !dailyChanged) return "同步链接中没有可保存的健身数据";
+        saveStore();
+        state.selectedDate = date;
+        state.activeTab = "today";
+        return sessionResult.session
+          ? sessionResult.created ? "Apple 健康训练已保存" : "这次训练已更新，没有重复记录"
+          : "Apple 健康当日数据已保存";
       }
 
       function activeProgram() {
@@ -2928,6 +3462,23 @@
         document.getElementById("energyOptions").innerHTML = [1, 2, 3, 4, 5].map((value) => `<button type="button" role="radio" aria-checked="${record.energy === value}" class="${record.energy === value ? "active" : ""}" data-action="set-energy" data-value="${value}">${value}</button>`).join("");
       }
 
+      function renderHealthToday() {
+        const summary = healthSummary(state.selectedDate);
+        const hasData = summary.sessions.length || [summary.steps, summary.exerciseMinutes, summary.activeKcal, summary.avgHeartRate].some((value) => Number.isFinite(value));
+        document.getElementById("healthExerciseMinutes").textContent = Number.isFinite(summary.exerciseMinutes) ? `${Math.round(summary.exerciseMinutes)} 分` : "—";
+        document.getElementById("healthSteps").textContent = Number.isFinite(summary.steps) ? Math.round(summary.steps).toLocaleString("zh-CN") : "—";
+        document.getElementById("healthActiveEnergy").textContent = Number.isFinite(summary.activeKcal) ? `${Math.round(summary.activeKcal)} 千卡` : "—";
+        document.getElementById("healthHeartRate").textContent = Number.isFinite(summary.avgHeartRate) ? `${Math.round(summary.avgHeartRate)} 次/分` : "—";
+        document.getElementById("healthStatus").textContent = summary.sessions.length ? `${summary.sessions.length} 次运动` : hasData ? "已同步" : "尚未记录";
+        const latest = summary.latestSync ? new Date(summary.latestSync) : null;
+        const latestText = latest && !Number.isNaN(latest.getTime())
+          ? new Intl.DateTimeFormat("zh-CN", {month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit"}).format(latest)
+          : "";
+        document.getElementById("healthTodayNote").textContent = hasData
+          ? `${summary.sessions.length ? `已保存${summary.sessions.length}次运动` : "已保存当日汇总"}${latestText ? ` · 最近同步 ${latestText}` : ""}。计划完成状态仍由你确认。`
+          : "网页无法直接读取 HealthKit；通过 iPhone 快捷指令授权后同步，数据仍只保存在本机。";
+      }
+
       function renderToday() {
         const context = getPlanContext();
         const {target, program} = context;
@@ -2946,6 +3497,7 @@
         renderAdjustment();
         renderTimeline();
         renderWorkout();
+        renderHealthToday();
         renderCheckin();
         renderDateContext();
         renderWeather();
@@ -2962,13 +3514,139 @@
         const trainingRecords = dates.slice(0, 6).map((date) => store.records[date]).filter(Boolean);
         const done = trainingRecords.filter((record) => record.workoutDone).length;
         const sleepRecords = records.filter((record) => typeof record.sleep === "number" && record.sleep > 0);
-        const packRecords = records.filter((record) => record.pack !== "" && Number.isFinite(Number(record.pack)));
+        const durationValues = dates.map((date) => {
+          const record = store.records[date];
+          if (record && record.pack !== "" && Number.isFinite(Number(record.pack))) return Number(record.pack);
+          return healthSummary(date).exerciseMinutes;
+        }).filter((value) => Number.isFinite(value));
         const average = (items, getter) => items.length ? items.reduce((sum, item) => sum + getter(item), 0) / items.length : null;
         return {
           done,
           sleep: average(sleepRecords, (record) => record.sleep),
-          pack: average(packRecords, (record) => Number(record.pack))
+          pack: durationValues.length ? durationValues.reduce((sum, value) => sum + value, 0) / durationValues.length : null
         };
+      }
+
+      function trendDates() {
+        let start;
+        let end = fromISO(todayISO);
+        if (state.trendRange === "cycle") {
+          start = fromISO(store.settings.startDate || defaultStart);
+          const cycleEnd = programEndDate();
+          if (dateDiff(toISO(cycleEnd), todayISO) < 0) end = cycleEnd;
+          if (dateDiff(toISO(start), toISO(end)) > 0) end = start;
+        } else {
+          const days = Number(state.trendRange) || 30;
+          start = addDays(end, -(days - 1));
+        }
+        const dates = [];
+        let cursor = start;
+        let guard = 0;
+        while (dateDiff(toISO(cursor), toISO(end)) <= 0 && guard < 100) {
+          dates.push(toISO(cursor));
+          cursor = addDays(cursor, 1);
+          guard += 1;
+        }
+        return dates.length ? dates : [todayISO];
+      }
+
+      function trendValue(date, metric) {
+        const summary = healthSummary(date);
+        if (metric === "duration") return summary.exerciseMinutes;
+        if (metric === "active") return summary.activeKcal;
+        if (metric === "steps") return summary.steps;
+        if (metric === "distance") return summary.distanceKm;
+        if (metric === "heartRate") return summary.avgHeartRate;
+        return null;
+      }
+
+      function formatTrendNumber(value, definition, compact = false) {
+        if (!Number.isFinite(value)) return "—";
+        if (compact && definition.unit === "步" && value >= 10000) return `${(value / 10000).toFixed(1)}万`;
+        const formatted = value.toLocaleString("zh-CN", {minimumFractionDigits: definition.decimals, maximumFractionDigits: definition.decimals});
+        return `${formatted}${compact ? definition.unit : ` ${definition.unit}`}`;
+      }
+
+      function chartAxisNumber(value, metric) {
+        if (metric === "steps" && value >= 10000) return `${(value / 10000).toFixed(1)}万`;
+        if (metric === "distance") return value.toFixed(1);
+        return Math.round(value).toLocaleString("zh-CN");
+      }
+
+      function trendChartMarkup(points, metric) {
+        const definition = trendMetrics[metric];
+        const known = points.filter((point) => Number.isFinite(point.value));
+        if (!known.length) return `<div class="trend-empty">还没有${definition.label}数据。可先记录一次运动，或用快捷指令同步 Apple 健康。</div>`;
+        const width = 640;
+        const height = 230;
+        const left = 52;
+        const right = 16;
+        const top = 17;
+        const bottom = 34;
+        const chartWidth = width - left - right;
+        const chartHeight = height - top - bottom;
+        const rawMin = Math.min(...known.map((point) => point.value));
+        const rawMax = Math.max(...known.map((point) => point.value));
+        const minimum = metric === "heartRate" ? Math.max(0, Math.floor((rawMin - 10) / 10) * 10) : 0;
+        let maximum = metric === "heartRate" ? Math.ceil((rawMax + 10) / 10) * 10 : rawMax * 1.12;
+        if (maximum <= minimum) maximum = minimum + (metric === "heartRate" ? 20 : 1);
+        const xFor = (index) => points.length === 1 ? left + chartWidth / 2 : left + index * chartWidth / (points.length - 1);
+        const yFor = (value) => top + (maximum - value) * chartHeight / (maximum - minimum);
+        const grid = Array.from({length: 5}, (_, index) => {
+          const y = top + index * chartHeight / 4;
+          const value = maximum - index * (maximum - minimum) / 4;
+          return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#ded9cd" stroke-width="1"/><text x="${left - 7}" y="${(y + 4).toFixed(1)}" fill="#817d74" font-size="10" text-anchor="end">${chartAxisNumber(value, metric)}</text>`;
+        }).join("");
+        const spacing = points.length > 1 ? chartWidth / (points.length - 1) : chartWidth;
+        const barWidth = Math.max(2, Math.min(13, spacing * .5));
+        const bars = metric === "heartRate" ? "" : known.map((point) => {
+          const x = xFor(point.index) - barWidth / 2;
+          const y = yFor(point.value);
+          return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${Math.max(1, top + chartHeight - y).toFixed(1)}" rx="1.5" fill="#eadba8"/>`;
+        }).join("");
+        const path = known.map((point, index) => `${index ? "L" : "M"}${xFor(point.index).toFixed(1)},${yFor(point.value).toFixed(1)}`).join(" ");
+        const dots = known.map((point) => `<circle cx="${xFor(point.index).toFixed(1)}" cy="${yFor(point.value).toFixed(1)}" r="3.2" fill="#1f1e1b" stroke="#f3d37a" stroke-width="1.5"><title>${point.date} · ${formatTrendNumber(point.value, definition)}</title></circle>`).join("");
+        const labelIndexes = new Set([0, points.length - 1]);
+        const labelStep = Math.max(1, Math.ceil((points.length - 1) / 4));
+        for (let index = labelStep; index < points.length - 1; index += labelStep) labelIndexes.add(index);
+        const labels = [...labelIndexes].sort((first, second) => first - second).map((index) => `<text x="${xFor(index).toFixed(1)}" y="${height - 11}" fill="#817d74" font-size="10" text-anchor="middle">${shortDateLabel.format(fromISO(points[index].date))}</text>`).join("");
+        return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHTML(definition.label)}趋势图">${grid}${bars}<path d="${path}" fill="none" stroke="#856313" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labels}</svg>`;
+      }
+
+      function renderHealthHistory() {
+        const sessions = [...store.health.sessions].sort((first, second) => `${second.date}T${second.startTime || "00:00"}`.localeCompare(`${first.date}T${first.startTime || "00:00"}`));
+        document.getElementById("healthHistoryCount").textContent = `${sessions.length} 条`;
+        document.getElementById("healthHistory").innerHTML = sessions.length ? sessions.map((session) => {
+          const details = [`${Math.round(session.durationMinutes)}分钟`];
+          if (Number.isFinite(session.activeKcal)) details.push(`${Math.round(session.activeKcal)}千卡`);
+          if (Number.isFinite(session.distanceKm)) details.push(`${session.distanceKm.toFixed(2)}公里`);
+          if (Number.isFinite(session.avgHeartRate)) details.push(`均心${Math.round(session.avgHeartRate)}`);
+          return `<div class="health-history-row">
+            <span class="health-history-date">${shortDateLabel.format(fromISO(session.date))}<br>${escapeHTML(session.startTime || "时间未记")}</span>
+            <span class="health-history-copy"><strong>${escapeHTML(session.type)}</strong><span>${details.join(" · ")} · ${escapeHTML(session.source)}</span></span>
+            <button class="history-delete" type="button" data-action="delete-health-session" data-session-id="${escapeHTML(session.id)}" aria-label="删除这条运动记录" title="删除记录">×</button>
+          </div>`;
+        }).join("") : `<div class="health-history-empty">还没有单次运动记录</div>`;
+      }
+
+      function renderTrend() {
+        const metric = trendMetrics[state.trendMetric] ? state.trendMetric : "duration";
+        const definition = trendMetrics[metric];
+        const dates = trendDates();
+        const points = dates.map((date, index) => ({date, index, value: trendValue(date, metric)}));
+        const values = points.map((point) => point.value).filter((value) => Number.isFinite(value));
+        const total = values.reduce((sum, value) => sum + value, 0);
+        const average = values.length ? total / values.length : null;
+        const best = values.length ? Math.max(...values) : null;
+        document.getElementById("trendMetric").value = metric;
+        document.querySelectorAll("[data-trend-range]").forEach((button) => button.classList.toggle("active", button.dataset.trendRange === state.trendRange));
+        document.getElementById("trendRangeLabel").textContent = `${state.trendRange === "cycle" ? "本周期" : `最近${state.trendRange}天`} · ${shortDateLabel.format(fromISO(dates[0]))} – ${shortDateLabel.format(fromISO(dates[dates.length - 1]))}`;
+        document.getElementById("trendTotalLabel").textContent = metric === "heartRate" ? "记录天数" : "合计";
+        document.getElementById("trendTotal").textContent = metric === "heartRate" ? `${values.length} 天` : formatTrendNumber(values.length ? total : null, definition, true);
+        document.getElementById("trendAverage").textContent = formatTrendNumber(average, definition, true);
+        document.getElementById("trendBest").textContent = formatTrendNumber(best, definition, true);
+        document.getElementById("trendChart").innerHTML = trendChartMarkup(points, metric);
+        renderHealthHistory();
       }
 
       function baseWorkoutSummary(date) {
@@ -3076,6 +3754,7 @@
             <span class="week-list-status ${statusClass}" aria-label="${done ? "已完成" : deferred ? "已顺延" : "未完成"}">${statusText}</span>
           </button>`;
         }).join("");
+        renderTrend();
       }
 
       function renderPlan() {
@@ -3083,6 +3762,7 @@
         const {program, target} = context;
         const programType = trainingPrograms[store.settings.programType] ? store.settings.programType : "eight";
         document.getElementById("startDateInput").value = store.settings.startDate;
+        document.getElementById("programDateRange").textContent = `${shortDateLabel.format(fromISO(store.settings.startDate))} – ${shortDateLabel.format(programEndDate())} · 共${program.duration}周`;
         const current = context.week;
         document.getElementById("planHeading").textContent = program.label;
         document.getElementById("planDescription").textContent = program.duration === 8 ? "日常空身训练，先练身体，再带相机" : "已有基础再压缩周期，保留减量周，不用赶进度硬扛";
@@ -3160,12 +3840,115 @@
 
       let toastTimer = null;
       let lastExerciseTrigger = null;
+      let lastHealthTrigger = null;
+      let lastShortcutTrigger = null;
       function showToast(message) {
         const toast = document.getElementById("toast");
         toast.textContent = message;
         toast.classList.add("show");
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+      }
+
+      function setModalOpen(isOpen) {
+        document.body.classList.toggle("modal-open", isOpen);
+      }
+
+      function openHealthEntry(trigger) {
+        const modal = document.getElementById("healthModal");
+        const now = new Date();
+        document.getElementById("healthDateInput").value = state.selectedDate;
+        document.getElementById("healthTimeInput").value = state.selectedDate === todayISO ? `${pad(now.getHours())}:${pad(now.getMinutes())}` : "";
+        document.getElementById("healthTypeInput").value = "户外步行";
+        ["healthDurationInput", "healthCaloriesInput", "healthDistanceInput", "healthHeartRateInput", "healthStepsInput"].forEach((id) => { document.getElementById(id).value = ""; });
+        lastHealthTrigger = trigger;
+        modal.hidden = false;
+        setModalOpen(true);
+        document.getElementById("healthDurationInput").focus();
+      }
+
+      function closeHealthEntry() {
+        const modal = document.getElementById("healthModal");
+        if (modal.hidden) return;
+        modal.hidden = true;
+        setModalOpen(false);
+        if (lastHealthTrigger && lastHealthTrigger.isConnected) lastHealthTrigger.focus();
+        lastHealthTrigger = null;
+      }
+
+      function openShortcutGuide(trigger) {
+        const modal = document.getElementById("shortcutModal");
+        document.getElementById("shortcutTemplate").value = healthTemplateURL();
+        lastShortcutTrigger = trigger;
+        modal.hidden = false;
+        setModalOpen(true);
+        document.querySelector("#shortcutModal .exercise-close").focus();
+      }
+
+      function closeShortcutGuide() {
+        const modal = document.getElementById("shortcutModal");
+        if (modal.hidden) return;
+        modal.hidden = true;
+        setModalOpen(false);
+        if (lastShortcutTrigger && lastShortcutTrigger.isConnected) lastShortcutTrigger.focus();
+        lastShortcutTrigger = null;
+      }
+
+      async function copyHealthTemplate() {
+        const value = healthTemplateURL();
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch (error) {
+          const textarea = document.getElementById("shortcutTemplate");
+          textarea.value = value;
+          textarea.focus();
+          textarea.select();
+          document.execCommand("copy");
+        }
+        showToast("同步网址模板已复制");
+      }
+
+      function saveManualHealth(event) {
+        event.preventDefault();
+        const date = document.getElementById("healthDateInput").value;
+        const durationMinutes = numericValue(document.getElementById("healthDurationInput").value, 1, 1440);
+        if (!validDate(date) || durationMinutes === null) {
+          showToast("请填写正确的日期和运动时长");
+          return;
+        }
+        const result = saveHealthSession({
+          id: `manual:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`,
+          date,
+          startTime: document.getElementById("healthTimeInput").value,
+          type: document.getElementById("healthTypeInput").value,
+          durationMinutes,
+          activeKcal: numericValue(document.getElementById("healthCaloriesInput").value, 0, 10000),
+          distanceKm: numericValue(document.getElementById("healthDistanceInput").value, 0, 1000),
+          avgHeartRate: numericValue(document.getElementById("healthHeartRateInput").value, 30, 240),
+          source: "手动记录",
+          syncedAt: new Date().toISOString()
+        });
+        const steps = numericValue(document.getElementById("healthStepsInput").value, 0, 200000);
+        if (steps !== null) updateDailyHealth(date, {steps, source: "手动记录", syncedAt: new Date().toISOString()});
+        if (!result.session) {
+          showToast("运动记录没有保存，请检查输入");
+          return;
+        }
+        saveStore();
+        state.selectedDate = date;
+        closeHealthEntry();
+        renderAll();
+        showToast("运动记录已保存");
+      }
+
+      function deleteHealthSession(id) {
+        const index = store.health.sessions.findIndex((session) => session.id === id);
+        if (index < 0) return;
+        if (!window.confirm("确定删除这条运动记录吗？")) return;
+        store.health.sessions.splice(index, 1);
+        saveStore();
+        renderAll();
+        showToast("运动记录已删除");
       }
 
       function openExercise(key, trigger) {
@@ -3179,7 +3962,7 @@
         document.getElementById("exerciseModalCues").innerHTML = guide.cues.map((cue) => `<li>${cue}</li>`).join("");
         lastExerciseTrigger = trigger;
         modal.hidden = false;
-        document.body.classList.add("modal-open");
+        setModalOpen(true);
         document.querySelector(".exercise-close").focus();
       }
 
@@ -3187,7 +3970,7 @@
         const modal = document.getElementById("exerciseModal");
         if (modal.hidden) return;
         modal.hidden = true;
-        document.body.classList.remove("modal-open");
+        setModalOpen(false);
         document.getElementById("exerciseModalImage").removeAttribute("src");
         if (lastExerciseTrigger && lastExerciseTrigger.isConnected) lastExerciseTrigger.focus();
         lastExerciseTrigger = null;
@@ -3230,9 +4013,11 @@
 
       function exportData() {
         const payload = {
+          version: 2,
           exportedAt: new Date().toISOString(),
           settings: store.settings,
-          records: store.records
+          records: store.records,
+          health: store.health
         };
         const blob = new Blob([JSON.stringify(payload, null, 2)], {type: "application/json;charset=utf-8"});
         const link = document.createElement("a");
@@ -3250,13 +4035,15 @@
         reader.onload = () => {
           try {
             const payload = JSON.parse(String(reader.result || ""));
-            if (!payload || typeof payload !== "object" || !payload.records || typeof payload.records !== "object") throw new Error("invalid");
-            if (!window.confirm("导入会覆盖当前浏览器中的打卡记录，确定继续吗？")) return;
+            if (!payload || typeof payload !== "object" || (!payload.records && !payload.health)) throw new Error("invalid");
+            if (!window.confirm("导入会覆盖当前浏览器中的打卡和健身记录，确定继续吗？")) return;
             const importedSettings = {...store.settings, ...(payload.settings || {})};
             if (!trainingPrograms[importedSettings.programType]) importedSettings.programType = "eight";
+            if (!validDate(importedSettings.startDate)) importedSettings.startDate = defaultStart;
             store = {
-              records: payload.records,
-              settings: importedSettings
+              records: payload.records && typeof payload.records === "object" ? payload.records : {},
+              settings: importedSettings,
+              health: normalizeHealthStore(payload.health)
             };
             saveStore();
             renderAll();
@@ -3290,6 +4077,12 @@
           saveStore();
           renderAll();
           showToast(`已切换为${trainingPrograms[programType].label}`);
+          return;
+        }
+        const trendRangeButton = event.target.closest("[data-trend-range]");
+        if (trendRangeButton) {
+          state.trendRange = trendRangeButton.dataset.trendRange;
+          renderTrend();
           return;
         }
         const actionElement = event.target.closest("[data-action]");
@@ -3392,6 +4185,12 @@
           showToast("天气不佳，今天已顺延并切换为恢复版");
           return;
         }
+        if (action === "open-health-entry") { openHealthEntry(actionElement); return; }
+        if (action === "close-health-entry") { closeHealthEntry(); return; }
+        if (action === "open-shortcut-guide") { openShortcutGuide(actionElement); return; }
+        if (action === "close-shortcut-guide") { closeShortcutGuide(); return; }
+        if (action === "copy-health-template") { copyHealthTemplate(); return; }
+        if (action === "delete-health-session") { deleteHealthSession(actionElement.dataset.sessionId); return; }
         if (action === "open-exercise") { openExercise(actionElement.dataset.exercise, actionElement); return; }
         if (action === "close-exercise") { closeExercise(); return; }
         if (action === "timer-start") { startTimer(); return; }
@@ -3399,8 +4198,8 @@
         if (action === "export-data") { exportData(); return; }
         if (action === "import-data") { document.getElementById("importInput").click(); return; }
         if (action === "clear-data") {
-          if (!window.confirm("确定清空本机所有打卡记录吗？此操作无法撤销。")) return;
-          store = {records: {}, settings: {startDate: defaultStart, programType: "eight"}};
+          if (!window.confirm("确定清空本机所有打卡和健身记录吗？此操作无法撤销。")) return;
+          store = {records: {}, settings: {startDate: defaultStart, programType: "eight"}, health: {daily: {}, sessions: []}};
           saveStore();
           renderAll();
           showToast("本机打卡记录已清空");
@@ -3422,6 +4221,10 @@
 
       document.addEventListener("change", (event) => {
         if (event.target.id === "painInput") updateRecord((record) => { record.pain = event.target.value; });
+        if (event.target.id === "trendMetric") {
+          state.trendMetric = event.target.value;
+          renderTrend();
+        }
         if (event.target.id === "startDateInput") {
           if (!event.target.value) return;
           store.settings.startDate = event.target.value;
@@ -3437,11 +4240,18 @@
       });
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") closeExercise();
+        if (event.key === "Escape") {
+          closeExercise();
+          closeHealthEntry();
+          closeShortcutGuide();
+        }
       });
 
+      document.getElementById("healthForm").addEventListener("submit", saveManualHealth);
+      const healthSyncMessage = syncHealthFromURL();
       restoreWeatherCache();
       renderAll();
+      if (healthSyncMessage) window.setTimeout(() => showToast(healthSyncMessage), 120);
     })();
   </script>
 </body>
